@@ -47,7 +47,7 @@ async function registerForPushNotificationsAsync() {
         projectId,
       })
     ).data;
-    console.log(pushTokenString);
+
     return pushTokenString;
   } catch (e: unknown) {
     throw new Error(`${e}`);
@@ -90,8 +90,7 @@ export const usePushNotifications = () => {
             saveExpoTokenMutation.mutate({ expoToken: token });
           }
         })
-        .catch((error: unknown) => {
-          console.error(error);
+        .catch(() => {
           setExpoPushToken(undefined);
         });
     };
@@ -107,9 +106,8 @@ export const usePushNotifications = () => {
       });
 
     responseListener.current =
-      Notifications.addNotificationResponseReceivedListener((response) => {
+      Notifications.addNotificationResponseReceivedListener((_response) => {
         //Whenever the user interacts with the notification (taps on it for example)
-        console.log(response);
       });
 
     return () => {

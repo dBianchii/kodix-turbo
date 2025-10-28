@@ -70,7 +70,6 @@
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
     "cobe": "catalog:",
-    "react": "catalog:react",
     "react-spring": "catalog:",
     "typescript": "catalog:"
   }

@@ -26,7 +26,7 @@ import { Label } from "./label";
 function useForm<TOut extends FieldValues, TIn extends FieldValues>(
   props: Omit<UseFormProps<TIn, unknown, TOut>, "resolver"> & {
     schema: ZodType<TOut, TIn>;
-  }
+  },
 ) {
   const form = __useForm<TIn, unknown, TOut>({
     ...props,
@@ -46,7 +46,7 @@ interface FormFieldContextValue<
 }
 
 const FormFieldContext = createContext<FormFieldContextValue>(
-  {} as FormFieldContextValue
+  {} as FormFieldContextValue,
 );
 
 const FormField = <
@@ -84,7 +84,7 @@ interface FormItemContextValue {
 }
 
 const FormItemContext = createContext<FormItemContextValue>(
-  {} as FormItemContextValue
+  {} as FormItemContextValue,
 );
 
 function FormItem({ className, ...props }: ComponentProps<"div">) {

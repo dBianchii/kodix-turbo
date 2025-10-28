@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/correctness/useHookAtTopLevel: Legacy file */
 "use client";
 
 import type { ColumnFiltersState, RowData } from "@tanstack/react-table";
@@ -82,6 +83,7 @@ export function DataTableTodo({
       ),
       enableHiding: false,
       enableSorting: false,
+      // biome-ignore lint/nursery/noShadow: Legacy file
       header: ({ table }) => (
         <Checkbox
           aria-label="Select all"
@@ -92,7 +94,7 @@ export function DataTableTodo({
       id: "select",
     }),
     columnHelper.accessor("priority", {
-      cell: function Cell(info) {
+      cell(info) {
         const [priority, setPriority] = useState<Priority>(0); //added "0" Just to make TS happy
 
         const value = info.getValue() as Priority;
@@ -149,7 +151,7 @@ export function DataTableTodo({
       },
     }),
     columnHelper.accessor("status", {
-      cell: function Cell(info) {
+      cell(info) {
         const [status, setStatus] = useState<Status>("TODO"); //added "TODO" Just to make TS happy
 
         const value = info.getValue();
@@ -207,7 +209,7 @@ export function DataTableTodo({
       cell: (info) => <div className="font-bold">{info.getValue()}</div>,
     }),
     columnHelper.accessor("dueDate", {
-      cell: function Cell(info) {
+      cell(info) {
         const [dueDate, setDueDate] = useState<Date>();
 
         const value = info.getValue();
@@ -255,7 +257,7 @@ export function DataTableTodo({
       },
     }),
     columnHelper.accessor("AssignedToUser", {
-      cell: function Cell(info) {
+      cell(info) {
         const [assignedToUserId, setAssignedToUserId] = useState("");
 
         const value = info.getValue();

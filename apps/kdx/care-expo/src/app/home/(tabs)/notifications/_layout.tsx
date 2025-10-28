@@ -6,6 +6,6 @@ export default function NotificationsLayout() {
       screenOptions={{
         headerShown: false,
       }}
-    ></Stack>
+    />
   );
 }

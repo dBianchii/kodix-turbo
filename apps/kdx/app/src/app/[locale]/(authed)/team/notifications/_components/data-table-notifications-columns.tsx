@@ -27,7 +27,7 @@ const columnHelper =
 export function getColumns() {
   return [
     columnHelper.display({
-      cell: function Cell({ row }) {
+      cell({ row }) {
         const t = useTranslations();
 
         return (
@@ -41,17 +41,21 @@ export function getColumns() {
       },
       enableHiding: false,
       enableSorting: false,
-      header: function Header({ table }) {
+      header({ table }) {
         const t = useTranslations();
-        <Checkbox
-          aria-label={t("Select all")}
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          className="translate-y-0.5"
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        />;
+        return (
+          <Checkbox
+            aria-label={t("Select all")}
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            className="translate-y-0.5"
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+          />
+        );
       },
       id: "select",
     }),
@@ -59,7 +63,7 @@ export function getColumns() {
       cell: ({ row }) => <div className="w-20">{row.original.subject}</div>,
       enableHiding: false,
       enableSorting: false,
-      header: function Header({ column }) {
+      header({ column }) {
         const t = useTranslations();
         return (
           <DataTableColumnHeader column={column}>
@@ -69,17 +73,14 @@ export function getColumns() {
       },
     }),
     columnHelper.accessor("channel", {
-      cell: ({ row }) => {
-        return (
-          <div className="flex items-center">
-            <span className="capitalize">{row.original.channel}</span>
-          </div>
-        );
-      },
-      filterFn: (row, id, value) => {
-        return Array.isArray(value) && value.includes(row.getValue(id));
-      },
-      header: function Header({ column }) {
+      cell: ({ row }) => (
+        <div className="flex items-center">
+          <span className="capitalize">{row.original.channel}</span>
+        </div>
+      ),
+      filterFn: (row, id, value) =>
+        Array.isArray(value) && value.includes(row.getValue(id)),
+      header({ column }) {
         const t = useTranslations();
         return (
           <DataTableColumnHeader column={column}>
@@ -89,11 +90,11 @@ export function getColumns() {
       },
     }),
     columnHelper.accessor("sentAt", {
-      cell: function Cell({ cell }) {
+      cell({ cell }) {
         const format = useFormatter();
         return format.dateTime(cell.row.original.sentAt, "extensive");
       },
-      header: function Header({ column }) {
+      header({ column }) {
         const t = useTranslations();
         return (
           <DataTableColumnHeader column={column}>
@@ -103,10 +104,10 @@ export function getColumns() {
       },
     }),
     columnHelper.accessor("teamId", {
-      cell: function Cell({ row }) {
+      cell({ row }) {
         return <div className="w-20">{row.original.teamName}</div>;
       },
-      header: function Header({ column }) {
+      header({ column }) {
         const t = useTranslations();
         return (
           <DataTableColumnHeader column={column}>
@@ -116,7 +117,7 @@ export function getColumns() {
       },
     }),
     columnHelper.display({
-      cell: function Cell({ row }) {
+      cell({ row }) {
         const [showDeleteTaskDialog, setShowDeleteTaskDialog] = useState(false);
         const t = useTranslations();
         return (

@@ -60,7 +60,7 @@ const runSeed = () =>
   });
 
 async function main() {
-  const dbResetSpinner = ora(`🧨 Resetting database...`).start();
+  const dbResetSpinner = ora("🧨 Resetting database...").start();
   try {
     await reset(db, schema);
   } catch (error: unknown) {
@@ -80,7 +80,7 @@ async function main() {
     throw error;
   }
 
-  seedingSpinner.succeed(`🌲 Fully seeded!`);
+  seedingSpinner.succeed("🌲 Fully seeded!");
 }
 
 main()

@@ -23,7 +23,7 @@ export const pushDatabaseSchema = async (app: AppName, url: string) => {
   if (urlObj.hostname !== "localhost") {
     // biome-ignore lint/suspicious/noConsole: user confirmation
     console.warn(
-      `⚠️  WARNING: You are about to push database schema changes to a live environment!\n   Database: ${urlObj}\n   This operation cannot be undone.\n`
+      `⚠️  WARNING: You are about to push database schema changes to a live environment!\n   Database: ${urlObj}\n   This operation cannot be undone.\n`,
     );
 
     const confirmed = await confirm("Do you want to proceed?");
@@ -43,7 +43,7 @@ export const pushDatabaseSchema = async (app: AppName, url: string) => {
 
 export const execCommand = (
   command: string,
-  options?: Parameters<typeof nodeExec>[1] & { silent?: boolean }
+  options?: Parameters<typeof nodeExec>[1] & { silent?: boolean },
 ): Promise<{ stdout: string }> =>
   new Promise((resolve, reject) => {
     const childProcess = nodeExec(command, options);
@@ -65,8 +65,8 @@ export const execCommand = (
       } else {
         reject(
           new Error(
-            `Command failed with exit code ${code} and signal ${signal}`
-          )
+            `Command failed with exit code ${code} and signal ${signal}`,
+          ),
         );
       }
     });

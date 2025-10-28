@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 
 export async function addImportStatement(
   filePath: string,
-  { importPath, importName }: { importPath: string; importName: string }
+  { importPath, importName }: { importPath: string; importName: string },
 ) {
   let fileContent = await fs.readFile(filePath, "utf-8");
 
@@ -22,7 +22,7 @@ export async function addImportStatement(
       const modifiedImportContent = `${importContent}, ${importName}`;
       fileContent = fileContent.replace(
         importRegex,
-        `import { ${modifiedImportContent} } from "${importPath}"`
+        `import { ${modifiedImportContent} } from "${importPath}"`,
       );
     }
   } else {

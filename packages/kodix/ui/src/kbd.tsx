@@ -14,7 +14,7 @@ const kbdVariants = cva(
         outline: "bg-background text-foreground",
       },
     },
-  }
+  },
 );
 
 export interface KbdProps

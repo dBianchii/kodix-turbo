@@ -1,15 +1,15 @@
 import type { z } from "zod";
-import { eq, lte, or } from "drizzle-orm";
+import { and, eq, lte, or } from "drizzle-orm";
 
-import type { Drizzle, DrizzleTransaction } from "../client";
+import type { Drizzle } from "../client";
 import type { Update } from "./_types";
-import type { zAccountCreate } from "./_zodSchemas/accountSchemas";
-import type { zResetPasswordTokenCreate } from "./_zodSchemas/resetPasswordTokenSchemas";
+import type { zAccountCreate } from "./_zodSchemas/account-schemas";
+import type { zResetPasswordTokenCreate } from "./_zodSchemas/reset-password-token-schemas";
 import type {
   zSessionCreate,
   zSessionUpdate,
-} from "./_zodSchemas/sessionSchemas";
-import { db } from "../client";
+} from "./_zodSchemas/session-schemas";
+import { db as _db } from "../client";
 import {
   accounts,
   invitations,
@@ -19,46 +19,54 @@ import {
   users,
 } from "../schema";
 
-export async function createSession(session: z.infer<typeof zSessionCreate>) {
+export async function createSession(
+  session: z.infer<typeof zSessionCreate>,
+  db = _db,
+) {
   await db.insert(sessions).values(session);
 }
 
-export async function deleteSession(sessionId: string) {
+export async function deleteSession(sessionId: string, db = _db) {
   await db.delete(sessions).where(eq(sessions.id, sessionId));
 }
 
-export async function updateSessionById({
-  id,
-  input,
-}: Update<typeof zSessionUpdate>) {
+export async function updateSessionById(
+  { id, input }: Update<typeof zSessionUpdate>,
+  db = _db,
+) {
   await db.update(sessions).set(input).where(eq(sessions.id, id));
 }
 
-export async function findAccountByProviderUserId({
-  providerId,
-  providerUserId,
-}: {
-  providerId: "google" | "discord";
-  providerUserId: string;
-}) {
+export function findAccountByProviderUserId(
+  {
+    providerId,
+    providerUserId,
+  }: {
+    providerId: "google" | "discord";
+    providerUserId: string;
+  },
+  db = _db,
+) {
   return db.query.accounts.findFirst({
     columns: { userId: true },
-    where: (accounts, { and, eq }) =>
-      and(
-        eq(accounts.providerId, providerId),
-        eq(accounts.providerUserId, providerUserId),
-      ),
+    where: and(
+      eq(accounts.providerId, providerId),
+      eq(accounts.providerUserId, providerUserId),
+    ),
   });
 }
 
 export async function createAccount(
-  db: DrizzleTransaction,
   account: z.infer<typeof zAccountCreate>,
+  db = _db,
 ) {
   await db.insert(accounts).values(account);
 }
 
-export async function deleteKodixAccountAndUserDataByUserId(userId: string) {
+export async function deleteKodixAccountAndUserDataByUserId(
+  userId: string,
+  db = _db,
+) {
   await db.transaction(async (tx) => {
     await tx.delete(accounts).where(eq(accounts.userId, userId));
     await tx.delete(invitations).where(eq(invitations.invitedById, userId));
@@ -68,24 +76,27 @@ export async function deleteKodixAccountAndUserDataByUserId(userId: string) {
   });
 }
 
-export async function findResetPasswordTokenByToken(token: string) {
-  return await db.query.resetPasswordTokens.findFirst({
+export function findResetPasswordTokenByToken(token: string, db = _db) {
+  return db.query.resetPasswordTokens.findFirst({
     columns: {
       tokenExpiresAt: true,
       userId: true,
     },
-    where: (resetPasswordTokens, { eq }) =>
-      eq(resetPasswordTokens.token, token),
+    where: eq(resetPasswordTokens.token, token),
   });
 }
 
 export async function createResetPasswordToken(
   data: z.infer<typeof zResetPasswordTokenCreate>,
+  db = _db,
 ) {
   await db.insert(resetPasswordTokens).values(data);
 }
 
-export async function deleteAllResetPasswordTokensByUserId(id: string) {
+export async function deleteAllResetPasswordTokensByUserId(
+  id: string,
+  db = _db,
+) {
   await db
     .delete(resetPasswordTokens)
     .where(eq(resetPasswordTokens.userId, id));

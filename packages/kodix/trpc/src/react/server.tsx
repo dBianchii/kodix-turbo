@@ -21,7 +21,7 @@ export function HydrateClient({ children }: PropsWithChildren) {
 
 // biome-ignore lint/suspicious/noExplicitAny: <intentionally any>
 export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
-  queryOptions: T
+  queryOptions: T,
 ) {
   const queryClient = getQueryClient();
 
@@ -37,7 +37,7 @@ export function prefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
 
 // biome-ignore lint/suspicious/noExplicitAny: <intentionally any>
 export function batchPrefetch<T extends ReturnType<TRPCQueryOptions<any>>>(
-  queryOptionsArray: T[]
+  queryOptionsArray: T[],
 ) {
   const queryClient = getQueryClient();
 

@@ -6,6 +6,5 @@ interface GetAllUsersOptions {
   ctx: TProtectedProcedureContext;
 }
 
-export const getAllUsersHandler = async ({ ctx }: GetAllUsersOptions) => {
-  return await teamRepository.findAllTeamMembers(ctx.auth.user.activeTeamId);
-};
+export const getAllUsersHandler = async ({ ctx }: GetAllUsersOptions) =>
+  await teamRepository.findAllTeamMembers(ctx.auth.user.activeTeamId);

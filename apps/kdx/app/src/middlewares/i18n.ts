@@ -6,13 +6,13 @@ import { defaultLocale, locales } from "@kdx/locales";
 import type { CustomMiddleware } from "~/middlewares/chain-middleware";
 
 const I18nMiddleware = createMiddleware({
-  defaultLocale: defaultLocale,
+  defaultLocale,
   localePrefix: "as-needed",
-  locales: locales,
+  locales,
 });
 
 export function withI18n(middleware: CustomMiddleware) {
-  return async (request: NextRequest, event: NextFetchEvent) => {
+  return (request: NextRequest, event: NextFetchEvent) => {
     const response = I18nMiddleware(request);
 
     return middleware(request, event, response);

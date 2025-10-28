@@ -26,7 +26,7 @@ export default function Config() {
       appId: kodixCareAppId,
     },
     {
-      staleTime: Infinity,
+      staleTime: Number.POSITIVE_INFINITY,
     },
   );
 

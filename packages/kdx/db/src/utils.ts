@@ -5,13 +5,13 @@ import type {
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kodix/shared/db";
 
 import * as calendar from "./schema/apps/calendar";
-import * as kodixCare from "./schema/apps/kodixCare";
+import * as kodixCare from "./schema/apps/kodix-care";
 import * as todos from "./schema/apps/todos";
 
 const withoutRelationsAndZodSchemas = <T>(obj: Record<string, T>) =>
   Object.fromEntries(
     Object.entries(obj).filter(
-      ([key]) => !key.includes("Relation") && !key.includes("Schema"),
+      ([key]) => !(key.includes("Relation") || key.includes("Schema")),
     ),
   ) as Record<string, MySqlTableWithColumns<TableConfig>>;
 

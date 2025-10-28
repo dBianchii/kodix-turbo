@@ -26,26 +26,32 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       //* Temos uma exceção.  Isso significa que o usuário quer editar a exceção.
       //* Aqui, o usuário pode alterar o title e o description ou o from da exceção.
 
-      await calendarRepository.updateEventExceptionById(db, {
-        id: input.eventExceptionId,
-        input: {
-          description: input.description,
-          newDate: input.from,
-          title: input.title,
-          type: input.type,
+      await calendarRepository.updateEventExceptionById(
+        {
+          id: input.eventExceptionId,
+          input: {
+            description: input.description,
+            newDate: input.from,
+            title: input.title,
+            type: input.type,
+          },
+          teamId: ctx.auth.user.activeTeamId,
         },
-        teamId: ctx.auth.user.activeTeamId,
-      });
+        db,
+      );
       return;
 
       //! END OF PROCEDURE
     }
 
     //* Se estamos aqui, o usuário enviou o masterId. Vamos procurar no eventMaster uma ocorrência do RRULE que bate com o selectedTimestamp.
-    const eventMaster = await calendarRepository.findEventMasterById(db, {
-      id: input.eventMasterId,
-      teamId: ctx.auth.user.activeTeamId,
-    });
+    const eventMaster = await calendarRepository.findEventMasterById(
+      {
+        id: input.eventMasterId,
+        teamId: ctx.auth.user.activeTeamId,
+      },
+      db,
+    );
 
     if (!eventMaster)
       throw new TRPCError({
@@ -74,31 +80,38 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
       input.type !== undefined
     ) {
       //* Se tivermos title ou description, criamos um eventInfo e também uma exceção.
-      await calendarRepository.createEventException(db, {
-        description: input.description,
-        eventMasterId: eventMaster.id,
-        newDate: input.from ?? foundTimestamp,
-        originalDate: foundTimestamp,
-        title: input.title,
-        type: input.type,
-      });
+      await calendarRepository.createEventException(
+        {
+          description: input.description,
+          eventMasterId: eventMaster.id,
+          newDate: input.from ?? foundTimestamp,
+          originalDate: foundTimestamp,
+          title: input.title,
+          type: input.type,
+        },
+        db,
+      );
 
       return;
       //! END OF PROCEDURE
     }
     //* Se não tivermos title nem description nem type, ainda temos o from. Criamos uma exceção sem eventInfo.
 
-    await calendarRepository.createEventException(db, {
-      eventMasterId: eventMaster.id,
-      newDate: input.from ?? foundTimestamp,
-      originalDate: foundTimestamp,
-    });
+    await calendarRepository.createEventException(
+      {
+        eventMasterId: eventMaster.id,
+        newDate: input.from ?? foundTimestamp,
+        originalDate: foundTimestamp,
+      },
+      db,
+    );
 
     return;
 
     //* Não temos uma exceção nem uma ocorrência que bate com o selectedTimestamp. Vamos gerar um erro.
   }
   if (input.editDefinition === "thisAndFuture") {
+    // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Fix me!
     await db.transaction(async (tx) => {
       //* Havemos description, title, from, until, frequency, inteval, count e selectedTimestamp.
       //* Havemos um selectedTimestamp.
@@ -126,10 +139,13 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
 
       //* Aqui, Vamos editar o eventMaster antigo.
 
-      const oldMaster = await calendarRepository.findEventMasterById(tx, {
-        id: input.eventMasterId,
-        teamId: ctx.auth.user.activeTeamId,
-      });
+      const oldMaster = await calendarRepository.findEventMasterById(
+        {
+          id: input.eventMasterId,
+          teamId: ctx.auth.user.activeTeamId,
+        },
+        tx,
+      );
       if (!oldMaster)
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -152,35 +168,37 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           });
 
         //! NO SPLIT REQUIRED BECAUSE ITS THE FIRST OCCURANCE! !!
-        await calendarRepository.updateEventMasterById(tx, {
-          id: input.eventMasterId,
-          input: {
-            dateStart: input.from ?? input.selectedTimestamp,
-            dateUntil: input.until ?? oldRule.options.until ?? undefined,
-            description: input.description,
-            rule: new RRule({
-              byweekday: input.weekdays ?? oldRule.options.byweekday,
-              count:
-                input.count !== undefined
-                  ? input.count
-                  : (oldRule.options.count ?? undefined),
-              dtstart: input.from ?? input.selectedTimestamp,
-              freq: input.frequency ?? oldRule.options.freq,
-              interval: input.interval ?? oldRule.options.interval,
-              until: input.until ?? oldRule.options.until ?? undefined,
-            }).toString(),
-            title: input.title,
-            type: input.type,
+        await calendarRepository.updateEventMasterById(
+          {
+            id: input.eventMasterId,
+            input: {
+              dateStart: input.from ?? input.selectedTimestamp,
+              dateUntil: input.until ?? oldRule.options.until ?? undefined,
+              description: input.description,
+              rule: new RRule({
+                byweekday: input.weekdays ?? oldRule.options.byweekday,
+                count:
+                  input.count !== undefined
+                    ? input.count
+                    : (oldRule.options.count ?? undefined),
+                dtstart: input.from ?? input.selectedTimestamp,
+                freq: input.frequency ?? oldRule.options.freq,
+                interval: input.interval ?? oldRule.options.interval,
+                until: input.until ?? oldRule.options.until ?? undefined,
+              }).toString(),
+              title: input.title,
+              type: input.type,
+            },
+            teamId: ctx.auth.user.activeTeamId,
           },
-          teamId: ctx.auth.user.activeTeamId,
-        });
+          tx,
+        );
 
         if (shouldDeleteFutureExceptions) return; //* We don't need to update the exceptions if we are deleting them already.
 
         if (input.title || input.description || input.type)
           //* Here we are updating all of the future exceptions, because we are not deleting them. If the user has edited non-timely info, we should update the exceptions.
           await calendarRepository.updateManyEventExceptionsByEventMasterId(
-            tx,
             {
               eventMasterId: input.eventMasterId,
               input: {
@@ -189,26 +207,30 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
                 type: input.type ? null : undefined,
               },
             },
+            tx,
           );
 
         return;
       }
 
-      await calendarRepository.updateEventMasterById(tx, {
-        id: input.eventMasterId,
-        input: {
-          dateUntil: previousOccurence,
-          rule: new RRule({
-            byweekday: oldRule.options.byweekday,
-            count: oldRule.options.count ?? undefined,
-            dtstart: oldRule.options.dtstart,
-            freq: oldRule.options.freq,
-            interval: oldRule.options.interval,
-            until: previousOccurence,
-          }).toString(),
+      await calendarRepository.updateEventMasterById(
+        {
+          id: input.eventMasterId,
+          input: {
+            dateUntil: previousOccurence,
+            rule: new RRule({
+              byweekday: oldRule.options.byweekday,
+              count: oldRule.options.count ?? undefined,
+              dtstart: oldRule.options.dtstart,
+              freq: oldRule.options.freq,
+              interval: oldRule.options.interval,
+              until: previousOccurence,
+            }).toString(),
+          },
+          teamId: ctx.auth.user.activeTeamId,
         },
-        teamId: ctx.auth.user.activeTeamId,
-      });
+        tx,
+      );
 
       const newMasterId = nanoid();
       await calendarRepository.createEventMaster(tx, {
@@ -260,6 +282,7 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
     //*Temos que pegar a nova regra se alterou o input.frequency ?? input.interval ?? input.count ?? input.until ou se alterou o input.from
 
     await db.transaction(async (tx) => {
+      // biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Fix me!
       const newRule = await (async () => {
         const shouldUpdateRule =
           !!input.frequency ||
@@ -269,13 +292,16 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
           !!input.from ||
           !!input.weekdays;
 
-        if (!shouldUpdateRule) return undefined;
+        if (!shouldUpdateRule) return;
 
         const foundEventMasterForPreviousRule =
-          await calendarRepository.findEventMasterById(tx, {
-            id: input.eventMasterId,
-            teamId: ctx.auth.user.activeTeamId,
-          });
+          await calendarRepository.findEventMasterById(
+            {
+              id: input.eventMasterId,
+              teamId: ctx.auth.user.activeTeamId,
+            },
+            tx,
+          );
 
         if (!foundEventMasterForPreviousRule)
           throw new TRPCError({
@@ -306,18 +332,21 @@ export const editHandler = async ({ ctx, input }: EditOptions) => {
         }).toString();
       })();
 
-      await calendarRepository.updateEventMasterById(tx, {
-        id: input.eventMasterId,
-        input: {
-          dateStart: newRule ? rrulestr(newRule).options.dtstart : undefined,
-          dateUntil: input.until,
-          description: input.description,
-          rule: newRule,
-          title: input.title,
-          type: input.type,
+      await calendarRepository.updateEventMasterById(
+        {
+          id: input.eventMasterId,
+          input: {
+            dateStart: newRule ? rrulestr(newRule).options.dtstart : undefined,
+            dateUntil: input.until,
+            description: input.description,
+            rule: newRule,
+            title: input.title,
+            type: input.type,
+          },
+          teamId: ctx.auth.user.activeTeamId,
         },
-        teamId: ctx.auth.user.activeTeamId,
-      });
+        tx,
+      );
 
       if (input.from || input.until) {
         await calendarRepository.deleteEventExceptionsByMasterIdWithNewDateHigherThan(

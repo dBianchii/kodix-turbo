@@ -4,6 +4,4 @@ interface GetSessionOptions {
   ctx: TPublicProcedureContext;
 }
 
-export const getSessionHandler = ({ ctx }: GetSessionOptions) => {
-  return ctx.auth;
-};
+export const getSessionHandler = ({ ctx }: GetSessionOptions) => ctx.auth;

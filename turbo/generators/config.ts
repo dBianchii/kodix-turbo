@@ -47,7 +47,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
             const versionPromises = deps.map((dep) =>
               fetch(`https://registry.npmjs.org/-/package/${dep}/dist-tags`)
                 .then((res) => res.json())
-                .then((json) => ({ dep, version: json.latest }))
+                .then((json) => ({ dep, version: json.latest })),
             );
 
             const results = await Promise.all(versionPromises);
@@ -70,7 +70,7 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
         if ("name" in answers && typeof answers.name === "string") {
           execSync("pnpm i", { stdio: "inherit" });
           execSync(
-            `pnpm biome check --write packages/kodix/${answers.name}/**`
+            `pnpm biome check --write packages/kodix/${answers.name}/**`,
           );
           return "Package scaffolded";
         }

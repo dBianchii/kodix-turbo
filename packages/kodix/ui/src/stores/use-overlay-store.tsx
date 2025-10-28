@@ -17,7 +17,7 @@ const useOverlayStore = create<{
  */
 export const useIsAnyOverlayMounted = () =>
   useOverlayStore((state) =>
-    Object.values(state.overlays).some((mounted) => mounted)
+    Object.values(state.overlays).some((mounted) => mounted),
   );
 
 export const useOverlayLifecycle_only_ui = (key: string) => {

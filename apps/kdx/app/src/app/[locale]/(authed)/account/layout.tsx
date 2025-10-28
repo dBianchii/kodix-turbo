@@ -13,7 +13,7 @@ export default async function Layout({
   const t = await getTranslations();
   const navItems = [
     {
-      href: `/account/general`,
+      href: "/account/general",
       title: t("General"),
     },
   ];

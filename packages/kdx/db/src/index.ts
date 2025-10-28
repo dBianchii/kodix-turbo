@@ -26,5 +26,6 @@ export const buildConflictUpdateColumns = <
 };
 
 export type { Column, ColumnBaseConfig, ColumnDataType } from "drizzle-orm";
+// biome-ignore lint/performance/noBarrelFile: Fix me!
 export { alias } from "drizzle-orm/mysql-core";
 export * from "drizzle-orm/sql";

@@ -32,22 +32,21 @@ export function AssigneePopover({
   return (
     <Popover onOpenChange={setOpen} open={open}>
       <PopoverTrigger asChild>
-        {children ? (
-          children
-        ) : user ? (
-          <div>
-            <AvatarWrapper
-              alt={user.name ? `${user.name} avatar` : ""}
-              className="h-6 w-6"
-              fallback={user.name}
-              src={user.image ?? undefined}
-            />
-          </div>
-        ) : (
-          <div>
-            <HiUserCircle className="h-6 w-6 text-foreground/70" />
-          </div>
-        )}
+        {children ??
+          (user ? (
+            <div>
+              <AvatarWrapper
+                alt={user.name ? `${user.name} avatar` : ""}
+                className="h-6 w-6"
+                fallback={user.name}
+                src={user.image ?? undefined}
+              />
+            </div>
+          ) : (
+            <div>
+              <HiUserCircle className="h-6 w-6 text-foreground/70" />
+            </div>
+          ))}
       </PopoverTrigger>
       <PopoverContent align={"start"} className="w-300 p-0" side="bottom">
         <Command>
@@ -67,22 +66,22 @@ export function AssigneePopover({
                 <HiUserCircle className="mr-2 size-4" />
                 Unassigned
               </CommandItem>
-              {users.map((user) => (
+              {users.map((u) => (
                 <CommandItem
-                  key={user.id}
+                  key={u.id}
                   onSelect={() => {
-                    setAssignedToUserId(user.id);
+                    setAssignedToUserId(u.id);
                     setOpen(false);
                   }}
-                  value={user.id}
+                  value={u.id}
                 >
                   <AvatarWrapper
-                    alt={user.image ?? "" + " avatar"}
+                    alt={u.image ?? " avatar"}
                     className="mr-2 size-4"
                     fallback={<HiUserCircle className="mr-2 size-4" />}
-                    src={user.image ?? ""}
+                    src={u.image ?? ""}
                   />
-                  {user.name}
+                  {u.name}
                 </CommandItem>
               ))}
             </CommandGroup>

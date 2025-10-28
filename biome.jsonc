@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/@biomejs/biome/configuration_schema.json",
-  "extends": ["ultracite/core", "ultracite/next"],
+  "extends": ["ultracite/core", "ultracite/react", "ultracite/next"],
   "files": {
     "includes": ["**", "!!**/rbc-styles.css", "!!.vscode/kodix.code-snippets"]
   },
@@ -15,6 +15,7 @@
   },
   "javascript": {
     "formatter": {
+      "trailingCommas": "all",
       "quoteStyle": "double"
     }
   },
@@ -93,6 +94,54 @@
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["apps/kdx/app/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "on",
+              "options": {
+                "paths": {
+                  "next/link": "Please import from `~/i18n/routing` instead.",
+                  "next/navigation": {
+                    "importNames": [
+                      "redirect",
+                      "permanentRedirect",
+                      "useRouter",
+                      "usePathname"
+                    ],
+                    "message": "Please import from `~/i18n/routing` instead."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/kdx/app/**", "packages/kdx/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "on",
+              "options": {
+                "paths": {
+                  "process": {
+                    "importNames": ["env"],
+                    "message": "Use `import { env } from '~/env'` instead to ensure validated types."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "vcs": {
     "enabled": true,
     "useIgnoreFile": true,

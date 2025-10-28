@@ -8,7 +8,7 @@ export const createDiscordProvider = (config: ProviderConfig): AuthProvider => {
   const discord = new Discord(
     process.env.AUTH_DISCORD_ID ?? "",
     process.env.AUTH_DISCORD_SECRET ?? "",
-    `${getBaseUrl()}/api/auth/discord/callback`
+    `${getBaseUrl()}/api/auth/discord/callback`,
   );
 
   const name = "Discord";

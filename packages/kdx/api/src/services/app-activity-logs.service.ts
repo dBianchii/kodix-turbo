@@ -47,17 +47,23 @@ export async function logActivity(
   await appRepository.createAppActivityLog(input, db);
 }
 
-const formatSide = (
-  value: z.infer<typeof valueSchema>,
-  path: string,
+const formatSide = ({
+  value,
+  path,
+  log,
+  format,
+  t,
+}: {
+  value: z.infer<typeof valueSchema>;
+  path: string;
   log: {
     User: {
       name: string;
     };
-  },
-  format: Awaited<ReturnType<typeof getFormatter>>,
-  t: ServerSideT,
-) => {
+  };
+  format: Awaited<ReturnType<typeof getFormatter>>;
+  t: ServerSideT;
+}) => {
   if (value === null) return t("api.appActivityLogs.null");
 
   if (typeof value === "string" && dayjs(value).isValid())
@@ -122,8 +128,20 @@ export async function getAppActivityLogs({
       // Remove paths that are not relevant to the user
       if (PATHS_TO_REMOVE.some((path) => diff.path.includes(path))) continue;
 
-      const lhs = formatSide(diff.lhs, fullPath, log, format, t);
-      const rhs = formatSide(diff.rhs, fullPath, log, format, t);
+      const lhs = formatSide({
+        format,
+        log,
+        path: fullPath,
+        t,
+        value: diff.lhs,
+      });
+      const rhs = formatSide({
+        format,
+        log,
+        path: fullPath,
+        t,
+        value: diff.rhs,
+      });
 
       //@ts-expect-error It might not be set
       const translatedPath = t(`api.appActivityLogs.${fullPath}`);

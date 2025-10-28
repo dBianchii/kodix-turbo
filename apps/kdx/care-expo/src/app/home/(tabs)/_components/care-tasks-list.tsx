@@ -1,4 +1,4 @@
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
+import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-care-task-central";
 import { useEffect, useMemo, useState } from "react";
 import { Alert, FlatList, Keyboard, TouchableOpacity } from "react-native";
 import dayjs from "@kodix/dayjs";
@@ -108,8 +108,8 @@ export function CareTasksLists() {
         await utils.app.kodixCare.careTask.getCareTasks.cancel();
 
         // Optimistically update to the new value
-        utils.app.kodixCare.careTask.getCareTasks.setData(input, (prev) => {
-          return prev?.map((x) => {
+        utils.app.kodixCare.careTask.getCareTasks.setData(input, (prev) =>
+          prev?.map((x) => {
             if (x.id === editedCareTask.id) {
               if (editedCareTask.doneAt !== undefined)
                 x.doneAt = editedCareTask.doneAt;
@@ -118,8 +118,8 @@ export function CareTasksLists() {
             }
 
             return x;
-          });
-        });
+          }),
+        );
 
         // Return a context object with the snapshotted value
         return { previousCareTasks };
@@ -152,7 +152,7 @@ export function CareTasksLists() {
   const [currentlyEditing, setCurrentlyEditing] =
     useState<CareTaskOrCalendarTask["id"]>(null);
   const currentlyEditingCareTask = useMemo(() => {
-    if (!careTasksQuery.data?.length) return undefined;
+    if (!careTasksQuery.data?.length) return;
     return careTasksQuery.data.find(
       (x) => x.id === currentlyEditing,
     ) as CareTask;
@@ -295,6 +295,7 @@ function CreateCareTaskSheet({
       },
     });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Need to reset form when sheet is opened
   useEffect(() => {
     form.reset();
   }, [form, open]);
@@ -604,6 +605,7 @@ function EditCareTaskSheet(props: {
     }),
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me
   useEffect(() => {
     form.reset(defaultValues);
   }, [defaultValues, form, props.open]);

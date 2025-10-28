@@ -58,13 +58,7 @@ export default function NotificationsTab() {
     <>
       <NotificationsHeader />
       <View backgroundColor={"$background"} f={1}>
-        {!notifications?.data.length ? (
-          <View ai="center" f={1} jc="center">
-            <H3 color={"$color11"} textAlign="center">
-              Nenhuma notificação no momento...
-            </H3>
-          </View>
-        ) : (
+        {notifications?.data.length ? (
           <YGroup alignSelf="center" bordered w={"100%"}>
             <FlatList
               data={notifications.data}
@@ -84,6 +78,12 @@ export default function NotificationsTab() {
               )}
             />
           </YGroup>
+        ) : (
+          <View ai="center" f={1} jc="center">
+            <H3 color={"$color11"} textAlign="center">
+              Nenhuma notificação no momento...
+            </H3>
+          </View>
         )}
       </View>
     </>

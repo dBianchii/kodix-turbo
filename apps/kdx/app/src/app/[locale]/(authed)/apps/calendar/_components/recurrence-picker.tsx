@@ -1,6 +1,6 @@
 import type { Dayjs } from "@kodix/dayjs";
 import type { Weekday } from "rrule";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import dayjs from "@kodix/dayjs";
 import { cn } from "@kodix/ui";
@@ -95,9 +95,14 @@ export function RecurrencePicker({
     setDraftWeekdays(weekdays);
   }, [interval, frequency, until, count, weekdays]);
 
-  useEffect(() => {
+  const doDiscardDraft = useEffectEvent(() => {
     discardDraft();
-  }, [open, discardDraft]);
+  });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Fix me!
+  useEffect(() => {
+    doDiscardDraft();
+  }, [open]);
 
   function saveDraft() {
     setInterval(draftInterval);
@@ -308,6 +313,7 @@ export function RecurrencePicker({
                   <div className="mt-4">{t("Ends")}</div>
                   {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
                   {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
+                  {/** biome-ignore lint/a11y/noNoninteractiveElementInteractions: Fix me! */}
                   <div
                     className="flex items-center"
                     onClick={() => setDraftUntil(undefined)}

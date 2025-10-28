@@ -44,7 +44,7 @@ export default function ResetPassword({
             <Section className="mt-[32px] mb-[32px] text-center">
               <Text className="mb-8 font-medium text-[14px] text-black leading-[24px]">
                 {t(
-                  "api.emails.Click the following link to reset your password"
+                  "api.emails.Click the following link to reset your password",
                 )}
               </Text>
 

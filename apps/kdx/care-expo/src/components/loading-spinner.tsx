@@ -13,15 +13,16 @@ export function ElasticSpinnerView(
   props: ComponentProps<typeof Animated.View>,
 ) {
   const rotation = useSharedValue(0);
-  const animatedStyles = useAnimatedStyle(() => {
-    return {
+  const animatedStyles = useAnimatedStyle(
+    () => ({
       transform: [
         {
           rotateZ: `${rotation.value}deg`,
         },
       ],
-    };
-  }, [rotation.value]);
+    }),
+    [rotation.value],
+  );
 
   useEffect(() => {
     rotation.value = withRepeat(
@@ -29,7 +30,7 @@ export function ElasticSpinnerView(
         duration: 1000,
         easing: Easing.elastic(1),
       }),
-      Infinity,
+      Number.POSITIVE_INFINITY,
     );
     return () => cancelAnimation(rotation);
   }, [rotation]);

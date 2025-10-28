@@ -38,7 +38,7 @@ export function DateTimePicker({
         <Button
           className={cn(
             "w-[280px] justify-start text-left font-normal",
-            !date && "text-muted-foreground"
+            !date && "text-muted-foreground",
           )}
           size={size}
           variant="outline"
@@ -70,7 +70,7 @@ export function DateTimePicker({
               date.setFullYear(
                 newDate.getFullYear(),
                 newDate.getMonth(),
-                newDate.getDate()
+                newDate.getDate(),
               );
               setDate(new Date(date));
               return;

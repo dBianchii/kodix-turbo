@@ -34,7 +34,7 @@ async function refreshAccessToken() {
   const refreshToken = existingToken.refreshToken;
 
   const credentials = Buffer.from(
-    `${process.env.CA_CLIENT_ID}:${process.env.CA_CLIENT_SECRET}`
+    `${process.env.CA_CLIENT_ID}:${process.env.CA_CLIENT_SECRET}`,
   ).toString("base64");
 
   const params = new URLSearchParams();
@@ -57,7 +57,7 @@ async function refreshAccessToken() {
 
   if (!response.ok) {
     throw new Error(
-      `Token refresh failed: ${response.status} - ${await response.text()}`
+      `Token refresh failed: ${response.status} - ${await response.text()}`,
     );
   }
 
@@ -65,7 +65,7 @@ async function refreshAccessToken() {
   const parseResult = ZRefreshTokenResponseSchema.safeParse(rawData);
   if (!parseResult.success) {
     throw new Error(
-      `Invalid token response format: ${parseResult.error.message}`
+      `Invalid token response format: ${parseResult.error.message}`,
     );
   }
 
@@ -97,7 +97,7 @@ async function refreshAndGetToken() {
 async function makeContaAzulRequest<TSchema extends z.ZodType>(
   url: string,
   schema: TSchema,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<z.infer<TSchema>> {
   let token = await caRepository.getCAToken();
 
@@ -134,7 +134,7 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
   if (!response.ok) {
     const errorBody = await response.text();
     throw new Error(
-      `Failed to make request to ${url}. Status: ${response.status}. Body: ${errorBody}`
+      `Failed to make request to ${url}. Status: ${response.status}. Body: ${errorBody}`,
     );
   }
 
@@ -160,7 +160,7 @@ async function makeContaAzulRequest<TSchema extends z.ZodType>(
       };
     });
     throw new Error(
-      `Invalid response format:\n${JSON.stringify(errorDetails, null, 2)}`
+      `Invalid response format:\n${JSON.stringify(errorDetails, null, 2)}`,
     );
   }
 
@@ -186,7 +186,7 @@ export const ZCAListSalesResponseSchema = z.looseObject({
       id: z.string().describe("ID da venda"),
       numero: z.number().describe("Número da venda"),
       total: z.number().describe("Total da venda"),
-    })
+    }),
   ),
   total_itens: z.number().describe("Total de itens encontrados"),
 });
@@ -256,7 +256,7 @@ export const ZCAListPersonsResponseSchema = z.object({
         .transform(emptyToNull)
         .describe("Telefone da pessoa"),
       tipo_pessoa: clientsSchema.shape.type,
-    })
+    }),
   ),
   totalItems: z.number().describe("Total de itens encontrados"),
 });
@@ -322,7 +322,7 @@ const ZCACreatePersonResponseSchema = z.object({
         logradouro: z.string().optional().describe("Logradouro do endereço"),
         numero: z.string().optional().describe("Número do endereço"),
         pais: z.string().optional().describe("País do endereço"),
-      })
+      }),
     )
     .optional()
     .describe("Lista de endereços"),
@@ -351,7 +351,7 @@ export function createContaAzulPerson(params: CreateContaAzulPersonParams) {
         "Content-Type": "application/json",
       },
       method: "POST",
-    }
+    },
   );
 }
 
@@ -414,7 +414,7 @@ const ZCAGetPersonResponseSchema = z.object({
         logradouro: z.string().describe("Logradouro do endereço"),
         numero: z.string().describe("Número do endereço"),
         pais: z.string().describe("País do endereço"),
-      })
+      }),
     )
     .optional()
     .describe("Lista de endereços"),
@@ -449,7 +449,7 @@ export const ZCAListSaleItemsResponseSchema = z.object({
       id_item: z.string(),
       quantidade: z.number(),
       valor: z.number(),
-    })
+    }),
   ),
   itens_totais: z.number(),
 });

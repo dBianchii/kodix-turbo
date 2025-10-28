@@ -5,7 +5,7 @@ import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
 
 import { trpc, trpcCaller } from "@kdx/api/trpc/react/server";
 
-import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/server-helpers";
 
 import ShiftsBigCalendar from "./_components/cc-shifts-big-calendar";
 

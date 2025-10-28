@@ -34,7 +34,7 @@ const hashSessionToken = (token: string) =>
 interface AuthRepository<TUser extends BaseUser, TSession extends BaseSession> {
   createSession: (session: TSession) => Promise<void>;
   findSessionById: (
-    sessionId: string
+    sessionId: string,
   ) => Promise<AuthResponse<TUser, TSession>>;
   deleteSession: (sessionId: string) => Promise<void>;
   updateSessionById: (session: {
@@ -48,11 +48,11 @@ export const getAuthManager = <
   TUser extends BaseUser,
   TSession extends BaseSession,
 >(
-  authRepository: AuthRepository<TUser, TSession>
+  authRepository: AuthRepository<TUser, TSession>,
 ) => {
   async function createSession(
     token: string,
-    userId: string
+    userId: string,
   ): Promise<TSession> {
     const sessionId = hashSessionToken(token);
     const heads = await headers();
@@ -158,7 +158,7 @@ export const getAuthManager = <
 
     const isPasswordValid = await verifyPasswordAgainstHash(
       existingUser.passwordHash,
-      password
+      password,
     );
 
     if (!isPasswordValid) {

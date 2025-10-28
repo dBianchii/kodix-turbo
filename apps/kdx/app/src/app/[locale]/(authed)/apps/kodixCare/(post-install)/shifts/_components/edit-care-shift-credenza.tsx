@@ -224,8 +224,9 @@ export function EditCareShiftCredenza({
             })}
           >
             <CredenzaBody>
-              {/** biome-ignore lint/a11y/noStaticElementInteractions: <biome migration> */}
-              {/** biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration> */}
+              {/** biome-ignore lint/a11y/noStaticElementInteractions: Fix me */}
+              {/** biome-ignore lint/a11y/useKeyWithClickEvents: Fix me */}
+              {/** biome-ignore lint/a11y/noNoninteractiveElementInteractions: Fix me */}
               <div
                 onClick={() => {
                   if (!isLocked) return;
@@ -347,7 +348,7 @@ export function EditCareShiftCredenza({
                               <SelectTrigger
                                 className="h-auto ps-2 [&>span]:flex [&>span]:items-center [&>span]:gap-2 [&>span_img]:shrink-0"
                                 disabled={
-                                  !canEditCareGiver || !canEdit || isLocked
+                                  !(canEditCareGiver && canEdit) || isLocked
                                 }
                               >
                                 <SelectValue
@@ -356,15 +357,15 @@ export function EditCareShiftCredenza({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {careGivers.map((user) => (
+                              {careGivers.map((u) => (
                                 <SelectItem
                                   className="p-2"
-                                  key={user.id}
+                                  key={u.id}
                                   value={user.id}
                                 >
                                   <div className="flex items-center gap-2">
                                     <AvatarWrapper
-                                      alt={user.name}
+                                      alt={u.name}
                                       className="size-10 rounded-full"
                                       fallback={user.name}
                                       height={40}
@@ -372,7 +373,7 @@ export function EditCareShiftCredenza({
                                       width={40}
                                     />
                                     <span className="font-medium">
-                                      {user.name}
+                                      {u.name}
                                     </span>
                                   </div>
                                 </SelectItem>
@@ -524,7 +525,7 @@ function Lock({
           aria-label="Toggle locked"
           disabled={!isLocked}
           type="button"
-          variant={!isLocked ? "ghost" : "secondary"}
+          variant={isLocked ? "secondary" : "ghost"}
         >
           {query.isFetching || mutation.isPending ? (
             <LuLoaderCircle className="size-5 animate-spin" />

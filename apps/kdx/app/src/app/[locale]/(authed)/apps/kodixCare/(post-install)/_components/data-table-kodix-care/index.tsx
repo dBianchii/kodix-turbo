@@ -1,7 +1,7 @@
 "use client";
 
 import type { SortingState, VisibilityState } from "@tanstack/react-table";
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendarAndCareTaskCentral";
+import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-care-task-central";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "@kodix/dayjs";
 import { cn } from "@kodix/ui";
@@ -169,7 +169,12 @@ export default function DataTableKodixCare({ user }: { user: User }) {
   );
   const data = useMemo(() => query.data ?? [], [query.data]);
 
-  const isCareTask = (id: CareTaskOrCalendarTask["id"]): id is string => !!id;
+  const isCareTask = useMemo(
+    () =>
+      (id: CareTaskOrCalendarTask["id"]): id is string =>
+        !!id,
+    [],
+  );
   const columns = useMemo(
     () => [
       columnHelper.accessor("title", {
@@ -227,14 +232,12 @@ export default function DataTableKodixCare({ user }: { user: User }) {
             </div>
           );
         },
-        header: ({ column }) => {
-          return (
-            <DataTableColumnHeader column={column}>
-              <LuCheck className="mr-2 size-4 text-green-400" />
-              {t("Done at")}
-            </DataTableColumnHeader>
-          );
-        },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column}>
+            <LuCheck className="mr-2 size-4 text-green-400" />
+            {t("Done at")}
+          </DataTableColumnHeader>
+        ),
       }),
       columnHelper.accessor("details", {
         cell: (ctx) => <div>{ctx.row.original.details}</div>,
@@ -301,7 +304,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
         id: "edit",
       }),
     ],
-    [format, saveCareTaskMutation, setCurrentlyEditing, t],
+    [format, saveCareTaskMutation, setCurrentlyEditing, t, isCareTask],
   );
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -321,7 +324,7 @@ export default function DataTableKodixCare({ user }: { user: User }) {
   });
 
   const currentlyEditingCareTask = useMemo(() => {
-    if (!query.data?.length) return undefined;
+    if (!query.data?.length) return;
     return query.data.find((x) => x.id === currentlyEditing) as CareTask;
   }, [currentlyEditing, query.data]);
 
@@ -358,78 +361,86 @@ export default function DataTableKodixCare({ user }: { user: User }) {
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {query.isLoading ? (
-              <TableRow>
-                <TableCell className="h-24" colSpan={columns.length}>
-                  <div className="flex h-full items-center justify-center">
-                    <LuLoaderCircle className="h-6 w-6 animate-spin" />
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  className={cn({
-                    "bg-muted/30": !row.original.id,
-                  })}
-                  data-state={row.getIsSelected() && "selected"}
-                  key={row.id}
-                  onClick={() => {
-                    if (!row.original.id) {
-                      //If it's locked...
-                      if (
-                        row.original.date >
-                        dayjs().endOf("day").add(1, "day").toDate()
-                      )
-                        return toast.warning(
-                          t(
-                            "You cannot unlock tasks that are scheduled for after tomorrow end of day",
-                          ),
-                        );
-                      setUnlockMoreTasksCredenzaOpenWithDate(row.original.date);
-                      return;
-                    }
-
-                    setCurrentlyEditing(row.original.id);
-                    setEditDetailsOpen(true);
-                  }}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+            {(() => {
+              if (query.isLoading) {
+                return (
+                  <TableRow>
+                    <TableCell className="h-24" colSpan={columns.length}>
+                      <div className="flex h-full items-center justify-center">
+                        <LuLoaderCircle className="h-6 w-6 animate-spin" />
+                      </div>
                     </TableCell>
-                  ))}
+                  </TableRow>
+                );
+              }
+
+              if (table.getRowModel().rows.length) {
+                return table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    className={cn({
+                      "bg-muted/30": !row.original.id,
+                    })}
+                    data-state={row.getIsSelected() && "selected"}
+                    key={row.id}
+                    onClick={() => {
+                      if (!row.original.id) {
+                        //If it's locked...
+                        if (
+                          row.original.date >
+                          dayjs().endOf("day").add(1, "day").toDate()
+                        )
+                          return toast.warning(
+                            t(
+                              "You cannot unlock tasks that are scheduled for after tomorrow end of day",
+                            ),
+                          );
+                        setUnlockMoreTasksCredenzaOpenWithDate(
+                          row.original.date,
+                        );
+                        return;
+                      }
+
+                      setCurrentlyEditing(row.original.id);
+                      setEditDetailsOpen(true);
+                    }}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ));
+              }
+
+              return (
+                <TableRow>
+                  <TableCell
+                    className="h-24 text-center"
+                    colSpan={columns.length}
+                  >
+                    {t("No results")}
+                  </TableCell>
                 </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  className="h-24 text-center"
-                  colSpan={columns.length}
-                >
-                  {t("No results")}
-                </TableCell>
-              </TableRow>
-            )}
+              );
+            })()}
           </TableBody>
         </Table>
       </div>
@@ -593,7 +604,7 @@ function AddCareTaskCredenzaButton() {
 
   useEffect(() => {
     form.reset();
-  }, [open, form]);
+  }, [form]);
 
   return (
     <Dialog onOpenChange={setOpen} open={open}>

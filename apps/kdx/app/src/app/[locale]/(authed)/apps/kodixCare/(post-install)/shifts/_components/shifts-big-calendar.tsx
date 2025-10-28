@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noBitwiseOperators: Fix me */
 "use client";
 
 import type { EventPropGetter, View } from "react-big-calendar";
@@ -170,7 +171,10 @@ export default function ShiftsBigCalendar({
 
               const baseBackgroundColor =
                 "#" +
-                ((parseInt(event.caregiverId, 36) & 0x8f8f8f) + 0x303030)
+                (
+                  (Number.parseInt(event.caregiverId, 36) & 0x8f_8f_8f) +
+                  0x30_30_30
+                )
                   .toString(16)
                   .padStart(6, "0");
 
@@ -179,9 +183,9 @@ export default function ShiftsBigCalendar({
                 color: string,
                 mixStrength: number,
               ) => {
-                const r = parseInt(color.slice(1, 3), 16);
-                const g = parseInt(color.slice(3, 5), 16);
-                const b = parseInt(color.slice(5, 7), 16);
+                const r = Number.parseInt(color.slice(1, 3), 16);
+                const g = Number.parseInt(color.slice(3, 5), 16);
+                const b = Number.parseInt(color.slice(5, 7), 16);
 
                 const grayLevel = 220;
                 const desaturatedR = Math.round(

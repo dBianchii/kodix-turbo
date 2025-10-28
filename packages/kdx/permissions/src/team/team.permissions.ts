@@ -23,7 +23,7 @@ export const teamPermissionsFactory =
           $eq: user.id,
         },
       }).because(
-        t("api.You cannot remove yourself from the Administrator role")
+        t("api.You cannot remove yourself from the Administrator role"),
       );
 
       can("RemoveFromTeam", "User");
@@ -31,8 +31,8 @@ export const teamPermissionsFactory =
         id: { $eq: user.id },
       }).because(
         t(
-          "api.You cannot remove yourself from a team you are an owner of Delete this team instead"
-        )
+          "api.You cannot remove yourself from a team you are an owner of Delete this team instead",
+        ),
       );
     }
   };

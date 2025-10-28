@@ -49,7 +49,7 @@ export function SalesTable() {
       dateTo: dateTo?.toISOString() || undefined,
       page: pagination.pageIndex + 1,
       perPage: pagination.pageSize,
-    })
+    }),
   );
 
   const columns = useMemo(
@@ -130,7 +130,7 @@ export function SalesTable() {
         ),
       }),
     ],
-    []
+    [],
   );
 
   const table = useReactTable({
@@ -211,7 +211,7 @@ export function SalesTable() {
                       ? null
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )}
                   </TableHead>
                 ))}
@@ -260,7 +260,7 @@ export function SalesTable() {
                       <TableCell key={cell.id}>
                         {flexRender(
                           cell.column.columnDef.cell,
-                          cell.getContext()
+                          cell.getContext(),
                         )}
                       </TableCell>
                     ))}

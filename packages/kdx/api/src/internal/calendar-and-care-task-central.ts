@@ -183,7 +183,7 @@ export async function getCareTasks({
 }) {
   if (!teamIds.length) throw new Error("teamIds must have at least one item");
 
-  const [calendarTasks, careTasks, teamConfigs] = await Promise.all([
+  const [calendarTasks, careTaskFromTo, teamConfigs] = await Promise.all([
     getCalendarTasks({
       dateEnd,
       dateStart,
@@ -203,7 +203,7 @@ export async function getCareTasks({
     }),
   ]);
 
-  let union: CareTaskOrCalendarTask[] = careTasks;
+  let union: CareTaskOrCalendarTask[] = careTaskFromTo;
   if (!onlyNotDone) {
     union.push(
       ...calendarTasks

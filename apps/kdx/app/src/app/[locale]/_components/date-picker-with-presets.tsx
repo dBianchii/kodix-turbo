@@ -72,8 +72,9 @@ export function DatePickerWithPresets({
                 })
               : t("Pick a date")}
             {date && (
-              // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
-              // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
+              // biome-ignore lint/a11y/noStaticElementInteractions: Fix me
+              // biome-ignore lint/a11y/useKeyWithClickEvents: Fix me
+              // biome-ignore lint/a11y/noNoninteractiveElementInteractions: Fix me
               <span
                 className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                 onClick={() => {
@@ -97,7 +98,7 @@ export function DatePickerWithPresets({
           <PopoverContent className="w-[350px] p-0" side="bottom">
             <Command
               onValueChange={(value) =>
-                setDate(addDays(new Date(), parseInt(value, 10)))
+                setDate(addDays(new Date(), Number.parseInt(value, 10)))
               }
             >
               <CommandInput placeholder="Choose day..." />
@@ -108,7 +109,10 @@ export function DatePickerWithPresets({
                       key={command.value}
                       onSelect={() => {
                         setDate(
-                          addDays(new Date(), parseInt(command.value, 10)),
+                          addDays(
+                            new Date(),
+                            Number.parseInt(command.value, 10),
+                          ),
                         );
                         setOpen(false);
                       }}

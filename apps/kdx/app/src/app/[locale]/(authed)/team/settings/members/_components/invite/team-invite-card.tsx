@@ -59,12 +59,12 @@ export default function TeamInviteCardClient({
           trpc.team.invitation.getAll.pathFilter(),
         );
       },
-      onSuccess: ({ successes, failures }) => {
-        if (successes.length > 0) {
+      onSuccess: ({ successes: successResponses, failures }) => {
+        if (successResponses.length > 0) {
           toast.success(
-            successes.length
+            successResponses.length
               ? t("Invitations sent to people", {
-                  people: successes.join(", "),
+                  people: successResponses.join(", "),
                 })
               : t("Invitations sent"),
           );
@@ -75,7 +75,7 @@ export default function TeamInviteCardClient({
               people: failures.join(", "),
             }),
           );
-        setSuccesses(successes);
+        setSuccesses(successResponses);
         setEmails([{ key: 0, value: "" }]);
 
         setTimeout(() => {
@@ -95,9 +95,9 @@ export default function TeamInviteCardClient({
   return (
     <>
       <Credenza
-        onOpenChange={(open) => {
-          if (!open) return closeDialog();
-          setOpen(open);
+        onOpenChange={(o) => {
+          if (!o) return closeDialog();
+          setOpen(o);
         }}
         open={open}
       >
@@ -206,7 +206,7 @@ export default function TeamInviteCardClient({
           <div className="mt-2">
             <Button
               className="h-8 p-2 text-xs"
-              disabled={!emails.some((x) => x.value.length) || !canEditPage}
+              disabled={!(emails.some((x) => x.value.length) && canEditPage)}
               onClick={() => {
                 const newEmails = [...emails];
                 newEmails.push({ key: Math.random(), value: "" });
@@ -226,7 +226,7 @@ export default function TeamInviteCardClient({
             {t("Only the owner of the team can invite new members")}
           </CardDescription>
           <Button
-            disabled={!emails.some((x) => x.value.length) || !canEditPage}
+            disabled={!(emails.some((x) => x.value.length) && canEditPage)}
             onClick={() => {
               if (
                 emails.length > 0 &&

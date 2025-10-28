@@ -96,10 +96,13 @@ export function PriorityIcon({
       );
     case 3:
       return <LuSignal className={cn("size-4 text-red-400", className)} />;
+    default:
+      return null;
   }
 }
 
 export function PriorityToTxt(priority: Priority) {
+  // biome-ignore lint/correctness/useHookAtTopLevel: Legacy file
   const t = useTranslations();
   switch (priority) {
     case 0:
@@ -110,5 +113,7 @@ export function PriorityToTxt(priority: Priority) {
       return t("Medium");
     case 3:
       return t("High");
+    default:
+      return null;
   }
 }

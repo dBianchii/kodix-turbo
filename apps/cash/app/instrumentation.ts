@@ -24,7 +24,7 @@ const POSTHOG_COOKIE_REGEX = /ph_phc_.*?_posthog=([^;]+)/;
 export const onRequestError: Instrumentation.onRequestError = async (
   error,
   errorRequest,
-  _errorContext
+  _errorContext,
 ) => {
   if (process.env.NEXT_RUNTIME !== "nodejs") {
     return;

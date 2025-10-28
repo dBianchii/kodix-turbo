@@ -45,7 +45,7 @@ export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps m
  */
 const dateFromISO8601 = z.preprocess(
   (value) => (value instanceof Date ? value : dayjs(value as string).toDate()),
-  z.date()
+  z.date(),
 );
 
 /**

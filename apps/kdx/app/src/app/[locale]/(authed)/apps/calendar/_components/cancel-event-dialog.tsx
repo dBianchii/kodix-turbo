@@ -117,15 +117,15 @@ export function CancelationDialog({
             onClick={() => {
               if (radioValue === "all")
                 mutation.mutate({
-                  eventExceptionId: eventExceptionId,
-                  eventMasterId: eventMasterId,
+                  eventExceptionId,
+                  eventMasterId,
                   exclusionDefinition: "all",
                 });
               else
                 mutation.mutate({
                   date,
-                  eventExceptionId: eventExceptionId,
-                  eventMasterId: eventMasterId,
+                  eventExceptionId,
+                  eventMasterId,
                   exclusionDefinition: radioValue,
                 });
             }}

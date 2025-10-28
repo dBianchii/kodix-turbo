@@ -14,14 +14,14 @@ interface PackageJson {
 const repositoryRoot = path.join(__dirname, "../../../../");
 
 const getPNPMWorkspaceFile = (
-  packageRoot: string
+  packageRoot: string,
 ): {
   catalog: Record<string, unknown>;
   catalogs: Record<string, Record<string, unknown>>;
   packages: string[];
 } =>
   yaml.parse(
-    readFileSync(path.join(packageRoot, "pnpm-workspace.yaml"), "utf-8")
+    readFileSync(path.join(packageRoot, "pnpm-workspace.yaml"), "utf-8"),
   );
 
 const getFilesToCheck = () => {
@@ -59,7 +59,7 @@ const getFilesToCheck = () => {
 test("Monorepo .nvmrc version should match the version in the root package.json's engines.node", async () => {
   const nvmrcVersion = readFileSync(
     path.join(repositoryRoot, ".nvmrc"),
-    "utf-8"
+    "utf-8",
   ).trim();
 
   const rootPackageJson = (await import("../../../../package.json")).default;
@@ -116,7 +116,7 @@ it("There are no unused dependencies", () => {
 
   // Find catalog packages that aren't used anywhere
   const unusedCatalogPackages = Array.from(allCatalogPackages).filter(
-    (packageName) => !usedPackages.has(packageName)
+    (packageName) => !usedPackages.has(packageName),
   );
 
   //Expect sets to be equal

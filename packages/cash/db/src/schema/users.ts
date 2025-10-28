@@ -35,7 +35,7 @@ export const accounts = pgTable(
       columns: [account.providerId, account.providerUserId],
     }),
     index("userId_idx").on(account.userId),
-  ]
+  ],
 );
 export const accountsRelations = relations(accounts, ({ one }) => ({
   Users: one(users, { fields: [accounts.userId], references: [users.id] }),

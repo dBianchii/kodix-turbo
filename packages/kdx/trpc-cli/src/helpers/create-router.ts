@@ -53,14 +53,14 @@ export const ${newRouterName}Router = {
     await addNewEntryToTrpcRouterRecord(
       routerFileToUpdate,
       `  ${chosenRouterPath.split("/").at(-1)}: ${newRouterName}Router,`,
-      true
+      true,
     );
 
     await addImportStatement(routerFileToUpdate, {
       importName: `${newRouterName}Router`,
       importPath: `./${newRouterName}/${trpcCliConfig.routerFileName.replace(
         ".ts",
-        ""
+        "",
       )}`,
     });
 
@@ -75,7 +75,7 @@ export const ${newRouterName}Router = {
     routerFilePath: string,
     // biome-ignore lint/nursery/noShadow: <biome migration>
     newEntry: string,
-    begginningOfRecord = false
+    begginningOfRecord = false,
   ) {
     try {
       let fileContent = await fs.readFile(routerFilePath, "utf-8");
@@ -84,7 +84,7 @@ export const ${newRouterName}Router = {
 
       const routerRegex = new RegExp(
         `export\\s+const\\s+${routerName}Router\\s*=\\s*{([^}]*)}`,
-        "s"
+        "s",
       );
       const match = fileContent.match(routerRegex);
       if (!match) {

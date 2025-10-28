@@ -19,13 +19,11 @@ export const defaultSafeActionToastError = (error: {
     error.validationErrors?.formErrors[0] ??
     error.fetchError;
 
-  if (!errorMessage) {
-    if (error.validationErrors?.fieldErrors.length) {
-      const fieldErrors = Object.entries(error.validationErrors.fieldErrors);
-      const firstErrorMessage = fieldErrors[0]?.[1]?.[0];
-      if (firstErrorMessage) {
-        errorMessage = firstErrorMessage;
-      }
+  if (!errorMessage && error.validationErrors?.fieldErrors.length) {
+    const fieldErrors = Object.entries(error.validationErrors.fieldErrors);
+    const firstErrorMessage = fieldErrors[0]?.[1]?.[0];
+    if (firstErrorMessage) {
+      errorMessage = firstErrorMessage;
     }
   }
 

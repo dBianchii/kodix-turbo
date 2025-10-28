@@ -54,7 +54,7 @@ export const createTRPC = <
         ">>> tRPC Request from",
         ctx.headers.get("x-trpc-source"),
         "for",
-        path
+        path,
       );
 
       const waitMs =

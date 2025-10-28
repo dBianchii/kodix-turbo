@@ -1,4 +1,5 @@
 /** biome-ignore-all assist/source/organizeImports: <Do not format formatjs imports!> */
+/** biome-ignore-all lint/performance/noBarrelFile: It's a side-effect import */
 export * from "@formatjs/intl-getcanonicallocales/polyfill";
 export * from "@formatjs/intl-locale/polyfill";
 export * from "@formatjs/intl-pluralrules/polyfill";

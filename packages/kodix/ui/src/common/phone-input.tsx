@@ -50,7 +50,7 @@ const PhoneInput: React.ForwardRefExoticComponent<PhoneInputProps> =
           {...props}
         />
       );
-    }
+    },
   );
 PhoneInput.displayName = "PhoneInput";
 
@@ -93,7 +93,9 @@ const CountrySelect = ({
       modal
       onOpenChange={(open) => {
         setIsOpen(open);
-        open && setSearchValue("");
+        if (open) {
+          setSearchValue("");
+        }
       }}
       open={isOpen}
     >
@@ -111,7 +113,7 @@ const CountrySelect = ({
           <ChevronsUpDown
             className={cn(
               "-mr-2 size-4 opacity-50",
-              disabled ? "hidden" : "opacity-100"
+              disabled ? "hidden" : "opacity-100",
             )}
           />
         </Button>
@@ -124,7 +126,7 @@ const CountrySelect = ({
               setTimeout(() => {
                 if (scrollAreaRef.current) {
                   const viewportElement = scrollAreaRef.current.querySelector(
-                    "[data-radix-scroll-area-viewport]"
+                    "[data-radix-scroll-area-viewport]",
                   );
                   if (viewportElement) {
                     viewportElement.scrollTop = 0;
@@ -149,7 +151,7 @@ const CountrySelect = ({
                       onSelectComplete={() => setIsOpen(false)}
                       selectedCountry={selectedCountry}
                     />
-                  ) : null
+                  ) : null,
                 )}
               </CommandGroup>
             </ScrollArea>

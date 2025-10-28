@@ -5,7 +5,7 @@ import { getTranslations } from "next-intl/server";
 
 import { IconKodixApp } from "~/app/[locale]/_components/app/kodix-icon";
 import MaxWidthWrapper from "~/app/[locale]/_components/max-width-wrapper";
-import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/server-helpers";
 
 import { CreateEventDialogButton } from "./_components/create-event-dialog";
 import { DataTable } from "./_components/data-table-calendar";

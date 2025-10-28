@@ -121,7 +121,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
           });
           return [];
         }
-      })
+      }),
     )
   ).flat();
 
@@ -139,7 +139,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
           ) {
             // biome-ignore lint/suspicious/noConsole: Logging for observability
             console.warn(
-              `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`
+              `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`,
             );
             return null;
           }
@@ -155,7 +155,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
           });
           return null;
         }
-      })
+      }),
     )
   ).filter((p): p is NonNullable<typeof p> => p !== null);
 
@@ -163,12 +163,12 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   const cashbackAmounts = allCASaleItems
     .map((caSaleItem) => {
       const product = products.find(
-        (p) => p.caProductId === caSaleItem.id_item
+        (p) => p.caProductId === caSaleItem.id_item,
       );
       if (!product) {
         // biome-ignore lint/suspicious/noConsole: Logging for observability
         console.warn(
-          `Product ${caSaleItem.id_item} not found for sale item, skipping cashback calculation`
+          `Product ${caSaleItem.id_item} not found for sale item, skipping cashback calculation`,
         );
         return null;
       }
@@ -182,7 +182,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       ) {
         // biome-ignore lint/suspicious/noConsole: Logging for observability
         console.warn(
-          `Sale item has invalid values (valor: ${caSaleItem.valor}, quantidade: ${caSaleItem.quantidade}), skipping cashback`
+          `Sale item has invalid values (valor: ${caSaleItem.valor}, quantidade: ${caSaleItem.quantidade}), skipping cashback`,
         );
         return null;
       }
@@ -198,7 +198,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       const totalSoldPriceForItemCents = soldPriceCents * caSaleItem.quantidade;
 
       const cashbackAmountCents = Math.round(
-        (totalSoldPriceForItemCents * cashbackPercent) / 100
+        (totalSoldPriceForItemCents * cashbackPercent) / 100,
       );
 
       return {
@@ -209,11 +209,11 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
     })
     .filter(
       (item): item is NonNullable<typeof item> =>
-        item !== null && item.cashbackAmountCents > 0
+        item !== null && item.cashbackAmountCents > 0,
     ); // Remove items with no cashback or missing products
 
   const uniqueClientIds = uniqBy(allCASales, (item) => item.cliente.id).map(
-    (item) => item.cliente.id
+    (item) => item.cliente.id,
   );
 
   let allCAClients: Awaited<ReturnType<typeof listContaAzulPersons>>["items"] =
@@ -266,13 +266,13 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
               pais: caClient.endereco?.pais,
               phone: normalizePhoneNumber(caClient.telefone),
               type: caClient.tipo_pessoa,
-            }) satisfies typeof clients.$inferInsert
+            }) satisfies typeof clients.$inferInsert,
         ),
-        tx
+        tx,
       );
 
       const caClientIdToClientMap = new Map(
-        txUpsertedClients.map((c) => [c.caId, c])
+        txUpsertedClients.map((c) => [c.caId, c]),
       );
 
       const txUpsertedSales = await caRepository.upsertSalesByCaId(
@@ -294,7 +294,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             total: caSale.total,
           } satisfies typeof sales.$inferInsert;
         }),
-        tx
+        tx,
       );
 
       const txUpsertedCashbacks =
@@ -311,7 +311,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
               saleId: sale.id,
             };
           }),
-          tx
+          tx,
         );
 
       return {
@@ -325,23 +325,23 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   const clientUpdatedCount = upsertedClients.length - clientCreatedCount;
   // biome-ignore lint/suspicious/noConsole: Logging for observability
   console.log(
-    `[CA Sales Sync] Created Clients: ${clientCreatedCount}, Updated Clients: ${clientUpdatedCount}`
+    `[CA Sales Sync] Created Clients: ${clientCreatedCount}, Updated Clients: ${clientUpdatedCount}`,
   );
 
   const createdCount = upsertedSales.filter((s) => s.inserted).length;
   const updatedCount = upsertedSales.length - createdCount;
   // biome-ignore lint/suspicious/noConsole: Logging for observability
   console.log(
-    `[CA Sales Sync] Created Sales: ${createdCount}, Updated Sales: ${updatedCount}`
+    `[CA Sales Sync] Created Sales: ${createdCount}, Updated Sales: ${updatedCount}`,
   );
 
   const cashbackCreatedCount = upsertedCashbacks.filter(
-    (c) => c.inserted
+    (c) => c.inserted,
   ).length;
   const cashbackUpdatedCount = upsertedCashbacks.length - cashbackCreatedCount;
   // biome-ignore lint/suspicious/noConsole: Logging for observability
   console.log(
-    `[CA Sales Sync] Created Cashbacks: ${cashbackCreatedCount}, Updated Cashbacks: ${cashbackUpdatedCount}`
+    `[CA Sales Sync] Created Cashbacks: ${cashbackCreatedCount}, Updated Cashbacks: ${cashbackUpdatedCount}`,
   );
 
   await posthog.shutdown();

@@ -80,6 +80,15 @@ export const getNotificationsHandler = async ({
       : or(...filterExpressions),
   );
 
+  const getOrderBy = () => {
+    if (column && column in notifications) {
+      return order === "asc"
+        ? asc(notifications[column])
+        : desc(notifications[column]);
+    }
+    return desc(notifications.id);
+  };
+
   const result = await db.transaction(async (tx) => {
     const data = await tx
       .select({
@@ -96,13 +105,7 @@ export const getNotificationsHandler = async ({
       .offset(offset)
       .where(where)
       .innerJoin(teams, eq(teams.id, notifications.teamId)) //So that we can get team info too
-      .orderBy(
-        column && column in notifications
-          ? order === "asc"
-            ? asc(notifications[column])
-            : desc(notifications[column])
-          : desc(notifications.id),
-      );
+      .orderBy(getOrderBy());
 
     const total = await tx
       .select({

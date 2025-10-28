@@ -27,7 +27,7 @@ import { LuArrowRight, LuLoaderCircle } from "react-icons/lu";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 
-import { finishKodixCareOnboardingAction } from "../actions/onboardingActions";
+import { finishKodixCareOnboardingAction } from "../actions/finish-kodic-care-onboarding.action";
 
 export default function OnboardingCard() {
   const form = useForm({

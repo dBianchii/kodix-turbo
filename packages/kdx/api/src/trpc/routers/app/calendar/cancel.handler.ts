@@ -18,9 +18,9 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
       await db.transaction(async (tx) => {
         const toDeleteException =
           await calendarRepository.findEventExceptionById(
-            tx,
             // biome-ignore lint/style/noNonNullAssertion: <already checked>
             input.eventExceptionId!,
+            tx,
           );
         if (!toDeleteException) {
           throw new TRPCError({
@@ -35,21 +35,28 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
           input.eventExceptionId!,
         );
 
-        await calendarRepository.createEventCancellation(tx, {
-          eventMasterId: toDeleteException.eventMasterId,
-          originalDate: toDeleteException.originalDate,
-        });
+        await calendarRepository.createEventCancellation(
+          {
+            eventMasterId: toDeleteException.eventMasterId,
+            originalDate: toDeleteException.originalDate,
+          },
+          tx,
+        );
       });
       return;
     }
 
-    await calendarRepository.createEventCancellation(db, {
-      eventMasterId: input.eventMasterId,
-      originalDate: input.date,
-    });
+    await calendarRepository.createEventCancellation(
+      {
+        eventMasterId: input.eventMasterId,
+        originalDate: input.date,
+      },
+      db,
+    );
 
     return;
-  } else if (input.exclusionDefinition === "thisAndFuture") {
+  }
+  if (input.exclusionDefinition === "thisAndFuture") {
     await db.transaction(async (tx) => {
       if (input.eventExceptionId) {
         await calendarRepository.deleteEventExceptionsHigherThanDate(tx, {
@@ -59,10 +66,13 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
         });
       }
 
-      const eventMaster = await calendarRepository.findEventMasterById(tx, {
-        id: input.eventMasterId,
-        teamId: ctx.auth.user.activeTeamId,
-      });
+      const eventMaster = await calendarRepository.findEventMasterById(
+        {
+          id: input.eventMasterId,
+          teamId: ctx.auth.user.activeTeamId,
+        },
+        tx,
+      );
       if (!eventMaster)
         throw new TRPCError({
           code: "NOT_FOUND",
@@ -71,26 +81,28 @@ export const cancelHandler = async ({ ctx, input }: CancelOptions) => {
 
       const rule = rrulestr(eventMaster.rule);
       const occurences = rule.between(eventMaster.dateStart, input.date, true);
-      const penultimateOccurence = occurences[occurences.length - 2];
+      const penultimateOccurence = occurences.at(-2);
       if (!penultimateOccurence)
         await calendarRepository.deleteEventMasterById(tx, input.eventMasterId);
 
       const options = RRule.parseString(eventMaster.rule);
       options.until = penultimateOccurence;
 
-      return await calendarRepository.updateEventMasterById(tx, {
-        id: input.eventMasterId,
-        input: {
-          dateUntil: penultimateOccurence,
-          rule: new RRule(options).toString(),
+      return await calendarRepository.updateEventMasterById(
+        {
+          id: input.eventMasterId,
+          input: {
+            dateUntil: penultimateOccurence,
+            rule: new RRule(options).toString(),
+          },
+          teamId: ctx.auth.user.activeTeamId,
         },
-        teamId: ctx.auth.user.activeTeamId,
-      });
+        tx,
+      );
     });
     return;
-  } else {
-    await calendarRepository.deleteEventMasterById(db, input.eventMasterId);
-
-    return;
   }
+  await calendarRepository.deleteEventMasterById(db, input.eventMasterId);
+
+  return;
 };

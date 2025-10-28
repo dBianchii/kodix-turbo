@@ -22,20 +22,20 @@ module.exports = config;
  * @param {import('expo/metro-config').MetroConfig} config
  * @returns {import('expo/metro-config').MetroConfig}
  */
-function withMonorepoPaths(config) {
-  const projectRoot = __dirname;
+function withMonorepoPaths(c) {
+  const projectRoot = import.meta.dirname;
   const workspaceRoot = path.resolve(projectRoot, "../..");
 
   // #1 - Watch all files in the monorepo
-  config.watchFolders = [workspaceRoot];
+  c.watchFolders = [workspaceRoot];
 
   // #2 - Resolve modules within the project's `node_modules` first, then all monorepo modules
-  config.resolver.nodeModulesPaths = [
+  c.resolver.nodeModulesPaths = [
     path.resolve(projectRoot, "node_modules"),
     path.resolve(workspaceRoot, "node_modules"),
   ];
 
-  return config;
+  return c;
 }
 
 /**
@@ -47,9 +47,9 @@ function withMonorepoPaths(config) {
  * @param {import('expo/metro-config').MetroConfig} config
  * @returns {import('expo/metro-config').MetroConfig}
  */
-function withTurborepoManagedCache(config) {
-  config.cacheStores = [
+function withTurborepoManagedCache(c) {
+  c.cacheStores = [
     new FileStore({ root: path.join(__dirname, ".cache/metro") }),
   ];
-  return config;
+  return c;
 }

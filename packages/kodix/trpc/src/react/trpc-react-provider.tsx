@@ -37,7 +37,7 @@ interface TRPCReactProviderProps<TRouter extends AnyRouter>
 }
 
 export function getTRPCClient<TRouter extends AnyRouter>(
-  apiSource = "nextjs-react"
+  apiSource = "nextjs-react",
 ) {
   return createTRPCClient<TRouter>({
     links: [

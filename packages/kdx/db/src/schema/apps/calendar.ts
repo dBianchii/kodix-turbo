@@ -11,7 +11,7 @@ import {
   teamIdReferenceCascadeDelete,
   typeEnum,
 } from "../utils";
-import { careTasks } from "./kodixCare";
+import { careTasks } from "./kodix-care";
 
 export const eventMasters = mysqlTable(
   "eventMaster",
@@ -57,11 +57,9 @@ export const eventCancellations = mysqlTable(
     id: nanoidPrimaryKey(t),
     originalDate: t.timestamp().notNull(),
   }),
-  (table) => {
-    return {
-      eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
-    };
-  },
+  (table) => ({
+    eventMasterIdIdx: index("eventMasterId_idx").on(table.eventMasterId),
+  }),
 );
 export const eventCancellationsRelations = relations(
   eventCancellations,

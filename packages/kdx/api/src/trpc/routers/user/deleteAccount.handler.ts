@@ -1,7 +1,7 @@
 import { authRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../procedures";
-import { protectedMutation } from "../../protectedFetchAndMutations";
+import { protectedMutation } from "../../protected-fetch-and-mutations";
 import { assertCanUserDeleteAccount } from "./_user.permissions";
 
 interface DeleteAccountOptions {

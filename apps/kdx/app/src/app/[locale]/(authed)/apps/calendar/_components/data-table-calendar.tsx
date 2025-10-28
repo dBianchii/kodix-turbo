@@ -167,14 +167,12 @@ const useTable = ({
       }),
       columnHelper.accessor("description", {
         cell: (info) => <div className="text-sm">{info.getValue()}</div>,
-        header: ({ column }) => {
-          return (
-            <DataTableColumnHeader column={column}>
-              <LuText className="mr-2 size-4" />
-              {t("Description")}
-            </DataTableColumnHeader>
-          );
-        },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column}>
+            <LuText className="mr-2 size-4" />
+            {t("Description")}
+          </DataTableColumnHeader>
+        ),
       }),
       columnHelper.accessor("date", {
         cell: (info) => (
@@ -315,79 +313,85 @@ export function DataTable() {
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
-                            )}
-                      </TableHead>
-                    );
-                  })}
+                  {headerGroup.headers.map((header) => (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  ))}
                 </TableRow>
               ))}
             </TableHeader>
             <TableBody>
-              {getAllQuery.isFetching ? (
-                <TableRow>
-                  <TableCell className="h-24" colSpan={columnLength}>
-                    <div className="flex h-full items-center justify-center">
-                      <LuLoaderCircle className="h-6 w-6 animate-spin" />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ) : table.getRowModel().rows.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <ContextMenu key={row.id}>
-                    <ContextMenuContent>
-                      <ContextMenuItem
-                        onClick={() => {
-                          setCalendarTask(row.original);
-                          setOpenEditDialog(true);
-                        }}
-                      >
-                        <LuPencil className="mr-2 size-4" />
-                        {t("Edit event")}
-                      </ContextMenuItem>
-                      <ContextMenuItem
-                        onClick={() => {
-                          setCalendarTask(row.original);
-                          setOpenCancelDialog(true);
-                        }}
-                      >
-                        <LuTrash className="mr-2 size-4 text-destructive" />
-                        {t("Delete event")}
-                      </ContextMenuItem>
-                    </ContextMenuContent>
-                    <ContextMenuTrigger asChild>
-                      <TableRow
-                        data-state={row.getIsSelected() && "selected"}
-                        key={row.id}
-                      >
-                        {row.getVisibleCells().map((cell) => (
-                          <TableCell key={cell.id}>
-                            {flexRender(cell.column.columnDef.cell, {
-                              ...cell.getContext(),
-                            })}
-                          </TableCell>
-                        ))}
-                      </TableRow>
-                    </ContextMenuTrigger>
-                  </ContextMenu>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    className="h-24 text-center"
-                    colSpan={columnLength}
-                  >
-                    {t("apps.kodixCare.No events for this day")}
-                  </TableCell>
-                </TableRow>
-              )}
+              {(() => {
+                if (getAllQuery.isFetching) {
+                  return (
+                    <TableRow>
+                      <TableCell className="h-24" colSpan={columnLength}>
+                        <div className="flex h-full items-center justify-center">
+                          <LuLoaderCircle className="h-6 w-6 animate-spin" />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                }
+
+                if (table.getRowModel().rows.length) {
+                  return table.getRowModel().rows.map((row) => (
+                    <ContextMenu key={row.id}>
+                      <ContextMenuContent>
+                        <ContextMenuItem
+                          onClick={() => {
+                            setCalendarTask(row.original);
+                            setOpenEditDialog(true);
+                          }}
+                        >
+                          <LuPencil className="mr-2 size-4" />
+                          {t("Edit event")}
+                        </ContextMenuItem>
+                        <ContextMenuItem
+                          onClick={() => {
+                            setCalendarTask(row.original);
+                            setOpenCancelDialog(true);
+                          }}
+                        >
+                          <LuTrash className="mr-2 size-4 text-destructive" />
+                          {t("Delete event")}
+                        </ContextMenuItem>
+                      </ContextMenuContent>
+                      <ContextMenuTrigger asChild>
+                        <TableRow
+                          data-state={row.getIsSelected() && "selected"}
+                          key={row.id}
+                        >
+                          {row.getVisibleCells().map((cell) => (
+                            <TableCell key={cell.id}>
+                              {flexRender(cell.column.columnDef.cell, {
+                                ...cell.getContext(),
+                              })}
+                            </TableCell>
+                          ))}
+                        </TableRow>
+                      </ContextMenuTrigger>
+                    </ContextMenu>
+                  ));
+                }
+
+                return (
+                  <TableRow>
+                    <TableCell
+                      className="h-24 text-center"
+                      colSpan={columnLength}
+                    >
+                      {t("apps.kodixCare.No events for this day")}
+                    </TableCell>
+                  </TableRow>
+                );
+              })()}
             </TableBody>
           </Table>
         </div>

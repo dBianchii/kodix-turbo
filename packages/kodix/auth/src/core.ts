@@ -45,5 +45,5 @@ export const generatePasswordHash = (password: string) =>
 
 export const verifyPasswordAgainstHash = (
   passwordHash: string,
-  password: string
+  password: string,
 ) => verify(passwordHash, password, argon2Config);

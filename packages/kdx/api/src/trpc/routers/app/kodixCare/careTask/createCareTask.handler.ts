@@ -7,7 +7,7 @@ import type { TCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixC
 import { careTaskRepository } from "@kdx/db/repositories";
 
 import type { TProtectedProcedureContext } from "../../../../procedures";
-import { logActivity } from "../../../../../services/appActivityLogs.service";
+import { logActivity } from "../../../../../services/app-activity-logs.service";
 
 interface CreateCareTaskOptions {
   ctx: TProtectedProcedureContext;

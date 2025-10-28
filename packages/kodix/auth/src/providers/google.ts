@@ -16,7 +16,7 @@ export const createGoogleProvider = (config: ProviderConfig): AuthProvider => {
   const google = new Google(
     process.env.AUTH_GOOGLE_CLIENT_ID ?? "",
     process.env.AUTH_GOOGLE_CLIENT_SECRET ?? "",
-    `${getBaseUrl()}/api/auth/google/callback`
+    `${getBaseUrl()}/api/auth/google/callback`,
   );
 
   const name = "Google";
@@ -35,7 +35,7 @@ export const createGoogleProvider = (config: ProviderConfig): AuthProvider => {
         headers: {
           Authorization: `Bearer ${tokens.accessToken}`,
         },
-      }
+      },
     );
     const googleUser = (await response.json()) as GoogleUser;
 

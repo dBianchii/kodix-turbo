@@ -1,8 +1,9 @@
+/** biome-ignore-all lint/performance/noBarrelFile: <Fix me> */
 export * as appRepository from "./app/appRepository";
 export * as calendarRepository from "./app/calendar/calendarRepository";
 export * as careTaskRepository from "./app/kodixCare/careTaskRepository";
 export * as kodixCareRepository from "./app/kodixCare/kodixCareRepository";
-export * as authRepository from "./auth-repository";
-export * as notificationRepository from "./notification-repository";
-export * as teamRepository from "./team-repository";
-export * as userRepository from "./user-repository";
+export * as authRepository from "./authRepository";
+export * as notificationRepository from "./notificationRepository";
+export * as teamRepository from "./teamRepository";
+export * as userRepository from "./userRepository";

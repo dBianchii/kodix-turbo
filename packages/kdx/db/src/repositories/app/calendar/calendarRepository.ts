@@ -1,60 +1,63 @@
 import type { SQL } from "drizzle-orm";
 import type { z } from "zod";
-import { and, eq, gt, gte, inArray, lte, or } from "drizzle-orm";
+import { and, eq, gt, gte, inArray, isNull, lte, or } from "drizzle-orm";
 
 import type { Drizzle } from "../../../client";
 import type { UpdateWithTeamId } from "../../_types";
-import type { zEventCancellationCreate } from "../../_zodSchemas/eventCancellationSchemas";
+import type { zEventCancellationCreate } from "../../_zodSchemas/event-cancellation-schemas";
 import type {
   zEventExceptionCreate,
   zEventExceptionUpdate,
-} from "../../_zodSchemas/eventExceptionSchema";
+} from "../../_zodSchemas/event-exception-schemas";
 import type {
   zEventMasterCreate,
   zEventMasterUpdate,
-} from "../../_zodSchemas/eventMasterSchemas";
-import { db } from "../../../client";
+} from "../../_zodSchemas/event-master-schemas";
+import { db as _db } from "../../../client";
 import {
   eventCancellations,
   eventExceptions,
   eventMasters,
 } from "../../../schema";
 
-export async function findEventMastersFromTo({
+export function findEventMastersFromTo({
   dateStart,
   dateEnd,
   teamIds,
   onlyCritical = false,
+  db = _db,
 }: {
   dateStart: Date;
   dateEnd: Date;
   teamIds: string[];
   onlyCritical?: boolean;
+  db?: Drizzle;
 }) {
-  return await db.query.eventMasters.findMany({
-    where: (eventMasters, { and, gte, eq, or, lte, isNull }) =>
+  return db.query.eventMasters.findMany({
+    where: and(
+      onlyCritical ? eq(eventMasters.type, "CRITICAL") : undefined,
+      inArray(eventMasters.teamId, teamIds),
       and(
-        onlyCritical ? eq(eventMasters.type, "CRITICAL") : undefined,
-        inArray(eventMasters.teamId, teamIds),
-        and(
-          lte(eventMasters.dateStart, dateEnd),
-          or(
-            gte(eventMasters.dateUntil, dateStart),
-            isNull(eventMasters.dateUntil),
-          ),
+        lte(eventMasters.dateStart, dateEnd),
+        or(
+          gte(eventMasters.dateUntil, dateStart),
+          isNull(eventMasters.dateUntil),
         ),
       ),
+    ),
   });
 }
 
-export async function findEventExceptionsFromTo({
+export function findEventExceptionsFromTo({
   dateStart,
   dateEnd,
   teamIds,
+  db = _db,
 }: {
   dateStart: Date;
   dateEnd: Date;
   teamIds: string[];
+  db?: Drizzle;
 }) {
   return db
     .select({
@@ -74,7 +77,7 @@ export async function findEventExceptionsFromTo({
       type: eventExceptions.type,
     })
     .from(eventExceptions)
-    .where((eventExceptions) =>
+    .where(
       and(
         inArray(eventMasters.teamId, teamIds),
         or(
@@ -95,14 +98,16 @@ export async function findEventExceptionsFromTo({
     );
 }
 
-export async function findEventCancellationsFromTo({
+export function findEventCancellationsFromTo({
   dateStart,
   dateEnd,
   teamIds,
+  db = _db,
 }: {
   dateStart: Date;
   dateEnd: Date;
   teamIds: string[];
+  db?: Drizzle;
 }) {
   return db
     .select({
@@ -110,7 +115,7 @@ export async function findEventCancellationsFromTo({
       originalDate: eventCancellations.originalDate,
     })
     .from(eventCancellations)
-    .where((eventCancellations) =>
+    .where(
       and(
         inArray(eventMasters.teamId, teamIds),
         and(
@@ -125,19 +130,19 @@ export async function findEventCancellationsFromTo({
     );
 }
 
-export async function findEventExceptionById(db: Drizzle, id: string) {
+export function findEventExceptionById(id: string, db = _db) {
   return db.query.eventExceptions.findFirst({
     columns: {
       eventMasterId: true,
       originalDate: true,
     },
-    where: (eventExceptions, { eq }) => eq(eventExceptions.id, id),
+    where: eq(eventExceptions.id, id),
   });
 }
 
-export async function updateEventMasterById(
-  db: Drizzle,
+export function updateEventMasterById(
   { id, input, teamId }: UpdateWithTeamId<typeof zEventMasterUpdate>,
+  db = _db,
 ) {
   return db
     .update(eventMasters)
@@ -146,8 +151,8 @@ export async function updateEventMasterById(
 }
 
 export async function updateEventExceptionById(
-  db: Drizzle,
   { id, teamId, input }: UpdateWithTeamId<typeof zEventExceptionUpdate>,
+  db = _db,
 ) {
   const allEventMastersIdsForThisTeamQuery = db
     .select({ id: eventMasters.id })
@@ -168,8 +173,7 @@ export async function updateEventExceptionById(
     );
 }
 
-export async function updateManyEventExceptionsByEventMasterId(
-  db: Drizzle,
+export function updateManyEventExceptionsByEventMasterId(
   {
     eventMasterId,
     input,
@@ -177,6 +181,7 @@ export async function updateManyEventExceptionsByEventMasterId(
     eventMasterId: string;
     input: z.infer<typeof zEventExceptionUpdate>;
   },
+  db = _db,
 ) {
   return db
     .update(eventExceptions)
@@ -184,16 +189,16 @@ export async function updateManyEventExceptionsByEventMasterId(
     .where(eq(eventExceptions.eventMasterId, eventMasterId));
 }
 
-export async function createEventCancellation(
-  db: Drizzle,
+export function createEventCancellation(
   input: z.infer<typeof zEventCancellationCreate>,
+  db: Drizzle,
 ) {
   return db.insert(eventCancellations).values(input);
 }
 
-export async function createEventException(
-  db: Drizzle,
+export function createEventException(
   input: z.infer<typeof zEventExceptionCreate>,
+  db: Drizzle,
 ) {
   return db.insert(eventExceptions).values(input);
 }
@@ -312,9 +317,9 @@ export async function deleteEventExceptionsHigherThanDate(
     );
 }
 
-export async function findEventMasterById(
-  db: Drizzle,
+export function findEventMasterById(
   { id, teamId }: { id: string; teamId: string },
+  db: Drizzle,
 ) {
   return db.query.eventMasters.findFirst({
     columns: {

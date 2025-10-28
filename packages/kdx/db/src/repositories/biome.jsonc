@@ -1,11 +1,11 @@
 {
-  "$schema": "../../../node_modules/@biomejs/biome/configuration_schema.json",
+  "$schema": "../../../../../node_modules/@biomejs/biome/configuration_schema.json",
   "extends": "//",
   "linter": {
     "rules": {
       "style": {
         "useFilenamingConvention": {
-          "level": "off" //Expo router does not follow the convention
+          "level": "off"
         }
       }
     }

@@ -32,7 +32,7 @@ export function defineAbilityForUserAndApp<T extends KodixAppId>({
   roles: AppRole[];
 }) {
   const appBuilder = new AbilityBuilder(
-    createMongoAbility as CreateAbility<KodixCareMongoAbility>
+    createMongoAbility as CreateAbility<KodixCareMongoAbility>,
   );
 
   const appPermissions = appIdToPermissionsFactory[appId]({ t });
@@ -63,7 +63,7 @@ export function defineAbilityForUserAndTeam({
   t: ServerSideT;
 }) {
   const teamBuilder = new AbilityBuilder(
-    createMongoAbility as CreateAbility<TeamAbility>
+    createMongoAbility as CreateAbility<TeamAbility>,
   );
 
   teamPermissionsFactory({ t, team, user })(teamBuilder);

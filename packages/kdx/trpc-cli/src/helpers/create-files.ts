@@ -53,7 +53,7 @@ export const createFiles = async (params: CreateFilesParams) => {
         endpointName: params.endpointName,
         validator: params.validator,
         validatorPath,
-      })
+      }),
     );
 
   await Promise.allSettled(promises);
@@ -74,13 +74,13 @@ export const createFiles = async (params: CreateFilesParams) => {
 
   logger.success("Links to your new/modified files:");
   logger.success(
-    `Router: ${chalk.blue(`${params.chosenRouterPath}/${trpcCliConfig.routerFileName}`)}`
+    `Router: ${chalk.blue(`${params.chosenRouterPath}/${trpcCliConfig.routerFileName}`)}`,
   );
   logger.success(
-    `Handler: ${chalk.blue(`${params.chosenRouterPath}/${params.endpointName}.handler.ts`)}`
+    `Handler: ${chalk.blue(`${params.chosenRouterPath}/${params.endpointName}.handler.ts`)}`,
   );
   if (params.validator)
     logger.success(
-      `Validator: ${chalk.blue(`trpc/${params.chosenRouterPath}/index.ts`)}`
+      `Validator: ${chalk.blue(`trpc/${params.chosenRouterPath}/index.ts`)}`,
     );
 };

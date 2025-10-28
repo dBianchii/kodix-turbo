@@ -30,7 +30,7 @@ export function DeleteTeamCardClient({ user }: { user: User }) {
       </CardHeader>
       <CardContent>
         <div className="grid w-full items-center gap-4">
-          <div className="flex flex-col space-y-1.5"></div>
+          <div className="flex flex-col space-y-1.5" />
         </div>
       </CardContent>
       <CardFooter className="flex justify-end border-destructive border-t bg-destructive/40 px-6 py-4">

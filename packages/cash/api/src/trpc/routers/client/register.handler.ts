@@ -15,9 +15,14 @@ interface RegisterHandlerInput {
   input: TRegisterInputSchema;
 }
 
+const BRAZIL_PHONE_COUNTRY_CODE_REGEX = /^\+55/;
+
 export async function registerHandler({ input }: RegisterHandlerInput) {
   // Remove +55 country code from phone (ContaAzul expects DDXXXXXXXXX format)
-  const phoneWithoutCountryCode = input.phone?.replace(/^\+55/, "");
+  const phoneWithoutCountryCode = input.phone?.replace(
+    BRAZIL_PHONE_COUNTRY_CODE_REGEX,
+    "",
+  );
 
   let caId: string;
 

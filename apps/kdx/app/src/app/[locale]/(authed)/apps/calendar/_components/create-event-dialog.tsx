@@ -69,7 +69,7 @@ export function CreateEventDialogButton() {
   form.watch();
   useEffect(() => {
     form.reset();
-  }, [open, form]);
+  }, [form]);
 
   const mutation = useMutation(
     trpc.app.calendar.create.mutationOptions({
@@ -189,9 +189,7 @@ export function CreateEventDialogButton() {
                       form.setValue("interval", interval);
                     }}
                     setOpen={setPersonalizedRecurrenceOpen}
-                    setUntil={(dayjs) =>
-                      form.setValue("until", dayjs?.toDate())
-                    }
+                    setUntil={(d) => form.setValue("until", d?.toDate())}
                     setWeekdays={(weekdays) =>
                       form.setValue(
                         "weekdays",

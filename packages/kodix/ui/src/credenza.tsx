@@ -55,7 +55,7 @@ const CredenzaContent = (props: React.ComponentProps<typeof DialogContent>) => {
 };
 
 const CredenzaDescription = (
-  props: React.ComponentProps<typeof DialogDescription>
+  props: React.ComponentProps<typeof DialogDescription>,
 ) => {
   const isDesktop = useMediaQuery(desktop);
   const Component = isDesktop ? DialogDescription : DrawerDescription;

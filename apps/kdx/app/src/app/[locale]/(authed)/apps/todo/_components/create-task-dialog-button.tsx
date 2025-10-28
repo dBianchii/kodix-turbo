@@ -145,7 +145,7 @@ export function CreateTaskDialogButton() {
               <PopoverTrigger asChild>
                 <Button
                   className={
-                    !dueDate ? "text-muted-foreground" : "text-foreground"
+                    dueDate ? "text-foreground" : "text-muted-foreground"
                   }
                   size="sm"
                   variant={"outline"}
@@ -155,8 +155,9 @@ export function CreateTaskDialogButton() {
                     ? format.dateTime(dueDate, "extensive")
                     : t("Pick a date")}
                   {dueDate && (
-                    // biome-ignore lint/a11y/noStaticElementInteractions: <biome migration>
-                    // biome-ignore lint/a11y/useKeyWithClickEvents: <biome migration>
+                    // biome-ignore lint/a11y/noStaticElementInteractions: biome migration
+                    // biome-ignore lint/a11y/useKeyWithClickEvents: biome migration
+                    // biome-ignore lint/a11y/noNoninteractiveElementInteractions: biome migration
                     <span
                       className="ml-2 rounded-full transition-colors hover:bg-primary/90 hover:text-background"
                       onClick={() => {

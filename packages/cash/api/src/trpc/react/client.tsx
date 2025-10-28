@@ -12,5 +12,5 @@ export const CashTRPCReactProvider = (
   props: Omit<
     ComponentProps<typeof TRPCReactProvider<CashTRPCRouter>>,
     "TRPCProvider"
-  >
+  >,
 ) => <TRPCReactProvider TRPCProvider={trpcContext.TRPCProvider} {...props} />;

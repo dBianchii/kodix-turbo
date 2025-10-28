@@ -11,7 +11,7 @@ export function findUserByEmail(email: string, db = _db) {
 
 export async function createUser(
   user: typeof users.$inferInsert,
-  db: Drizzle | DrizzleTransaction = _db
+  db: Drizzle | DrizzleTransaction = _db,
 ) {
   await db.insert(users).values(user);
 }

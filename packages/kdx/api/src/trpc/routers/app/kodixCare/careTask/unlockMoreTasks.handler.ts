@@ -38,7 +38,7 @@ export const unlockMoreTasksHandler = async ({
     throw new TRPCError({
       code: "FORBIDDEN",
       message: ctx.t(
-        `api.No tasks to unlock We have already unlocked all tasks up until TIME`,
+        "api.No tasks to unlock We have already unlocked all tasks up until TIME",
         {
           time: clonedCareTasksUntil.toISOString(),
         },

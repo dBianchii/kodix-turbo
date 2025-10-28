@@ -37,16 +37,16 @@ export function Navigation({
   return (
     <NavigationMenu className="flex w-full max-w-4xl self-start">
       <NavigationMenuList className={cn("flex w-full flex-col space-y-2")}>
-        {!pathname.endsWith(entryPoint) && !isSmallerScreen ? (
-          <NavigationItem href={goBackItem.href}>
-            <LuArrowLeft className="mr-2 size-4" /> {goBackItem.title}
-          </NavigationItem>
-        ) : (
+        {pathname.endsWith(entryPoint) || isSmallerScreen ? (
           items.map((item) => (
             <NavigationItem href={item.href} key={`${item.href}-nav-item`}>
               {item.title}
             </NavigationItem>
           ))
+        ) : (
+          <NavigationItem href={goBackItem.href}>
+            <LuArrowLeft className="mr-2 size-4" /> {goBackItem.title}
+          </NavigationItem>
         )}
       </NavigationMenuList>
     </NavigationMenu>

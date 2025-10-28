@@ -18,7 +18,7 @@ export function I18nPicker() {
   const pathname = usePathname();
   const router = useRouter();
   const handleLocaleChange = (locale: Locale) => {
-    router.replace(pathname, { locale: locale });
+    router.replace(pathname, { locale });
     router.refresh();
   };
   return (

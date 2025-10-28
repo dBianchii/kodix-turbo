@@ -3,7 +3,7 @@ import { Redis } from "@upstash/redis";
 import type { users } from "@kdx/db/schema";
 import { env } from "@kdx/env";
 
-import type { getCareTaskCompositeId } from "../internal/calendarAndCareTaskCentral";
+import type { getCareTaskCompositeId } from "../internal/calendar-and-care-task-central";
 
 const redis = new Redis({
   token: env.UPSTASH_REDIS_REST_TOKEN,

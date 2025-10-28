@@ -80,7 +80,7 @@ export default function Globe({
       state.width = width * 2;
       state.height = width * 2;
     },
-    [phi, r, width]
+    [phi, r, width],
   );
 
   const onResize = () => {
@@ -113,17 +113,17 @@ export default function Globe({
     <div
       className={cn(
         "absolute inset-0 mx-auto aspect-1/1 w-full max-w-[600px]",
-        className
+        className,
       )}
     >
       <canvas
         className={cn(
-          "h-full w-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
+          "h-full w-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]",
         )}
         onMouseMove={(e) => updateMovement(e.clientX)}
         onPointerDown={(e) =>
           updatePointerInteraction(
-            e.clientX - pointerInteractionMovement.current
+            e.clientX - pointerInteractionMovement.current,
           )
         }
         onPointerOut={() => updatePointerInteraction(null)}

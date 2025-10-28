@@ -1,7 +1,7 @@
 import { kodixCareAppId } from "@kodix/shared/db";
 import { H1 } from "@kodix/ui/typography";
 
-import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/serverHelpers";
+import { redirectIfAppNotInstalled } from "~/helpers/miscelaneous/server-helpers";
 
 import { BackButton } from "./_components/back-button";
 
