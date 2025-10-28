@@ -4,6 +4,11 @@
   "files": {
     "includes": ["**", "!!**/rbc-styles.css", "!!.vscode/kodix.code-snippets"]
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2
