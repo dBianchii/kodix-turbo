@@ -27,7 +27,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@kodix/biome-config": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
     "typescript": "catalog:"

@@ -1,7 +1,7 @@
 import { ZCpfSchema, ZPhoneSchema } from "@kodix/shared/schemas";
 import { z } from "zod";
 
-export const ZRegisterInputSchema = z.object({
+const zCommonFields = z.object({
   bairro: z
     .string()
     .min(2, "Bairro deve ter pelo menos 2 caracteres")
@@ -15,11 +15,11 @@ export const ZRegisterInputSchema = z.object({
   cpf: ZCpfSchema,
   email: z.email("Email inválido"),
   estado: z.string().length(2, "Estado deve ter 2 caracteres").optional(),
+  isUpdate: z.boolean(),
   logradouro: z
     .string()
     .min(3, "Logradouro deve ter pelo menos 3 caracteres")
     .optional(),
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   numero: z.string().optional(),
   phone: ZPhoneSchema.refine(
     (phone) => phone?.startsWith("+55"),
@@ -27,7 +27,25 @@ export const ZRegisterInputSchema = z.object({
   ).optional(),
   withAddress: z.boolean(),
 });
+
+const zName = z.string().min(2, "Nome deve ter pelo menos 2 characters");
+export const ZRegisterInputSchema = z.discriminatedUnion("isUpdate", [
+  z.object({
+    ...zCommonFields.shape,
+    isUpdate: z.literal(false),
+    name: zName,
+  }),
+  z.object({
+    ...zCommonFields.shape,
+    isUpdate: z.literal(true),
+    name: zName.optional(),
+  }),
+]);
 export type TRegisterInputSchema = z.infer<typeof ZRegisterInputSchema>;
+export type RegisterInputSchemaKeys = Exclude<
+  keyof TRegisterInputSchema,
+  "cpf" | "isUpdate" | "withAddress"
+>;
 
 export const ZGetByCpfInputSchema = z.object({
   cpf: ZCpfSchema,

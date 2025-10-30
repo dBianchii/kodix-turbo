@@ -1,4 +1,5 @@
 import { caRepository } from "@cash/db/repositories";
+import { getPostHogServer } from "@kodix/posthog";
 import { TRPCError } from "@trpc/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
@@ -15,9 +16,11 @@ interface RegisterHandlerInput {
   input: TRegisterInputSchema;
 }
 
-const BRAZIL_PHONE_COUNTRY_CODE_REGEX = /^\+55/;
+export const BRAZIL_PHONE_COUNTRY_CODE_REGEX = /^\+55/;
 
 export async function registerHandler({ input }: RegisterHandlerInput) {
+  const posthog = getPostHogServer();
+
   // Remove +55 country code from phone (ContaAzul expects DDXXXXXXXXX format)
   const phoneWithoutCountryCode = input.phone?.replace(
     BRAZIL_PHONE_COUNTRY_CODE_REGEX,
@@ -25,14 +28,6 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
   );
 
   let caId: string;
-
-  const existingClient = await caRepository.findClientByCpf(input.cpf);
-  if (existingClient) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "CPF já cadastrado",
-    });
-  }
 
   const registeredFromFormAt = new Date().toISOString();
   const newAddress:
@@ -92,6 +87,7 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
       caId = id;
     }
   } catch (error) {
+    posthog.captureException(error);
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: error instanceof Error ? error.message : "Unknown error",

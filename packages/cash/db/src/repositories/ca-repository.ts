@@ -37,10 +37,6 @@ export async function updateCAToken(
 
 export function findClientByCpf(cpf: string, db: Drizzle = _db) {
   return db.query.clients.findFirst({
-    columns: {
-      email: true,
-      phone: true,
-    },
     where: eq(clients.document, cpf),
   });
 }
