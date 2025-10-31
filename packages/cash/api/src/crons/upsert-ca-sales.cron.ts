@@ -134,6 +134,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
 
           // Validate product price
           if (
+            product.estoque.valor_venda === undefined ||
             product.estoque.valor_venda <= 0 ||
             !Number.isFinite(product.estoque.valor_venda)
           ) {
