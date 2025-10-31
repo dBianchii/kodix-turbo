@@ -476,7 +476,7 @@ export function listSaleItemsBySaleId(params: ListSaleItemsBySaleIdParams) {
 
 export const ZCAGetProductResponseSchema = z.object({
   estoque: z.object({
-    valor_venda: z.number(),
+    valor_venda: z.number().optional(),
   }),
   id: z.string(),
   nome: z.string(),
