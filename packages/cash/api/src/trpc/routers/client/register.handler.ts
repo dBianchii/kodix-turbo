@@ -1,4 +1,5 @@
 import { caRepository } from "@cash/db/repositories";
+import { getPostHogServer } from "@kodix/posthog";
 import { TRPCError } from "@trpc/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
@@ -123,8 +124,6 @@ async function syncToDatabase(
 }
 
 export async function registerHandler({ input }: RegisterHandlerInput) {
-  // const posthog = getPostHogServer();
-
   const phoneWithoutCountryCode = input.phone?.replace(
     BRAZIL_PHONE_COUNTRY_CODE_REGEX,
     "",
@@ -176,7 +175,10 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
 
     await syncToDatabase(caId, input, newAddress);
   } catch (error) {
-    // posthog.captureException(error);
+    const posthog = getPostHogServer();
+
+    posthog.captureException(error);
+    await posthog.shutdown();
 
     if (error instanceof TRPCError) {
       throw error;
