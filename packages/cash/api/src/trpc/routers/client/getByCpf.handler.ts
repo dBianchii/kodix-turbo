@@ -46,7 +46,7 @@ export async function getByCpfHandler({ input }: GetByCpfHandlerInput) {
   };
 
   addToMissingOrDifferentFields("name", caPerson.nome);
-  addToMissingOrDifferentFields("email", caPerson.email);
+  addToMissingOrDifferentFields("email", caPerson.email?.toLowerCase());
   //TODO: A conta azul não retorna o telefone celular, por isso não é possível verificar se ele é diferente pelo lado deles.
   if (!dbClient?.phone) {
     missingOrDifferentFields.push("phone");
