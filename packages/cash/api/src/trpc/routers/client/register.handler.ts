@@ -17,32 +17,121 @@ interface RegisterHandlerInput {
 
 export const BRAZIL_PHONE_COUNTRY_CODE_REGEX = /^\+55/;
 
+function prepareAddress(input: TRegisterInputSchema) {
+  if (!input.withAddress) return;
+
+  return {
+    bairro: input.bairro,
+    cep: input.cep,
+    cidade: input.cidade,
+    complemento: input.complemento,
+    estado: input.estado,
+    logradouro: input.logradouro,
+    numero: input.numero,
+    pais: "Brasil",
+  };
+}
+
+function mergeAddresses(
+  existingAddress:
+    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
+    | undefined,
+  newAddress: NonNullable<CreateContaAzulPersonParams["enderecos"]>[number],
+) {
+  const addresses = existingAddress ? [existingAddress] : [];
+  return addresses.filter((a) => a.cep !== newAddress.cep).concat([newAddress]);
+}
+
+async function updateExistingPerson(
+  existingPerson: {
+    id: string;
+    endereco?: NonNullable<CreateContaAzulPersonParams["enderecos"]>[number];
+  },
+  payload: Omit<CreateContaAzulPersonParams, "nome">,
+  input: TRegisterInputSchema,
+  newAddress:
+    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
+    | undefined,
+) {
+  const updatePayload: Parameters<typeof updateContaAzulPerson>[0] = {
+    ...payload,
+    id: existingPerson.id,
+  };
+
+  if (input.name) {
+    updatePayload.nome = input.name;
+  }
+
+  if (newAddress) {
+    updatePayload.enderecos = mergeAddresses(
+      existingPerson.endereco,
+      newAddress,
+    );
+  }
+
+  await updateContaAzulPerson(updatePayload);
+  return existingPerson.id;
+}
+
+async function createNewPerson(
+  payload: Omit<CreateContaAzulPersonParams, "nome">,
+  name: string,
+) {
+  const { id } = await createContaAzulPerson({
+    ...payload,
+    nome: name,
+  });
+  return id;
+}
+
+async function syncToDatabase(
+  caId: string,
+  input: TRegisterInputSchema,
+  newAddress:
+    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
+    | undefined,
+) {
+  const dbFields = {
+    bairro: newAddress?.bairro,
+    caId,
+    cep: newAddress?.cep,
+    cidade: newAddress?.cidade,
+    complemento: newAddress?.complemento,
+    document: input.cpf,
+    email: input.email,
+    estado: newAddress?.estado,
+    logradouro: newAddress?.logradouro,
+    numero: newAddress?.numero,
+    pais: newAddress?.pais,
+    phone: input.phone,
+    registeredFromFormAt: new Date().toISOString(),
+    type: "Física" as const,
+  };
+
+  if (input.isUpdate) {
+    await caRepository.updateClientByCaId(caId, {
+      ...dbFields,
+      name: input.name,
+    });
+    return;
+  }
+
+  await caRepository.createClient({
+    ...dbFields,
+    name: input.name,
+  });
+}
+
 export async function registerHandler({ input }: RegisterHandlerInput) {
   // const posthog = getPostHogServer();
 
-  // Remove +55 country code from phone (ContaAzul expects DDXXXXXXXXX format)
   const phoneWithoutCountryCode = input.phone?.replace(
     BRAZIL_PHONE_COUNTRY_CODE_REGEX,
     "",
   );
 
-  let caId: string;
-
   const registeredFromFormAt = new Date().toISOString();
-  const newAddress:
-    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
-    | undefined = input.withAddress
-    ? {
-        bairro: input.bairro,
-        cep: input.cep,
-        cidade: input.cidade,
-        complemento: input.complemento,
-        estado: input.estado,
-        logradouro: input.logradouro,
-        numero: input.numero,
-        pais: "Brasil",
-      }
-    : undefined;
+  const newAddress = prepareAddress(input);
 
   const payload: Omit<CreateContaAzulPersonParams, "nome"> = {
     cpf: input.cpf,
@@ -64,23 +153,17 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
       pagina: 1,
       tamanho_pagina: 10,
     });
-    const existingPerson = items?.[0];
-    if (existingPerson) {
-      const address = existingPerson.endereco ? [existingPerson.endereco] : [];
 
-      await updateContaAzulPerson({
-        ...payload,
-        ...(input.name ? { nome: input.name } : {}),
-        ...(newAddress
-          ? {
-              enderecos: address
-                .filter((a) => a.cep !== newAddress.cep)
-                .concat([newAddress]),
-            }
-          : {}),
-        id: existingPerson.id,
-      });
-      caId = existingPerson.id;
+    const existingPerson = items?.[0];
+
+    let caId: string;
+    if (existingPerson) {
+      caId = await updateExistingPerson(
+        existingPerson,
+        payload,
+        input,
+        newAddress,
+      );
     } else {
       if (input.isUpdate) {
         throw new TRPCError({
@@ -88,45 +171,16 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
           message: "Client not found",
         });
       }
-
-      const { id } = await createContaAzulPerson({
-        ...payload,
-        nome: input.name,
-      });
-      caId = id;
+      caId = await createNewPerson(payload, input.name);
     }
 
-    const dbUpdateOrCreateFields = {
-      bairro: newAddress?.bairro,
-      caId,
-      cep: newAddress?.cep,
-      cidade: newAddress?.cidade,
-      complemento: newAddress?.complemento,
-      document: input.cpf,
-      email: input.email,
-      estado: newAddress?.estado,
-      logradouro: newAddress?.logradouro,
-      numero: newAddress?.numero,
-      pais: newAddress?.pais,
-      phone: input.phone,
-      registeredFromFormAt: new Date().toISOString(),
-      type: "Física" as const,
-    };
-
-    if (input.isUpdate) {
-      await caRepository.updateClientByCaId(caId, {
-        ...dbUpdateOrCreateFields,
-        name: input.name,
-      });
-      return;
-    }
-
-    await caRepository.createClient({
-      ...dbUpdateOrCreateFields,
-      name: input.name,
-    });
+    await syncToDatabase(caId, input, newAddress);
   } catch (error) {
     // posthog.captureException(error);
+
+    if (error instanceof TRPCError) {
+      throw error;
+    }
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: error instanceof Error ? error.message : "Unknown error",
