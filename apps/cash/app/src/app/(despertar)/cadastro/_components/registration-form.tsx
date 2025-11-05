@@ -138,7 +138,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
         try {
           await registerMutation.mutateAsync({
             ...values,
-            // biome-ignore lint/style/noNonNullAssertion: When we are updating, the name is optional
+            // biome-ignore lint/style/noNonNullAssertion: The non-null assertion is safe because when isUpdate is false, name is guaranteed to exist by the discriminated union schema.
             name: values.name!,
           });
         } catch {

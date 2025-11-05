@@ -27,7 +27,7 @@ const zCommonFields = z.object({
   withAddress: z.boolean().default(false),
 });
 
-const zName = z.string().min(2, "Nome deve ter pelo menos 2 characters");
+const zName = z.string().min(2, "Nome deve ter pelo menos 2 caracteres");
 export const ZRegisterInputSchema = z.discriminatedUnion("isUpdate", [
   z.object({
     ...zCommonFields.shape,
