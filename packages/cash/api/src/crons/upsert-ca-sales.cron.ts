@@ -15,17 +15,17 @@ import { verifiedQstashCron } from "./_utils";
 
 const LOOKBACK_DAYS = 1;
 
-type CAPersonPhone = Awaited<
-  ReturnType<typeof listContaAzulPersons>
->["items"][number]["telefone"];
+// type CAPersonPhone = NonNullable<
+//   Awaited<ReturnType<typeof listContaAzulPersons>>["items"]
+// >[number]["telefone"];
 
-function normalizePhoneNumber(phone: CAPersonPhone) {
-  if (!phone) return;
-  if (phone.startsWith("+")) {
-    return phone;
-  }
-  return `+55${phone}`;
-}
+// function normalizePhoneNumber(phone: CAPersonPhone) {
+//   if (!phone) return;
+//   if (phone.startsWith("+")) {
+//     return phone;
+//   }
+//   return `+55${phone}`;
+// }
 
 function toCents(amount: number) {
   return Math.round(amount * 100);
@@ -264,7 +264,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
               name: caClient.nome,
               numero: caClient.endereco?.numero,
               pais: caClient.endereco?.pais,
-              phone: normalizePhoneNumber(caClient.telefone),
+              // phone: normalizePhoneNumber(caClient.telefone), //TODO: Add phone to DB if we can get it from the API
               type: caClient.tipo_pessoa,
             }) satisfies typeof clients.$inferInsert,
         ),
