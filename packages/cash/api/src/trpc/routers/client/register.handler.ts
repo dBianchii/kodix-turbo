@@ -65,6 +65,7 @@ async function syncToDatabase(
   newAddress:
     | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
     | undefined,
+  registeredFromFormAt: string,
 ) {
   const dbFields = {
     bairro: newAddress?.bairro,
@@ -79,7 +80,7 @@ async function syncToDatabase(
     numero: newAddress?.numero,
     pais: newAddress?.pais,
     phone: input.phone,
-    registeredFromFormAt: new Date().toISOString(),
+    registeredFromFormAt,
     type: "Física" as const,
   };
 
@@ -151,7 +152,7 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
       caId = id;
     }
 
-    await syncToDatabase(caId, input, newAddress);
+    await syncToDatabase(caId, input, newAddress, registeredFromFormAt);
   } catch (error) {
     const posthog = getPostHogServer();
 
