@@ -1,29 +1,24 @@
 import { Alert, AlertDescription, AlertTitle } from "@kodix/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Info } from "lucide-react";
 
 interface CpfAlreadyRegisteredAlertProps {
-  email: boolean;
-  phone: boolean;
+  hasMissingOrDifferentFields: boolean;
 }
 
 export function CpfAlreadyRegisteredAlert({
-  email,
-  phone,
+  hasMissingOrDifferentFields,
 }: CpfAlreadyRegisteredAlertProps) {
-  const hasBoth = email && phone;
-
-  let missingInfoMessage = "";
-  if (!hasBoth) {
-    if (!(email || phone)) {
-      missingInfoMessage =
-        "No entanto, seu cadastro está sem e-mail e telefone. Peça ao atendente do caixa para adicionar essas informações no sistema.";
-    } else if (email) {
-      missingInfoMessage =
-        "No entanto, seu cadastro está sem telefone. Peça ao atendente do caixa para adicionar essa informação no sistema.";
-    } else {
-      missingInfoMessage =
-        "No entanto, seu cadastro está sem e-mail. Peça ao atendente do caixa para adicionar essa informação no sistema.";
-    }
+  if (hasMissingOrDifferentFields) {
+    return (
+      <Alert variant="default">
+        <Info />
+        <AlertTitle>Complete seu cadastro</AlertTitle>
+        <AlertDescription>
+          Seu CPF já está cadastrado, mas faltam algumas informações. Por favor,
+          preencha os campos abaixo para completar seu cadastro.
+        </AlertDescription>
+      </Alert>
+    );
   }
 
   return (
@@ -33,12 +28,6 @@ export function CpfAlreadyRegisteredAlert({
       <AlertDescription>
         O seu CPF já está cadastrado no nosso sistema. Você não precisa se
         cadastrar novamente. 🙏
-        {missingInfoMessage.length ? (
-          <>
-            <br />
-            {missingInfoMessage}
-          </>
-        ) : null}
       </AlertDescription>
     </Alert>
   );

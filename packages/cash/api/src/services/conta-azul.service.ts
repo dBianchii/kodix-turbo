@@ -225,39 +225,37 @@ interface ListContaAzulPersonsParams {
 }
 
 export const ZCAListPersonsResponseSchema = z.object({
-  items: z.array(
-    z.object({
-      documento: z
-        .string()
-        .transform(emptyToNull) // Some clients have an empty string for the document
-        .describe("Documento da pessoa (CPF/CNPJ)"),
-      email: z
-        .string()
-        .transform(emptyToNull) // Some clients have an empty string for the email
-        .describe("Email da pessoa"),
-      endereco: z
-        .object({
-          bairro: z.string().optional(),
-          cep: z.string().optional(),
-          cidade: z.string().optional(),
-          complemento: z.string().optional(),
-          estado: z.string().optional(),
-          logradouro: z.string().optional(),
-          numero: z.string().optional(),
-          pais: z.string().optional(),
-        })
-        .optional(),
-      id: z.string().describe("ID da pessoa"),
-      nome: z
-        .string()
-        .describe("Nome da pessoa (física, jurídica ou estrangeira)"),
-      telefone: z
-        .string()
-        .transform(emptyToNull)
-        .describe("Telefone da pessoa"),
-      tipo_pessoa: clientsSchema.shape.type,
-    }),
-  ),
+  items: z
+    .array(
+      z.object({
+        documento: z
+          .string()
+          .transform(emptyToNull) // Some clients have an empty string for the document
+          .describe("Documento da pessoa (CPF/CNPJ)"),
+        email: z
+          .string()
+          .transform(emptyToNull) // Some clients have an empty string for the email
+          .describe("Email da pessoa"),
+        endereco: z
+          .object({
+            bairro: z.string().optional(),
+            cep: z.string().optional(),
+            cidade: z.string().optional(),
+            complemento: z.string().optional(),
+            estado: z.string().optional(),
+            logradouro: z.string().optional(),
+            numero: z.string().optional(),
+            pais: z.string().optional(),
+          })
+          .optional(),
+        id: z.string().describe("ID da pessoa"),
+        nome: z
+          .string()
+          .describe("Nome da pessoa (física, jurídica ou estrangeira)"),
+        tipo_pessoa: clientsSchema.shape.type,
+      }),
+    )
+    .or(z.literal(null)),
   totalItems: z.number().describe("Total de itens encontrados"),
 });
 

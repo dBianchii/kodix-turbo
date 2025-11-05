@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useEffectEvent, useRef, useState } from "react";
+import type { RouterOutputs } from "@cash/api";
+import { useEffect, useEffectEvent, useRef } from "react";
 import Image from "next/image";
 import { useTRPC } from "@cash/api/trpc/react/client";
 import { ZRegisterInputSchema } from "@cash/api/trpc/schemas/client";
@@ -9,27 +10,20 @@ import { Alert, AlertDescription, AlertTitle } from "@kodix/ui/alert";
 import { Button } from "@kodix/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
 import { PhoneInput } from "@kodix/ui/common/phone-input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  useForm,
-} from "@kodix/ui/form";
+import { Field, FieldError, FieldGroup, FieldLabel } from "@kodix/ui/field";
+import { Form, useForm } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "@kodix/ui/input-group";
-import { Label } from "@kodix/ui/label";
 import { Spinner } from "@kodix/ui/spinner";
 import { Switch } from "@kodix/ui/switch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import cep from "cep-promise";
-import { AlertCircle, Check } from "lucide-react";
+import { AlertCircle } from "lucide-react";
+import { Controller } from "react-hook-form";
 
 import DespertarLogo from "./_assets/despertar-logo.png";
 import { CadastroSuccess } from "./_components/cadastro-success";
@@ -65,11 +59,14 @@ const addressValues = {
   numero: undefined,
 };
 
+type MissingOrDifferentFields = NonNullable<
+  RouterOutputs["client"]["getByCpf"]["missingOrDifferentFields"]
+>[number];
+
 export default function CadastroPage() {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
-  const [addAddress, setAddAddress] = useState(false);
   const numeroInputRef = useRef<HTMLInputElement>(null);
 
   const registerMutation = useMutation(
@@ -77,7 +74,6 @@ export default function CadastroPage() {
       onSuccess: () => {
         form.reset();
         queryClient.invalidateQueries(trpc.client.getByCpf.pathFilter());
-        setAddAddress(false);
       },
     }),
   );
@@ -87,10 +83,13 @@ export default function CadastroPage() {
       ...addressValues,
       cpf: "",
       email: "",
+      isUpdate: false,
       name: "",
       phone: "",
+      withAddress: false,
     },
-    schema: ZRegisterInputSchema.omit({ withAddress: true }),
+    schema: ZRegisterInputSchema,
+    shouldUnregister: true, //Important! This will unregister the field from the form when it is unmounted
   });
 
   const cpfValue = form.watch("cpf")?.replace(NON_DIGIT_REGEX, "");
@@ -101,18 +100,21 @@ export default function CadastroPage() {
       { cpf: cpfValue },
       {
         enabled: isValidCpf,
-        retry: false,
       },
     ),
   );
-  const isCpfAlreadyRegistered = !!cpfQuery.data;
+  useEffect(() => {
+    form.setValue("isUpdate", cpfQuery.data?.status === "missing-fields");
+  }, [cpfQuery.data, form.setValue]);
 
+  const withAddress = form.watch("withAddress");
   const validCepValue = form.watch("cep")?.replace(NON_DIGIT_REGEX, "");
+
   const cepQuery = useQuery({
-    enabled: addAddress && validCepValue?.length === CEP_LENGTH,
+    enabled: Boolean(withAddress && validCepValue?.length === CEP_LENGTH),
     queryFn: () =>
       cep(validCepValue ?? "", {
-        providers: ["brasilapi", "viacep", "widenet"],
+        providers: ["viacep", "widenet"],
       }),
     queryKey: ["cep", validCepValue],
     retry: false,
@@ -121,7 +123,6 @@ export default function CadastroPage() {
   const focusInput = useEffectEvent(() => {
     numeroInputRef.current?.focus();
   });
-
   useEffect(() => {
     if (cepQuery.data) {
       form.clearErrors("cep");
@@ -129,6 +130,7 @@ export default function CadastroPage() {
       form.setValue("bairro", cepQuery.data.neighborhood);
       form.setValue("cidade", cepQuery.data.city);
       form.setValue("estado", cepQuery.data.state);
+      form.trigger(["logradouro", "bairro", "cidade", "estado"]);
 
       const timeoutId = setTimeout(() => {
         focusInput();
@@ -145,13 +147,17 @@ export default function CadastroPage() {
     }
   }, [cepQuery.data, cepQuery.error, form]);
 
+  const shouldShowField = (field: MissingOrDifferentFields) =>
+    cpfQuery.data?.status === "not-found" ||
+    (cpfQuery.data?.status === "missing-fields" &&
+      cpfQuery.data?.missingOrDifferentFields?.includes(field));
+
   if (registerMutation.isSuccess) {
     return (
       <CadastroSuccess
         onReset={() => {
           registerMutation.reset();
           form.reset();
-          setAddAddress(false);
         }}
       />
     );
@@ -174,348 +180,414 @@ export default function CadastroPage() {
           <Form {...form}>
             <form
               className="space-y-4"
-              onSubmit={form.handleSubmit(async (data) => {
+              onSubmit={form.handleSubmit(async (values) => {
                 try {
                   await registerMutation.mutateAsync({
-                    ...data,
-                    withAddress: addAddress,
+                    ...values,
+                    // biome-ignore lint/style/noNonNullAssertion: When we are updating, the name is optional
+                    name: values.name!,
                   });
                 } catch {
                   /* Error is already captured by mutation state */
                 }
               })}
             >
-              <FormField
-                control={form.control}
-                name="cpf"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>CPF</FormLabel>
-                    <FormControl>
-                      <InputGroup>
-                        <InputGroupInput
-                          {...field}
-                          inputMode="numeric"
-                          onChange={(e) => {
-                            const formattedValue = formatCpf(e.target.value);
-                            field.onChange(formattedValue);
+              <FieldGroup>
+                <Controller
+                  control={form.control}
+                  name="cpf"
+                  render={({ field, fieldState }) => {
+                    const inputId = `field-${field.name}`;
+                    return (
+                      <Field data-invalid={fieldState.invalid}>
+                        <FieldLabel htmlFor={inputId}>CPF</FieldLabel>
+                        <InputGroup>
+                          <InputGroupInput
+                            {...field}
+                            aria-invalid={fieldState.invalid}
+                            id={inputId}
+                            inputMode="numeric"
+                            onChange={(e) => {
+                              const formattedValue = formatCpf(e.target.value);
+                              field.onChange(formattedValue);
 
-                            const justNumbers = formattedValue.replace(
-                              NON_DIGIT_REGEX,
-                              "",
-                            );
-                            if (justNumbers.length === CPF_LENGTH) {
-                              form.trigger("cpf"); // Trigger validation immediately
+                              const justNumbers = formattedValue.replace(
+                                NON_DIGIT_REGEX,
+                                "",
+                              );
+                              if (justNumbers.length === CPF_LENGTH) {
+                                form.trigger("cpf"); // Trigger validation immediately
+                              }
+                            }}
+                            placeholder="000.000.000-00"
+                            type="text"
+                          />
+                          {cpfQuery.isLoading && (
+                            <InputGroupAddon
+                              align="inline-end"
+                              className="cursor-default"
+                            >
+                              <Spinner />
+                            </InputGroupAddon>
+                          )}
+                        </InputGroup>
+                        <FieldError errors={[fieldState.error]} />
+                        {(cpfQuery.data?.status === "missing-fields" ||
+                          cpfQuery.data?.status === "completed") && (
+                          <CpfAlreadyRegisteredAlert
+                            hasMissingOrDifferentFields={
+                              cpfQuery.data?.status === "missing-fields"
                             }
-                          }}
-                          placeholder="000.000.000-00"
-                          type="text"
-                        />
-                        {!cpfQuery.isPending && (
-                          <InputGroupAddon
-                            align="inline-end"
-                            className="cursor-default"
-                          >
-                            {cpfQuery.data ? null : (
-                              <Check className="text-green-500" />
-                            )}
-                          </InputGroupAddon>
+                          />
                         )}
-                      </InputGroup>
-                    </FormControl>
-                    <FormMessage />
-                    {cpfQuery.data && (
-                      <CpfAlreadyRegisteredAlert
-                        email={cpfQuery.data.email}
-                        phone={cpfQuery.data.phone}
-                      />
-                    )}
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Nome completo</FormLabel>
-                    <FormControl>
-                      <Input
-                        autoComplete="name"
-                        disabled={isCpfAlreadyRegistered}
-                        placeholder="João da Silva"
-                        type="text"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        autoComplete="email"
-                        disabled={isCpfAlreadyRegistered}
-                        placeholder="nome@email.com"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phone"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Telefone</FormLabel>
-                    <FormControl>
-                      <PhoneInput
-                        {...field}
-                        countries={["BR"]}
-                        defaultCountry="BR"
-                        disabled={isCpfAlreadyRegistered}
-                        inputMode="tel"
-                        placeholder="(16) 99999-9999"
-                        type="tel"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex flex-row items-center gap-2 text-center">
-                <Switch
-                  checked={addAddress}
-                  disabled={isCpfAlreadyRegistered}
-                  id="addAddress"
-                  onCheckedChange={(checked) => {
-                    const toSetValue = checked ? "" : undefined;
-
-                    for (const key of Object.keys(addressValues)) {
-                      form.setValue(
-                        key as keyof typeof addressValues,
-                        toSetValue,
-                      );
-                    }
-
-                    setAddAddress(checked);
+                      </Field>
+                    );
                   }}
                 />
-                <Label className="text-center" htmlFor="addAddress">
-                  Adicionar endereço (opcional)
-                </Label>
-              </div>
-              {addAddress && (
-                <>
-                  <FormField
-                    control={form.control}
-                    name="cep"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>CEP</FormLabel>
-                        <FormControl>
-                          <InputGroup>
-                            <InputGroupInput
-                              {...field}
-                              autoComplete="postal-code"
-                              disabled={
-                                field.disabled ||
-                                cepQuery.isFetching ||
-                                isCpfAlreadyRegistered
-                              }
-                              inputMode="numeric"
-                              onChange={(e) => {
-                                const cleanedValue = e.target.value.replace(
-                                  NON_DIGIT_REGEX,
-                                  "",
-                                );
-                                const formatted = cleanedValue
-                                  .replace(CEP_FORMAT_REGEX, "$1-$2")
-                                  .slice(0, 9);
-
-                                field.onChange(formatted);
-                              }}
-                              placeholder="00000-000"
-                              type="text"
-                            />
-                            {cepQuery.isFetching && (
-                              <InputGroupAddon align="inline-end">
-                                <Spinner />
-                              </InputGroupAddon>
-                            )}
-                          </InputGroup>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                {cpfQuery.isLoading ? null : (
+                  <>
+                    {shouldShowField("name") && (
+                      <Controller
+                        control={form.control}
+                        name="name"
+                        render={({ field, fieldState }) => {
+                          const inputId = `field-${field.name}`;
+                          return (
+                            <Field data-invalid={fieldState.invalid}>
+                              <FieldLabel htmlFor={inputId}>
+                                Nome completo
+                              </FieldLabel>
+                              <Input
+                                {...field}
+                                aria-invalid={fieldState.invalid}
+                                autoComplete="name"
+                                id={inputId}
+                                placeholder="João da Silva"
+                                type="text"
+                              />
+                              <FieldError errors={[fieldState.error]} />
+                            </Field>
+                          );
+                        }}
+                      />
                     )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="logradouro"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Logradouro</FormLabel>
-                        <FormControl>
-                          <Input
-                            autoComplete="street-address"
-                            disabled={
-                              cepQuery.isFetching || isCpfAlreadyRegistered
-                            }
-                            placeholder="Rua, Avenida, etc."
-                            type="text"
-                            {...field}
+                    {shouldShowField("email") && (
+                      <Controller
+                        control={form.control}
+                        name="email"
+                        render={({ field, fieldState }) => {
+                          const inputId = `field-${field.name}`;
+                          return (
+                            <Field data-invalid={fieldState.invalid}>
+                              <FieldLabel htmlFor={inputId}>Email</FieldLabel>
+                              <Input
+                                {...field}
+                                aria-invalid={fieldState.invalid}
+                                autoComplete="email"
+                                id={inputId}
+                                placeholder="nome@email.com"
+                              />
+                              <FieldError errors={[fieldState.error]} />
+                            </Field>
+                          );
+                        }}
+                      />
+                    )}
+                    {shouldShowField("phone") && (
+                      <Controller
+                        control={form.control}
+                        name="phone"
+                        render={({ field, fieldState }) => {
+                          const inputId = `field-${field.name}`;
+                          return (
+                            <Field data-invalid={fieldState.invalid}>
+                              <FieldLabel htmlFor={inputId}>
+                                Telefone
+                              </FieldLabel>
+                              <PhoneInput
+                                {...field}
+                                aria-invalid={fieldState.invalid}
+                                countries={["BR"]}
+                                defaultCountry="BR"
+                                id={inputId}
+                                inputMode="tel"
+                                placeholder="(16) 99999-9999"
+                                type="tel"
+                              />
+                              <FieldError errors={[fieldState.error]} />
+                            </Field>
+                          );
+                        }}
+                      />
+                    )}
+                    {cpfQuery.data?.status === "not-found" && (
+                      <Controller
+                        control={form.control}
+                        name="withAddress"
+                        render={({ field, fieldState }) => (
+                          <Field
+                            data-invalid={fieldState.invalid}
+                            orientation="horizontal"
+                          >
+                            <Switch
+                              checked={field.value}
+                              id="addAddress"
+                              onCheckedChange={(checked) => {
+                                const toSetValue = checked ? "" : undefined;
+
+                                for (const key of Object.keys(addressValues)) {
+                                  form.setValue(
+                                    key as keyof typeof addressValues,
+                                    toSetValue,
+                                  );
+                                }
+
+                                field.onChange(checked);
+                              }}
+                            />
+                            <FieldLabel
+                              className="text-center"
+                              htmlFor="addAddress"
+                            >
+                              Adicionar endereço (opcional)
+                            </FieldLabel>
+                          </Field>
+                        )}
+                      />
+                    )}
+                    {form.watch("withAddress") && (
+                      <>
+                        <Controller
+                          control={form.control}
+                          name="cep"
+                          render={({ field, fieldState }) => {
+                            const inputId = `field-${field.name}`;
+                            return (
+                              <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel htmlFor={inputId}>CEP</FieldLabel>
+                                <InputGroup>
+                                  <InputGroupInput
+                                    {...field}
+                                    aria-invalid={fieldState.invalid}
+                                    autoComplete="postal-code"
+                                    disabled={
+                                      field.disabled || cepQuery.isFetching
+                                    }
+                                    id={inputId}
+                                    inputMode="numeric"
+                                    onChange={(e) => {
+                                      const cleanedValue =
+                                        e.target.value.replace(
+                                          NON_DIGIT_REGEX,
+                                          "",
+                                        );
+                                      const formatted = cleanedValue
+                                        .replace(CEP_FORMAT_REGEX, "$1-$2")
+                                        .slice(0, 9);
+
+                                      field.onChange(formatted);
+                                    }}
+                                    placeholder="00000-000"
+                                    type="text"
+                                  />
+                                  {cepQuery.isFetching && (
+                                    <InputGroupAddon align="inline-end">
+                                      <Spinner />
+                                    </InputGroupAddon>
+                                  )}
+                                </InputGroup>
+                                <FieldError errors={[fieldState.error]} />
+                              </Field>
+                            );
+                          }}
+                        />
+                        <Controller
+                          control={form.control}
+                          name="logradouro"
+                          render={({ field, fieldState }) => {
+                            const inputId = `field-${field.name}`;
+                            return (
+                              <Field data-invalid={fieldState.invalid}>
+                                <FieldLabel htmlFor={inputId}>
+                                  Logradouro
+                                </FieldLabel>
+                                <Input
+                                  {...field}
+                                  aria-invalid={fieldState.invalid}
+                                  autoComplete="street-address"
+                                  disabled={cepQuery.isFetching}
+                                  id={inputId}
+                                  placeholder="Rua, Avenida, etc."
+                                  type="text"
+                                />
+                                <FieldError errors={[fieldState.error]} />
+                              </Field>
+                            );
+                          }}
+                        />
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <Controller
+                            control={form.control}
+                            name="numero"
+                            render={({ field, fieldState }) => {
+                              const inputId = `field-${field.name}`;
+                              return (
+                                <Field data-invalid={fieldState.invalid}>
+                                  <FieldLabel htmlFor={inputId}>
+                                    Número
+                                  </FieldLabel>
+                                  <Input
+                                    {...field}
+                                    aria-invalid={fieldState.invalid}
+                                    id={inputId}
+                                    inputMode="numeric"
+                                    onChange={(e) => {
+                                      const onlyNumbers =
+                                        e.target.value.replace(
+                                          NON_DIGIT_REGEX,
+                                          "",
+                                        );
+                                      field.onChange(onlyNumbers);
+                                    }}
+                                    pattern="[0-9]*"
+                                    placeholder="123"
+                                    ref={(e) => {
+                                      field.ref(e);
+                                      numeroInputRef.current = e;
+                                    }}
+                                    type="text"
+                                  />
+                                  <FieldError errors={[fieldState.error]} />
+                                </Field>
+                              );
+                            }}
                           />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
+                          <Controller
+                            control={form.control}
+                            name="complemento"
+                            render={({ field, fieldState }) => {
+                              const inputId = `field-${field.name}`;
+                              return (
+                                <Field data-invalid={fieldState.invalid}>
+                                  <FieldLabel htmlFor={inputId}>
+                                    Complemento
+                                  </FieldLabel>
+                                  <Input
+                                    {...field}
+                                    aria-invalid={fieldState.invalid}
+                                    disabled={cepQuery.isFetching}
+                                    id={inputId}
+                                    placeholder="Apto 101, Bloco A, etc."
+                                    type="text"
+                                  />
+                                  <FieldError errors={[fieldState.error]} />
+                                </Field>
+                              );
+                            }}
+                          />
+                        </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                          <Controller
+                            control={form.control}
+                            name="bairro"
+                            render={({ field, fieldState }) => {
+                              const inputId = `field-${field.name}`;
+                              return (
+                                <Field data-invalid={fieldState.invalid}>
+                                  <FieldLabel htmlFor={inputId}>
+                                    Bairro
+                                  </FieldLabel>
+                                  <Input
+                                    {...field}
+                                    aria-invalid={fieldState.invalid}
+                                    disabled={cepQuery.isFetching}
+                                    id={inputId}
+                                    placeholder="Centro"
+                                    type="text"
+                                  />
+                                  <FieldError errors={[fieldState.error]} />
+                                </Field>
+                              );
+                            }}
+                          />
+                          <Controller
+                            control={form.control}
+                            name="cidade"
+                            render={({ field, fieldState }) => {
+                              const inputId = `field-${field.name}`;
+                              return (
+                                <Field data-invalid={fieldState.invalid}>
+                                  <FieldLabel htmlFor={inputId}>
+                                    Cidade
+                                  </FieldLabel>
+                                  <Input
+                                    {...field}
+                                    aria-invalid={fieldState.invalid}
+                                    autoComplete="address-level2"
+                                    disabled={cepQuery.isFetching}
+                                    id={inputId}
+                                    placeholder="São Paulo"
+                                    type="text"
+                                  />
+                                  <FieldError errors={[fieldState.error]} />
+                                </Field>
+                              );
+                            }}
+                          />
+                          <Controller
+                            control={form.control}
+                            name="estado"
+                            render={({ field, fieldState }) => {
+                              const inputId = `field-${field.name}`;
+                              return (
+                                <Field data-invalid={fieldState.invalid}>
+                                  <FieldLabel htmlFor={inputId}>
+                                    Estado
+                                  </FieldLabel>
+                                  <Input
+                                    {...field}
+                                    aria-invalid={fieldState.invalid}
+                                    autoComplete="address-level1"
+                                    disabled={cepQuery.isFetching}
+                                    id={inputId}
+                                    maxLength={2}
+                                    placeholder="SP"
+                                    type="text"
+                                  />
+                                  <FieldError errors={[fieldState.error]} />
+                                </Field>
+                              );
+                            }}
+                          />
+                        </div>
+                      </>
                     )}
-                  />
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="numero"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Número</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              disabled={isCpfAlreadyRegistered}
-                              inputMode="numeric"
-                              onChange={(e) => {
-                                const onlyNumbers = e.target.value.replace(
-                                  NON_DIGIT_REGEX,
-                                  "",
-                                );
-                                field.onChange(onlyNumbers);
-                              }}
-                              pattern="[0-9]*"
-                              placeholder="123"
-                              ref={(e) => {
-                                field.ref(e);
-                                numeroInputRef.current = e;
-                              }}
-                              type="text"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="complemento"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Complemento</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={isCpfAlreadyRegistered}
-                              placeholder="Apto 101, Bloco A, etc."
-                              type="text"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <FormField
-                      control={form.control}
-                      name="bairro"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Bairro</FormLabel>
-                          <FormControl>
-                            <Input
-                              disabled={
-                                cepQuery.isFetching || isCpfAlreadyRegistered
-                              }
-                              placeholder="Centro"
-                              type="text"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="cidade"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Cidade</FormLabel>
-                          <FormControl>
-                            <Input
-                              autoComplete="address-level2"
-                              disabled={
-                                cepQuery.isFetching || isCpfAlreadyRegistered
-                              }
-                              placeholder="São Paulo"
-                              type="text"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="estado"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Estado</FormLabel>
-                          <FormControl>
-                            <Input
-                              autoComplete="address-level1"
-                              disabled={
-                                cepQuery.isFetching || isCpfAlreadyRegistered
-                              }
-                              maxLength={2}
-                              placeholder="SP"
-                              type="text"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </>
-              )}
-              {registerMutation.error && (
-                <Alert variant="destructive">
-                  <AlertCircle />
-                  <AlertTitle>Erro ao realizar cadastro</AlertTitle>
-                  <AlertDescription>
-                    {registerMutation.error.message ||
-                      "Ocorreu um erro ao processar seu cadastro. Por favor, tente novamente."}
-                  </AlertDescription>
-                </Alert>
-              )}
+                    {registerMutation.error && (
+                      <Alert variant="destructive">
+                        <AlertCircle />
+                        <AlertTitle>Erro ao realizar cadastro</AlertTitle>
+                        <AlertDescription>
+                          {registerMutation.error.message ||
+                            "Ocorreu um erro ao processar seu cadastro. Por favor, tente novamente."}
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  </>
+                )}
 
-              <Button
-                className="mt-4 w-full"
-                disabled={isCpfAlreadyRegistered}
-                loading={registerMutation.isPending}
-                type="submit"
-                variant="default"
-              >
-                Cadastrar
-              </Button>
+                <Button
+                  className="mt-4 w-full"
+                  disabled={
+                    cpfQuery.isPending ||
+                    cpfQuery.data?.missingOrDifferentFields?.length === 0
+                  }
+                  loading={registerMutation.isPending || cpfQuery.isLoading}
+                  type="submit"
+                  variant="default"
+                >
+                  Cadastrar
+                </Button>
+              </FieldGroup>
             </form>
           </Form>
         </CardContent>
