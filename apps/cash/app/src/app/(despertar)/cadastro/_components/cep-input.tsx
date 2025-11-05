@@ -6,10 +6,16 @@ import {
 } from "@kodix/ui/input-group";
 import { Spinner } from "@kodix/ui/spinner";
 import { useQuery } from "@tanstack/react-query";
-import cep, { type CEP } from "cep-promise";
+import cep, { type CEP, type Configurations } from "cep-promise";
 
 const CEP_LENGTH = 8;
 const NON_DIGIT_REGEX = /\D/g;
+
+const PROVIDERS = [
+  "viacep",
+  "widenet",
+  // "brasilapi", //brasilapi for some reason takes a long time to finish the request if the cep is not found
+] satisfies Configurations["providers"];
 
 export function CepInput({
   onCepFetched,
@@ -28,7 +34,7 @@ export function CepInput({
     enabled: validCepValue?.length === CEP_LENGTH,
     queryFn: () =>
       cep(validCepValue ?? "", {
-        providers: ["viacep", "widenet"],
+        providers: PROVIDERS,
       }),
     queryKey: ["cep", validCepValue],
     retry: false,

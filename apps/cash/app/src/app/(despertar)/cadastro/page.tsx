@@ -209,13 +209,27 @@ export default function CadastroPage() {
                         )}
                       </InputGroup>
                       <FieldError errors={[fieldState.error]} />
+                      {cpfQuery.isLoading && isValidCpf && (
+                        <div className="fade-in slide-in-from-top-2 animate-in duration-300">
+                          <Alert variant="default">
+                            <Spinner className="h-4 w-4" />
+                            <AlertTitle>Verificando CPF...</AlertTitle>
+                            <AlertDescription>
+                              Aguarde enquanto verificamos seus dados no
+                              sistema.
+                            </AlertDescription>
+                          </Alert>
+                        </div>
+                      )}
                       {(cpfQuery.data?.status === "missing-fields" ||
                         cpfQuery.data?.status === "completed") && (
-                        <CpfAlreadyRegisteredAlert
-                          hasMissingOrDifferentFields={
-                            cpfQuery.data?.status === "missing-fields"
-                          }
-                        />
+                        <div className="fade-in slide-in-from-top-2 animate-in duration-300">
+                          <CpfAlreadyRegisteredAlert
+                            hasMissingOrDifferentFields={
+                              cpfQuery.data?.status === "missing-fields"
+                            }
+                          />
+                        </div>
                       )}
                     </Field>
                   );
