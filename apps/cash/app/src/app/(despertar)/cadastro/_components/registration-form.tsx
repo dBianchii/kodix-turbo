@@ -136,11 +136,7 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
     <form
       onSubmit={form.handleSubmit(async (values) => {
         try {
-          await registerMutation.mutateAsync({
-            ...values,
-            // biome-ignore lint/style/noNonNullAssertion: The non-null assertion is safe because when isUpdate is false, name is guaranteed to exist by the discriminated union schema.
-            name: values.name!,
-          });
+          await registerMutation.mutateAsync(values);
         } catch {
           /* Error is already captured by mutation state */
         }
