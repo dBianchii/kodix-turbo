@@ -143,15 +143,16 @@ export default function CadastroPage() {
   }
 
   return (
-    <main className="flex flex-col items-center p-4 px-2">
+    <main className="flex min-h-dvh flex-col items-center px-2 py-8 pb-12">
       <Image
         alt="Logo do Despertar"
-        className="mx-auto mb-3"
+        className="mb-6"
         height={100}
         src={DespertarLogo}
         width={100}
       />
-      <Card className="w-full max-w-md">
+
+      <Card className="w-full md:max-w-md">
         <CardHeader>
           <CardTitle>Participe do programa de cashback</CardTitle>
         </CardHeader>
