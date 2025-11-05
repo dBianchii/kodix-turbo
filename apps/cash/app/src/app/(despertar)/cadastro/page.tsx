@@ -578,7 +578,6 @@ export default function CadastroPage() {
                 <Button
                   className="mt-4 w-full"
                   disabled={
-                    cpfQuery.isPending ||
                     cpfQuery.data?.missingOrDifferentFields?.length === 0
                   }
                   loading={registerMutation.isPending || cpfQuery.isLoading}
