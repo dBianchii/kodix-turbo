@@ -96,26 +96,35 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
       caId = id;
     }
 
-    await caRepository.upsertClientsByCaId([
-      {
-        bairro: newAddress?.bairro,
-        caId,
-        cep: newAddress?.cep,
-        cidade: newAddress?.cidade,
-        complemento: newAddress?.complemento,
-        document: input.cpf,
-        email: input.email,
-        estado: newAddress?.estado,
-        logradouro: newAddress?.logradouro,
-        // biome-ignore lint/style/noNonNullAssertion: this will only be accessed if we are updating a client, and in that case, the existingPerson will be defined.
-        name: input.name ?? existingPerson!.nome,
-        numero: newAddress?.numero,
-        pais: newAddress?.pais,
-        phone: input.phone,
-        registeredFromFormAt: new Date().toISOString(),
-        type: "Física",
-      },
-    ]);
+    const dbUpdateOrCreateFields = {
+      bairro: newAddress?.bairro,
+      caId,
+      cep: newAddress?.cep,
+      cidade: newAddress?.cidade,
+      complemento: newAddress?.complemento,
+      document: input.cpf,
+      email: input.email,
+      estado: newAddress?.estado,
+      logradouro: newAddress?.logradouro,
+      numero: newAddress?.numero,
+      pais: newAddress?.pais,
+      phone: input.phone,
+      registeredFromFormAt: new Date().toISOString(),
+      type: "Física" as const,
+    };
+
+    if (input.isUpdate) {
+      await caRepository.updateClientByCaId(caId, {
+        ...dbUpdateOrCreateFields,
+        name: input.name,
+      });
+      return;
+    }
+
+    await caRepository.createClient({
+      ...dbUpdateOrCreateFields,
+      name: input.name,
+    });
   } catch (error) {
     // posthog.captureException(error);
     throw new TRPCError({

@@ -24,7 +24,7 @@ const zCommonFields = z.object({
     (phone) => phone?.startsWith("+55"),
     "Telefone deve ser com o código do país (+55)",
   ).optional(),
-  withAddress: z.boolean(),
+  withAddress: z.boolean().default(false),
 });
 
 const zName = z.string().min(2, "Nome deve ter pelo menos 2 characters");
