@@ -33,16 +33,6 @@ function prepareAddress(input: TRegisterInputSchema) {
   };
 }
 
-function mergeAddresses(
-  existingAddress:
-    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
-    | undefined,
-  newAddress: NonNullable<CreateContaAzulPersonParams["enderecos"]>[number],
-) {
-  const addresses = existingAddress ? [existingAddress] : [];
-  return addresses.filter((a) => a.cep !== newAddress.cep).concat([newAddress]);
-}
-
 async function updateExistingPerson(
   existingPerson: {
     id: string;
@@ -54,35 +44,19 @@ async function updateExistingPerson(
     | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
     | undefined,
 ) {
-  const updatePayload: Parameters<typeof updateContaAzulPerson>[0] = {
+  const addresses = existingPerson.endereco ? [existingPerson.endereco] : [];
+
+  await updateContaAzulPerson({
     ...payload,
     id: existingPerson.id,
-  };
-
-  if (input.name) {
-    updatePayload.nome = input.name;
-  }
-
-  if (newAddress) {
-    updatePayload.enderecos = mergeAddresses(
-      existingPerson.endereco,
-      newAddress,
-    );
-  }
-
-  await updateContaAzulPerson(updatePayload);
-  return existingPerson.id;
-}
-
-async function createNewPerson(
-  payload: Omit<CreateContaAzulPersonParams, "nome">,
-  name: string,
-) {
-  const { id } = await createContaAzulPerson({
-    ...payload,
-    nome: name,
+    ...(input.name && { nome: input.name }),
+    ...(newAddress && {
+      enderecos: addresses
+        .filter((a) => a.cep !== newAddress.cep)
+        .concat([newAddress]),
+    }),
   });
-  return id;
+  return existingPerson.id;
 }
 
 async function syncToDatabase(
@@ -170,7 +144,11 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
           message: "Client not found",
         });
       }
-      caId = await createNewPerson(payload, input.name);
+      const { id } = await createContaAzulPerson({
+        ...payload,
+        nome: input.name,
+      });
+      caId = id;
     }
 
     await syncToDatabase(caId, input, newAddress);
