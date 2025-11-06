@@ -16,12 +16,30 @@ import {
   useForm as __useForm,
   Controller,
   FormProvider,
+  type UseFormReturn,
   useFormContext,
   useFormState,
 } from "react-hook-form";
 import { cn } from ".";
 
 import { Label } from "./label";
+
+function createForm<TOut extends FieldValues, TIn extends FieldValues>(
+  schema: ZodType<TOut, TIn>,
+) {
+  const useFormHook = (
+    props?: Omit<UseFormProps<TIn, unknown, TOut>, "resolver">,
+  ) =>
+    useForm<TOut, TIn>({
+      ...(props ?? {}),
+      schema,
+    });
+
+  const useFormContextHook: () => UseFormReturn<TIn, unknown, TOut> = () =>
+    useFormContext<TIn, unknown, TOut>();
+
+  return [useFormHook, useFormContextHook] as const;
+}
 
 function useForm<TOut extends FieldValues, TIn extends FieldValues>(
   props: Omit<UseFormProps<TIn, unknown, TOut>, "resolver"> & {
@@ -174,6 +192,7 @@ export {
   Form,
   FormItem,
   FormLabel,
+  createForm,
   FormControl,
   FormDescription,
   FormMessage,
