@@ -184,6 +184,7 @@ export const ZCAListSalesResponseSchema = z.looseObject({
       }),
       criado_em: z.string().describe("Data de criação da venda"),
       id: z.string().describe("ID da venda"),
+      itens: z.enum(["PRODUCT", "SERVICE"]),
       numero: z.number().describe("Número da venda"),
       total: z.number().describe("Total da venda"),
     }),

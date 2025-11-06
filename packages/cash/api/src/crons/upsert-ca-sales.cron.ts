@@ -60,8 +60,10 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
         tamanho_pagina: pageSize,
       });
 
-      if (itens?.length) {
-        allCASales = [...allCASales, ...itens];
+      const filteredItens = itens.filter((item) => item.itens === "PRODUCT"); // Exclude services
+
+      if (filteredItens?.length) {
+        allCASales = [...allCASales, ...filteredItens];
       }
 
       totalItens = total_itens;
