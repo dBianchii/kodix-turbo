@@ -61,6 +61,14 @@ export const clients = pgTable("client", (t) => ({
     withTimezone: true,
   }),
   type: clientTypeEnum().notNull(),
+  updatedAt: t
+    .timestamp({
+      mode: "string",
+      precision: 3,
+      withTimezone: true,
+    })
+    .$onUpdate(() => new Date().toISOString())
+    .notNull(),
 }));
 export const clientsRelations = relations(clients, ({ many }) => ({
   Sales: many(sales),

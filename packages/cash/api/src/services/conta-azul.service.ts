@@ -5,7 +5,7 @@ import { z } from "zod";
 const emptyToNull = (val: string | undefined) =>
   val === "" || val === "-" ? null : val;
 
-const FIVE_MINUTES_IN_MS = 300_000; // 5 minutes in milliseconds
+const FIVE_MINUTES_IN_MS = 300_000;
 const ONE_SECOND_IN_MS = 1000;
 
 const HTTP_STATUS_UNAUTHORIZED = 401;
@@ -244,6 +244,7 @@ export const ZCAListPersonsResponseSchema = z.object({
             cidade: z.string().optional(),
             complemento: z.string().optional(),
             estado: z.string().optional(),
+            id: z.string().optional(),
             logradouro: z.string().optional(),
             numero: z.string().optional(),
             pais: z.string().optional(),
@@ -260,7 +261,7 @@ export const ZCAListPersonsResponseSchema = z.object({
   totalItems: z.number().describe("Total de itens encontrados"),
 });
 
-/** @see https://developers.contaazul.com/docs/person-apis-openapi/v1/listarpessoas */
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/retornapessoasporfiltros */
 export function listContaAzulPersons(params: ListContaAzulPersonsParams) {
   const searchParams = new URLSearchParams();
 
@@ -366,6 +367,7 @@ export interface UpdateContaAzulPersonParams {
   }>;
   tipo_pessoa?: "Física" | "Jurídica" | "Estrangeira";
   enderecos?: Array<{
+    id?: string;
     bairro?: string;
     cep?: string;
     cidade?: string;
@@ -377,18 +379,21 @@ export interface UpdateContaAzulPersonParams {
   }>;
 }
 
-/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/atualizarpessoaparcialmenteporid */
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/atualizarparcialmentepessoa */
 export function updateContaAzulPerson(params: UpdateContaAzulPersonParams) {
   const { id, ...body } = params;
-  const url = `https://api-v2.contaazul.com/v1/pessoas/${id}`;
 
-  return makeContaAzulRequest(url, z.undefined(), {
-    body: JSON.stringify(body),
-    headers: {
-      "Content-Type": "application/json",
+  return makeContaAzulRequest(
+    `https://api-v2.contaazul.com/v1/pessoas/${id}`,
+    z.undefined(),
+    {
+      body: JSON.stringify(body),
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "PATCH",
     },
-    method: "PATCH",
-  });
+  );
 }
 
 const ZCAGetPersonResponseSchema = z.object({
@@ -428,11 +433,13 @@ const ZCAGetPersonResponseSchema = z.object({
 
 /** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/retornarapessoaporid */
 export function getContaAzulPerson(id: string) {
-  const url = `https://api-v2.contaazul.com/v1/pessoas/${id}`;
-
-  return makeContaAzulRequest(url, ZCAGetPersonResponseSchema, {
-    method: "GET",
-  });
+  return makeContaAzulRequest(
+    `https://api-v2.contaazul.com/v1/pessoas/${id}`,
+    ZCAGetPersonResponseSchema,
+    {
+      method: "GET",
+    },
+  );
 }
 
 interface ListSaleItemsBySaleIdParams {
@@ -464,13 +471,16 @@ export function listSaleItemsBySaleId(params: ListSaleItemsBySaleIdParams) {
   }
 
   const queryString = searchParams.toString();
-  const url = `https://api-v2.contaazul.com/v1/venda/${id_venda}/itens${
-    queryString ? `?${queryString}` : ""
-  }`;
 
-  return makeContaAzulRequest(url, ZCAListSaleItemsResponseSchema, {
-    method: "GET",
-  });
+  return makeContaAzulRequest(
+    `https://api-v2.contaazul.com/v1/venda/${id_venda}/itens${
+      queryString ? `?${queryString}` : ""
+    }`,
+    ZCAListSaleItemsResponseSchema,
+    {
+      method: "GET",
+    },
+  );
 }
 
 export const ZCAGetProductResponseSchema = z.object({
@@ -483,9 +493,11 @@ export const ZCAGetProductResponseSchema = z.object({
 
 /** @see https://developers.contaazul.com/docs/product-apis-openapi/v1/retornarprodutoporid */
 export function getProductById(id: string) {
-  const url = `https://api-v2.contaazul.com/v1/produtos/${id}`;
-
-  return makeContaAzulRequest(url, ZCAGetProductResponseSchema, {
-    method: "GET",
-  });
+  return makeContaAzulRequest(
+    `https://api-v2.contaazul.com/v1/produtos/${id}`,
+    ZCAGetProductResponseSchema,
+    {
+      method: "GET",
+    },
+  );
 }
