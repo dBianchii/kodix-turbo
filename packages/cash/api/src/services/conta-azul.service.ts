@@ -260,7 +260,7 @@ export const ZCAListPersonsResponseSchema = z.object({
   totalItems: z.number().describe("Total de itens encontrados"),
 });
 
-/** @see https://developers.contaazul.com/docs/person-apis-openapi/v1/listarpessoas */
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/retornapessoasporfiltros */
 export function listContaAzulPersons(params: ListContaAzulPersonsParams) {
   const searchParams = new URLSearchParams();
 
@@ -377,7 +377,7 @@ export interface UpdateContaAzulPersonParams {
   }>;
 }
 
-/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/atualizarpessoaparcialmenteporid */
+/** @see https://developers.contaazul.com/open-api-docs/open-api-person/v1/atualizarparcialmentepessoa */
 export function updateContaAzulPerson(params: UpdateContaAzulPersonParams) {
   const { id, ...body } = params;
   const url = `https://api-v2.contaazul.com/v1/pessoas/${id}`;
