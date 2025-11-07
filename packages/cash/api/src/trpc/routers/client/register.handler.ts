@@ -33,32 +33,6 @@ function prepareAddress(input: TRegisterInputSchema) {
   };
 }
 
-async function updateExistingPerson(
-  existingPerson: {
-    id: string;
-    endereco?: NonNullable<CreateContaAzulPersonParams["enderecos"]>[number];
-  },
-  payload: Omit<CreateContaAzulPersonParams, "nome">,
-  input: TRegisterInputSchema,
-  newAddress:
-    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
-    | undefined,
-) {
-  const addresses = existingPerson.endereco ? [existingPerson.endereco] : [];
-
-  await updateContaAzulPerson({
-    ...payload,
-    id: existingPerson.id,
-    ...(input.name && { nome: input.name }),
-    ...(newAddress && {
-      enderecos: addresses
-        .filter((a) => a.cep !== newAddress.cep)
-        .concat([newAddress]),
-    }),
-  });
-  return existingPerson.id;
-}
-
 async function syncToDatabase(
   caId: string,
   input: TRegisterInputSchema,
@@ -132,12 +106,22 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
 
     let caId: string;
     if (existingPerson) {
-      caId = await updateExistingPerson(
-        existingPerson,
-        payload,
-        input,
-        newAddress,
-      );
+      const addresses = existingPerson.endereco
+        ? [existingPerson.endereco]
+        : [];
+
+      await updateContaAzulPerson({
+        ...payload,
+        id: existingPerson.id,
+        ...(input.name && { nome: input.name }),
+        ...(newAddress && {
+          enderecos: addresses
+            .filter((a) => a.cep !== newAddress.cep)
+            .concat([newAddress]),
+        }),
+      });
+
+      caId = existingPerson.id;
     } else {
       if (input.isUpdate) {
         throw new TRPCError({

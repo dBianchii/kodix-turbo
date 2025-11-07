@@ -30,7 +30,7 @@ export const caTokens = pgTable("caToken", (t) => ({
       withTimezone: true,
     })
     .notNull()
-    .$onUpdate(() => new Date().toISOString()),
+    .defaultNow(),
 }));
 export const caTokenschema = createInsertSchema(caTokens);
 
@@ -61,6 +61,14 @@ export const clients = pgTable("client", (t) => ({
     withTimezone: true,
   }),
   type: clientTypeEnum().notNull(),
+  updatedAt: t
+    .timestamp({
+      mode: "string",
+      precision: 3,
+      withTimezone: true,
+    })
+    .notNull()
+    .defaultNow(),
 }));
 export const clientsRelations = relations(clients, ({ many }) => ({
   Sales: many(sales),
