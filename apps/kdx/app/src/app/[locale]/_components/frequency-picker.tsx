@@ -1,5 +1,3 @@
-"use client";
-
 import type { Frequency } from "rrule";
 import { useState } from "react";
 import { Button } from "@kodix/ui/button";
