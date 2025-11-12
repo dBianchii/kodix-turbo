@@ -3,7 +3,11 @@
   "compilerOptions": {
     "lib": ["ES2022", "dom", "dom.iterable"],
     "jsx": "preserve",
-    "rootDir": "."
+    "rootDir": ".",
+    "baseUrl": ".",
+    "paths": {
+      "@kodix/ui/*": ["./src/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]

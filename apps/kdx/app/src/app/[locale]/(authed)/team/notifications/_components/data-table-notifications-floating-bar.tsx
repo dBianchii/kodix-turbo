@@ -2,7 +2,7 @@ import type { Table } from "@tanstack/react-table";
 import { useEffect, useState, useTransition } from "react";
 import { getErrorMessage } from "@kodix/shared/utils";
 import { Button } from "@kodix/ui/button";
-import { exportTableToCSV } from "@kodix/ui/data-table/export";
+import { exportTableToCSV } from "@kodix/ui/common/data-table/export";
 import { Kbd } from "@kodix/ui/kbd";
 import { Separator } from "@kodix/ui/separator";
 import { toast } from "@kodix/ui/toast";

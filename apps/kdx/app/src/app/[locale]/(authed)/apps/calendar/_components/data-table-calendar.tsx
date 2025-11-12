@@ -11,8 +11,8 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@kodix/ui/context-menu";
-import { DataTableColumnHeader } from "@kodix/ui/data-table/data-table-column-header";
-import { DataTablePagination } from "@kodix/ui/data-table/data-table-pagination";
+import { DataTableColumnHeader } from "@kodix/ui/common/data-table/data-table-column-header";
+import { DataTablePagination } from "@kodix/ui/common/data-table/data-table-pagination";
 import {
   DropdownMenu,
   DropdownMenuContent,

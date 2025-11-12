@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import {
   Card,
@@ -19,9 +18,10 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
 import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
+import { cn } from "@kodix/ui/lib/utils";
 import { Separator } from "@kodix/ui/separator";
 import { toast } from "@kodix/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

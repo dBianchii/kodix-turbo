@@ -1,6 +1,6 @@
 import { getBaseUrl } from "@kodix/shared/utils";
-import { cn } from "@kodix/ui";
 import { buttonVariants } from "@kodix/ui/button";
+import { cn } from "@kodix/ui/lib/utils";
 import { FcGoogle } from "react-icons/fc";
 import { RxDiscordLogo } from "react-icons/rx";
 

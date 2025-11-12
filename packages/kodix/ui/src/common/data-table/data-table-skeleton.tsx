@@ -1,6 +1,5 @@
-import { cn } from "..";
-
-import { Skeleton } from "../skeleton";
+import { cn } from "@kodix/ui/lib/utils";
+import { Skeleton } from "@kodix/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -8,7 +7,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../table";
+} from "@kodix/ui/table";
 
 interface DataTableSkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   /**

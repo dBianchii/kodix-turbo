@@ -1,7 +1,6 @@
 "use client";
 
 import { use } from "react";
-import { cn } from "@kodix/ui";
 import { Button, buttonVariants } from "@kodix/ui/button";
 import {
   Card,
@@ -20,6 +19,7 @@ import {
   useForm,
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
+import { cn } from "@kodix/ui/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 

@@ -3,7 +3,6 @@
 import type { ReactNode } from "react";
 import { useState } from "react";
 import { getErrorMessage } from "@kodix/shared/utils";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import {
   Credenza,
@@ -14,9 +13,10 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
 import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
+import { cn } from "@kodix/ui/lib/utils";
 import { toast } from "@kodix/ui/toast";
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";

@@ -1,6 +1,6 @@
 "use client";
 
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,

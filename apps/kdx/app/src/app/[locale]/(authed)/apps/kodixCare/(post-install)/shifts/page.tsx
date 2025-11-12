@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
 import { HydrateClient, prefetch } from "@kodix/trpc/react/server";
-import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
+import { DataTableSkeleton } from "@kodix/ui/common/data-table/data-table-skeleton";
 
 import { trpc, trpcCaller } from "@kdx/api/trpc/react/server";
 

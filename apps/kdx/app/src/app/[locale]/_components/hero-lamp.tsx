@@ -1,6 +1,6 @@
 "use client";
 
-import { LampContainer } from "@kodix/ui/aceternity/lamp";
+import { LampContainer } from "@kodix/ui/common/aceternity/lamp";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 

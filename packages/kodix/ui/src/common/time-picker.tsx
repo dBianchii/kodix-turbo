@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef } from "react";
+import { Label } from "@kodix/ui/label";
 import { Clock } from "lucide-react";
 
 import type { TimePickerType } from "./time-picker-input/time-picker-utils";
-import { Label } from "./label";
 import { TimePickerInput } from "./time-picker-input";
 
 interface TimePickerDemoProps {

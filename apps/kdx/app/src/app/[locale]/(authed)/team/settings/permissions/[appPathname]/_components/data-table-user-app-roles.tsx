@@ -1,12 +1,12 @@
 "use client";
 
 import type { AppRole, KodixAppId } from "@kodix/shared/db";
-import type { FixedColumnsType } from "@kodix/ui/data-table/data-table";
+import type { FixedColumnsType } from "@kodix/ui/common/data-table/data-table";
 import { use, useMemo } from "react";
 import { allRoles } from "@kodix/shared/db";
 import { typedObjectEntries } from "@kodix/shared/utils";
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
-import MultipleSelector from "@kodix/ui/origin-ui/multi-select";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
+import MultipleSelector from "@kodix/ui/common/origin-ui/multi-select";
 import {
   TableBody,
   TableCell,
@@ -171,7 +171,7 @@ export function DataTableUserAppRoles({
                   const rolesUnion = [
                     ...new Set([
                       ...selected,
-                      ...newValues.map((option) => option.value),
+                      ...newValues.map((option) => option.value as AppRole),
                     ]),
                   ] as AppRole[];
                   const updatedRoles = rolesUnion.reduce(

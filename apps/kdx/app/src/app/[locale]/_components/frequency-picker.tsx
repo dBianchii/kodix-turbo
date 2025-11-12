@@ -17,7 +17,7 @@ import {
   CredenzaDescription,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
 import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";

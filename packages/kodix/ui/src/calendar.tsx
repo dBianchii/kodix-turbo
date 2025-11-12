@@ -1,8 +1,8 @@
 "use client";
 
+import { cn } from "@kodix/ui/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { type ChevronProps, DayPicker } from "react-day-picker";
-import { cn } from ".";
 
 import { buttonVariants } from "./button";
 

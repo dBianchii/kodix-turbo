@@ -1,4 +1,5 @@
-import { ThemeToggle } from "../theme";
+import { ThemeToggle } from "@kodix/ui/common/theme";
+
 import { TailwindIndicator } from "./tailwind-indicator";
 
 export function DevDesignHelper() {

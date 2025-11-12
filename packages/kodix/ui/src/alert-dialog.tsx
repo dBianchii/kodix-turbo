@@ -1,7 +1,7 @@
 "use client";
 
-import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
+import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 
 import { buttonVariants } from "./button";
 import { useOverlayLifecycle_only_ui } from "./stores/use-overlay-store";
