@@ -1,6 +1,14 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
+import { Button } from "@kodix/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@kodix/ui/select";
 import {
   ChevronLeft,
   ChevronRight,
@@ -8,15 +16,6 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-
-import { Button } from "../button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../select";
 
 interface DataTablePaginationProps<TData> {
   table: Table<TData>;
@@ -42,7 +41,7 @@ export function DataTablePagination<TData>({
             {t("Rows per page")}
           </p>
           <Select
-            onValueChange={(value) => {
+            onValueChange={(value: string) => {
               table.setPageSize(Number(value));
             }}
             value={`${table.getState().pagination.pageSize}`}

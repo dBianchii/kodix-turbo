@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@kodix/ui/lib/utils";
 import { Drawer as DrawerPrimitive } from "vaul";
-import { cn } from ".";
 
 import { useOverlayLifecycle_only_ui } from "./stores/use-overlay-store";
 

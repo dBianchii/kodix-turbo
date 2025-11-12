@@ -3,9 +3,9 @@
 import type { Table } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
-import { DataTableViewOptions } from "@kodix/ui/data-table/data-table-view-options";
+import { DataTableViewOptions } from "@kodix/ui/common/data-table/data-table-view-options";
+import { cn } from "@kodix/ui/lib/utils";
 import { useTranslations } from "next-intl";
 import { LuChevronsUpDown, LuPlus } from "react-icons/lu";
 

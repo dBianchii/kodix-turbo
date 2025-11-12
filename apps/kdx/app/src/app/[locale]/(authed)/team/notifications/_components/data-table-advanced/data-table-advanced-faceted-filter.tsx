@@ -1,5 +1,4 @@
 import type { Column } from "@tanstack/react-table";
-import { cn } from "@kodix/ui";
 import {
   Command,
   CommandEmpty,
@@ -9,6 +8,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@kodix/ui/command";
+import { cn } from "@kodix/ui/lib/utils";
 import { useTranslations } from "next-intl";
 import { LuCheck } from "react-icons/lu";
 

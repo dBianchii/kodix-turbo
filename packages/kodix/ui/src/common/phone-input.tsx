@@ -1,8 +1,8 @@
 import * as React from "react";
+import { cn } from "@kodix/ui/lib/utils";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
 import * as RPNInput from "react-phone-number-input";
 import flags from "react-phone-number-input/flags";
-import { cn } from "..";
 
 import { Button } from "../button";
 import {

@@ -1,8 +1,8 @@
 "use client";
 
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
+import { cn } from "@kodix/ui/lib/utils";
 import { Check, ChevronRight, Circle } from "lucide-react";
-import { cn } from ".";
+import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
 

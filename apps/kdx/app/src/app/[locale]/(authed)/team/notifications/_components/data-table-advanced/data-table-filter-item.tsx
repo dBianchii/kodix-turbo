@@ -2,10 +2,10 @@ import type { Table } from "@tanstack/react-table";
 import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { dataTableConfig } from "@kodix/shared/data-table-config";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import { useDebounce } from "@kodix/ui/hooks/use-debounce";
 import { Input } from "@kodix/ui/input";
+import { cn } from "@kodix/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import {
   Select,

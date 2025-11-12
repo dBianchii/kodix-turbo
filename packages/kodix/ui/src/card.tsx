@@ -1,4 +1,4 @@
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
 
 const Card = ({ className, ...props }: React.ComponentProps<"div">) => (
   <div

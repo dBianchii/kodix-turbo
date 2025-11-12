@@ -1,7 +1,7 @@
 "use client";
 
-import * as SwitchPrimitives from "@radix-ui/react-switch";
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
+import { Switch as SwitchPrimitives } from "radix-ui";
 
 const Switch = ({
   className,

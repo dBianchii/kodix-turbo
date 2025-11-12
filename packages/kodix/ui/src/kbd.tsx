@@ -1,6 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
+import { cn } from "@kodix/ui/lib/utils";
 import { cva } from "class-variance-authority";
-import { cn } from ".";
 
 const kbdVariants = cva(
   "select-none rounded-sm border px-1.5 py-px font-mono font-normal text-[0.7rem] shadow-2xs disabled:opacity-50",

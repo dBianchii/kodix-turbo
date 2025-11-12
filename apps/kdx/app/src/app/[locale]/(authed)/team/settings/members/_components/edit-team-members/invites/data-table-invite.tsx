@@ -1,15 +1,15 @@
 "use client";
 
 import { useMemo } from "react";
-import { cn } from "@kodix/ui";
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kodix/ui/dropdown-menu";
+import { cn } from "@kodix/ui/lib/utils";
 import {
   Table,
   TableBody,

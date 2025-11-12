@@ -6,7 +6,7 @@ import "~/styles/globals.css";
 
 import { notFound } from "next/navigation";
 import { getBaseUrl } from "@kodix/shared/utils";
-import { cn } from "@kodix/ui";
+import { cn } from "@kodix/ui/lib/utils";
 import { hasLocale } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 

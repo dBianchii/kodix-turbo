@@ -1,7 +1,6 @@
 "use client";
 
 import { getErrorMessage } from "@kodix/shared/utils";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import {
   Card,
@@ -19,6 +18,7 @@ import {
   useForm,
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
+import { cn } from "@kodix/ui/lib/utils";
 import { toast } from "@kodix/ui/toast";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";

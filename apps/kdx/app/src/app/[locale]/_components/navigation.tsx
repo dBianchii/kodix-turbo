@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@kodix/ui";
 import { useMediaQuery } from "@kodix/ui/hooks/use-media-query";
+import { cn } from "@kodix/ui/lib/utils";
 import {
   NavigationMenu,
   NavigationMenuItem,

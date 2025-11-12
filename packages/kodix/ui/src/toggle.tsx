@@ -1,9 +1,9 @@
 "use client";
 
 import type { VariantProps } from "class-variance-authority";
-import * as TogglePrimitive from "@radix-ui/react-toggle";
+import { cn } from "@kodix/ui/lib/utils";
 import { cva } from "class-variance-authority";
-import { cn } from ".";
+import { Toggle as TogglePrimitive } from "radix-ui";
 
 const toggleVariants = cva(
   "inline-flex items-center justify-center rounded-md font-medium text-sm transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",

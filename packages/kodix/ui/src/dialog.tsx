@@ -1,8 +1,8 @@
 "use client";
 
-import * as DialogPrimitive from "@radix-ui/react-dialog";
+import { cn } from "@kodix/ui/lib/utils";
 import { XIcon } from "lucide-react";
-import { cn } from ".";
+import { Dialog as DialogPrimitive } from "radix-ui";
 
 import { useOverlayLifecycle_only_ui } from "./stores/use-overlay-store";
 

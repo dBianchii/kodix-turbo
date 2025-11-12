@@ -1,10 +1,11 @@
 "use client";
 
 import { useMemo } from "react";
-import { Separator } from "@radix-ui/react-context-menu";
-import * as LabelPrimitive from "@radix-ui/react-label";
+import { cn } from "@kodix/ui/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from ".";
+import { Label as LabelPrimitive } from "radix-ui";
+
+import { Separator } from "./separator";
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (

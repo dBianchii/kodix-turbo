@@ -2,7 +2,7 @@
 
 import type { Table } from "@tanstack/react-table";
 import { Button } from "@kodix/ui/button";
-import { exportTableToCSV } from "@kodix/ui/data-table/export";
+import { exportTableToCSV } from "@kodix/ui/common/data-table/export";
 import { useTranslations } from "next-intl";
 import { LuDownload } from "react-icons/lu";
 

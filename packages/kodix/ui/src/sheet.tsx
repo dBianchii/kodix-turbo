@@ -1,10 +1,10 @@
 "use client";
 
 import type { VariantProps } from "class-variance-authority";
-import * as SheetPrimitive from "@radix-ui/react-dialog";
+import { cn } from "@kodix/ui/lib/utils";
 import { cva } from "class-variance-authority";
 import { X } from "lucide-react";
-import { cn } from ".";
+import { Dialog as SheetPrimitive } from "radix-ui";
 
 import { useOverlayLifecycle_only_ui } from "./stores/use-overlay-store";
 

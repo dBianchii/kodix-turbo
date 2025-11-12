@@ -1,6 +1,6 @@
 import type { VariantProps } from "class-variance-authority";
+import { cn } from "@kodix/ui/lib/utils";
 import { cva } from "class-variance-authority";
-import { cn } from ".";
 
 const badgeVariants = cva(
   "inline-flex items-center rounded-md border px-2.5 py-0.5 font-semibold text-xs transition-colors focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",

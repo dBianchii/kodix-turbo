@@ -1,9 +1,6 @@
 "use client";
 
 import type { ColumnDef, Table as TanstackTable } from "@tanstack/react-table";
-import { flexRender } from "@tanstack/react-table";
-import { useTranslations } from "next-intl";
-
 import {
   Table,
   TableBody,
@@ -11,7 +8,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "../table";
+} from "@kodix/ui/table";
+import { flexRender } from "@tanstack/react-table";
+import { useTranslations } from "next-intl";
+
 import { DataTablePagination } from "./data-table-pagination";
 
 /**https://github.com/shadcn-ui/ui/issues/346#issuecomment-1908758526 */

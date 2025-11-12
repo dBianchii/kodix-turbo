@@ -1,16 +1,15 @@
 "use client";
 
-import { Moon, Sun } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { useTheme } from "next-themes";
-
-import { Button } from "./button";
+import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "./dropdown-menu";
+} from "@kodix/ui/dropdown-menu";
+import { Moon, Sun } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useTheme } from "next-themes";
 
 function ThemeToggle() {
   const { setTheme } = useTheme();

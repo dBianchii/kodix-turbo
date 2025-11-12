@@ -1,8 +1,8 @@
 "use client";
 
-import * as RadioGroupPrimitive from "@radix-ui/react-radio-group";
+import { cn } from "@kodix/ui/lib/utils";
 import { Circle } from "lucide-react";
-import { cn } from ".";
+import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 
 const RadioGroup = ({
   className,

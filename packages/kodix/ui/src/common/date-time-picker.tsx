@@ -12,6 +12,10 @@
 
 import type { Matcher } from "react-day-picker";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Button, buttonVariants } from "@kodix/ui/button";
+import { cn } from "@kodix/ui/lib/utils";
+import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
+import { ScrollArea } from "@kodix/ui/scroll-area";
 import {
   addHours,
   addMonths,
@@ -51,11 +55,6 @@ import {
 import { useFormatter, useLocale, useTranslations } from "next-intl";
 import { DayPicker, TZDate } from "react-day-picker";
 import { enUS, ptBR } from "react-day-picker/locale";
-import { cn } from ".";
-
-import { Button, buttonVariants } from "./button";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
-import { ScrollArea } from "./scroll-area";
 
 export type CalendarProps = Omit<
   React.ComponentProps<typeof DayPicker>,

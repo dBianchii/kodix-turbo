@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import { Calendar } from "@kodix/ui/calendar";
 import {
@@ -11,6 +10,7 @@ import {
   CommandItem,
   CommandList,
 } from "@kodix/ui/command";
+import { cn } from "@kodix/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import { addDays } from "date-fns";
 import { useFormatter, useTranslations } from "next-intl";

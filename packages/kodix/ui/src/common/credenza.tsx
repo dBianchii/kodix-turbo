@@ -1,7 +1,5 @@
 "use client";
 
-import { cn } from ".";
-
 import {
   Dialog,
   DialogClose,
@@ -11,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./dialog";
+} from "@kodix/ui/dialog";
 import {
   Drawer,
   DrawerClose,
@@ -21,8 +19,9 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "./drawer";
-import { useMediaQuery } from "./hooks/use-media-query";
+} from "@kodix/ui/drawer";
+import { useMediaQuery } from "@kodix/ui/hooks/use-media-query";
+import { cn } from "@kodix/ui/lib/utils";
 
 const desktop = { query: "md" } as const;
 

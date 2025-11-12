@@ -7,7 +7,7 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
 import { Label } from "@kodix/ui/label";
 import { RadioGroup, RadioGroupItem } from "@kodix/ui/radio-group";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

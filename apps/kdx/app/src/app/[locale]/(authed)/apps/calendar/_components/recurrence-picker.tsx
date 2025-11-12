@@ -3,7 +3,6 @@ import type { Weekday } from "rrule";
 import { useCallback, useEffect, useEffectEvent, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import dayjs from "@kodix/dayjs";
-import { cn } from "@kodix/ui";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -21,6 +20,7 @@ import {
 import { DatePicker } from "@kodix/ui/common/date-picker";
 import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
+import { cn } from "@kodix/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import { RadioGroup, RadioGroupItem } from "@kodix/ui/radio-group";
 import { Toggle } from "@kodix/ui/toggle";

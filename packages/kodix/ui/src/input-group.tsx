@@ -1,8 +1,8 @@
 "use client";
 
 import type * as React from "react";
+import { cn } from "@kodix/ui/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from ".";
 
 import { Button } from "./button";
 import { Input } from "./input";

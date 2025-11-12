@@ -1,7 +1,7 @@
 import type { Locale } from "next-intl";
-import { cn } from "@kodix/ui";
 import { buttonVariants } from "@kodix/ui/button";
-import { RadialGradient } from "@kodix/ui/magic-ui/radial-gradient";
+import { RadialGradient } from "@kodix/ui/common/magic-ui/radial-gradient";
+import { cn } from "@kodix/ui/lib/utils";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { LuChevronRight } from "react-icons/lu";
 

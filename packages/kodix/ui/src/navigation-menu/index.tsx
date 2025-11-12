@@ -1,8 +1,8 @@
 "use client";
 
-import * as NavigationMenuPrimitive from "@radix-ui/react-navigation-menu";
+import { cn } from "@kodix/ui/lib/utils";
 import { ChevronDown } from "lucide-react";
-import { cn } from "..";
+import { NavigationMenu as NavigationMenuPrimitive } from "radix-ui";
 
 import { navigationMenuTriggerStyle } from "./navigation-menu-trigger-style";
 
