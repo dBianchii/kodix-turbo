@@ -9,8 +9,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@kodix/ui/alert-dialog";
-import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import {
   Credenza,
   CredenzaBody,

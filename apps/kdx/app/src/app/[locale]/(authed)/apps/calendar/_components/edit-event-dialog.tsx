@@ -249,7 +249,7 @@ export function EditEventDialog({
             <div className="flex flex-col space-y-2">
               <Label>{t("From")}</Label>
               <DateTimePicker
-                onChange={(newDate: Date | undefined) => setFrom(dayjs(newDate))}
+                onChange={(newDate) => setFrom(dayjs(newDate))}
                 value={from.toDate()}
               />
             </div>
