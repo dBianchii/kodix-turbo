@@ -250,7 +250,7 @@ export function EditCareShiftCredenza({
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate: Date | undefined) =>
+                                  onChange={(newDate) =>
                                     field.onChange(newDate ?? new Date())
                                   }
                                   value={field.value}
@@ -272,7 +272,7 @@ export function EditCareShiftCredenza({
                                 <DateTimePicker
                                   clearable
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate: Date | undefined) =>
+                                  onChange={(newDate) =>
                                     field.onChange(newDate ?? null)
                                   }
                                   value={field.value ?? undefined}
@@ -296,7 +296,7 @@ export function EditCareShiftCredenza({
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate: Date | undefined) =>
+                                  onChange={(newDate) =>
                                     field.onChange(newDate ?? new Date())
                                   }
                                   value={field.value}
@@ -318,7 +318,7 @@ export function EditCareShiftCredenza({
                                 <DateTimePicker
                                   clearable
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate: Date | undefined) =>
+                                  onChange={(newDate) =>
                                     field.onChange(newDate ?? null)
                                   }
                                   value={field.value ?? undefined}
