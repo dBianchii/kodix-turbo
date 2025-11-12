@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import {
   Command,
   CommandGroup,
@@ -7,6 +6,7 @@ import {
   CommandItem,
   CommandList,
 } from "@kodix/ui/command";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import { HiUserCircle } from "react-icons/hi";
 

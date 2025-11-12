@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import {
   Credenza,
   CredenzaBody,

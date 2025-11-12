@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
-import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import {
   Credenza,
   CredenzaBody,
@@ -193,7 +193,7 @@ export function CreateShiftCredenzaButton({
                       <FormControl>
                         <div className="flex flex-row gap-2">
                           <DateTimePicker
-                            onChange={(newDate: Date | undefined) =>
+                            onChange={(newDate) =>
                               field.onChange(newDate ?? new Date())
                             }
                             value={field.value}
