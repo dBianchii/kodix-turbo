@@ -6,7 +6,6 @@
     "@kdx/env": "workspace:*",
     "@kdx/locales": "workspace:*",
     "@kdx/validators": "workspace:*",
-    "@kodix/biome-config": "workspace:*",
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@kodix/trpc": "workspace:*",

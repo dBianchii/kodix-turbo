@@ -24,7 +24,6 @@
   },
   "devDependencies": {
     "@clack/prompts": "catalog:",
-    "@kodix/biome-config": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/react": "catalog:react",
     "chalk": "catalog:",
