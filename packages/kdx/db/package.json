@@ -9,7 +9,6 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@kodix/biome-config": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "dotenv-cli": "catalog:",
