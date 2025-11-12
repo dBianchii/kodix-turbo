@@ -1,16 +1,15 @@
 import type { Column } from "@tanstack/react-table";
-import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { cn } from "..";
-
-import { Button } from "../button";
+import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "@kodix/ui/dropdown-menu";
+import { cn } from "@kodix/ui/lib/utils";
+import { ChevronDown, ChevronsUpDown, ChevronUp, EyeOff } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {

@@ -11,7 +11,7 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@kodix/ui/context-menu";
-import { DataTablePagination } from "@kodix/ui/data-table/data-table-pagination";
+import { DataTablePagination } from "@kodix/ui/common/data-table/data-table-pagination";
 import { Input } from "@kodix/ui/input";
 import { Table, TableBody, TableCell, TableRow } from "@kodix/ui/table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

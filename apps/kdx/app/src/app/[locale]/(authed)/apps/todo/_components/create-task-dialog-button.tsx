@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
 import {
   Credenza,
@@ -11,7 +11,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
 import { Input } from "@kodix/ui/input";
 import { PopoverTrigger } from "@kodix/ui/popover";
 import { Textarea } from "@kodix/ui/textarea";

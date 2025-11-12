@@ -1,7 +1,7 @@
 "use client";
 
 import type { ComponentProps } from "react";
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
 
 export function H1({ children, className }: ComponentProps<"h1">) {
   return (

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import {
   Command,
   CommandGroup,

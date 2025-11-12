@@ -5,7 +5,7 @@ import type { EventPropGetter, View } from "react-big-calendar";
 import type { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import { use, useCallback, useMemo, useState } from "react";
 import dayjs from "@kodix/dayjs";
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { useTranslations } from "next-intl";
 import { Calendar, dayjsLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";

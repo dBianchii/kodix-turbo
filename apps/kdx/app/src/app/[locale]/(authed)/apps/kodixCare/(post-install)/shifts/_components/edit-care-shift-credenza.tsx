@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { cn } from "@kodix/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,7 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@kodix/ui/alert-dialog";
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
 import {
   Credenza,
@@ -20,8 +19,8 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kodix/ui/credenza";
-import { DateTimePicker } from "@kodix/ui/date-time-picker";
+} from "@kodix/ui/common/credenza";
+import { DateTimePicker } from "@kodix/ui/common/date-time-picker";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +37,7 @@ import {
   FormMessage,
   useForm,
 } from "@kodix/ui/form";
+import { cn } from "@kodix/ui/lib/utils";
 import {
   Select,
   SelectContent,
@@ -250,7 +250,7 @@ export function EditCareShiftCredenza({
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate) =>
+                                  onChange={(newDate: Date | undefined) =>
                                     field.onChange(newDate ?? new Date())
                                   }
                                   value={field.value}
@@ -272,7 +272,7 @@ export function EditCareShiftCredenza({
                                 <DateTimePicker
                                   clearable
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate) =>
+                                  onChange={(newDate: Date | undefined) =>
                                     field.onChange(newDate ?? null)
                                   }
                                   value={field.value ?? undefined}
@@ -296,7 +296,7 @@ export function EditCareShiftCredenza({
                               <div className="flex flex-row gap-2">
                                 <DateTimePicker
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate) =>
+                                  onChange={(newDate: Date | undefined) =>
                                     field.onChange(newDate ?? new Date())
                                   }
                                   value={field.value}
@@ -318,7 +318,7 @@ export function EditCareShiftCredenza({
                                 <DateTimePicker
                                   clearable
                                   disabled={isLocked || !canEdit}
-                                  onChange={(newDate) =>
+                                  onChange={(newDate: Date | undefined) =>
                                     field.onChange(newDate ?? null)
                                   }
                                   value={field.value ?? undefined}

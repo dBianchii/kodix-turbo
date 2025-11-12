@@ -1,4 +1,4 @@
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
 
 export type TextareaProps = React.ComponentProps<"textarea">;
 

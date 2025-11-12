@@ -1,8 +1,8 @@
 "use client";
 
-import type { FixedColumnsType } from "@kodix/ui/data-table/data-table";
+import type { FixedColumnsType } from "@kodix/ui/common/data-table/data-table";
 import { use, useMemo } from "react";
-import { DataTable } from "@kodix/ui/data-table/data-table";
+import { DataTable } from "@kodix/ui/common/data-table/data-table";
 import { useTranslations } from "next-intl";
 import { MdEmail } from "react-icons/md";
 

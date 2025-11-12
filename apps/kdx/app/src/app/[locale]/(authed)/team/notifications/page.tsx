@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { DataTableSkeleton } from "@kodix/ui/data-table/data-table-skeleton";
+import { DataTableSkeleton } from "@kodix/ui/common/data-table/data-table-skeleton";
 import { H1, Lead } from "@kodix/ui/typography";
 import { getLocale, getTranslations } from "next-intl/server";
 

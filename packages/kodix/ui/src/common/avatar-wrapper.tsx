@@ -1,6 +1,6 @@
 //? Not a ShadCN file. I added this to simplify the fallback
 
-import { Avatar, AvatarFallback, AvatarImage } from "./avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@kodix/ui/avatar";
 
 export const AvatarWrapper = ({
   ref,

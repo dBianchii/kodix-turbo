@@ -3,10 +3,10 @@
 //?Modified version of https://tie.openstatus.dev/
 import type { ComponentProps, KeyboardEvent } from "react";
 import { useEffect, useMemo, useState } from "react";
-import { cn } from "..";
+import { Input } from "@kodix/ui/input";
+import { cn } from "@kodix/ui/lib/utils";
 
 import type { TimePickerType } from "./time-picker-utils";
-import { Input } from "../input";
 import {
   getArrowByType,
   getDateByType,

@@ -2,10 +2,9 @@ import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-c
 import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { kodixCareAppId } from "@kodix/shared/db";
-import { cn } from "@kodix/ui";
 import { Alert, AlertDescription, AlertTitle } from "@kodix/ui/alert";
 import { Button } from "@kodix/ui/button";
-import { DateTimePicker } from "@kodix/ui/date-time-picker";
+import { DateTimePicker } from "@kodix/ui/common/date-time-picker";
 import {
   Dialog,
   DialogContent,
@@ -22,6 +21,7 @@ import {
   FormMessage,
   useForm,
 } from "@kodix/ui/form";
+import { cn } from "@kodix/ui/lib/utils";
 import {
   Table,
   TableBody,
@@ -185,7 +185,7 @@ export function EditCareTaskCredenza({
                             <div className="flex flex-row gap-2">
                               <DateTimePicker
                                 clearable
-                                onChange={(newDate) =>
+                                onChange={(newDate: Date | undefined) =>
                                   field.onChange(newDate ?? null)
                                 }
                                 value={field.value ?? undefined}

@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
+import { buttonVariants } from "@kodix/ui/button";
+import { cn } from "@kodix/ui/lib/utils";
 import { ArrowRight } from "lucide-react";
-import { cn } from "..";
-
-import { buttonVariants } from "../button";
 
 const BentoGrid = ({
   children,

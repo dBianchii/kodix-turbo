@@ -1,5 +1,4 @@
 import type { Column } from "@tanstack/react-table";
-import { cn } from "@kodix/ui";
 import { Badge } from "@kodix/ui/badge";
 import { Button } from "@kodix/ui/button";
 import {
@@ -11,6 +10,7 @@ import {
   CommandList,
   CommandSeparator,
 } from "@kodix/ui/command";
+import { cn } from "@kodix/ui/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import { Separator } from "@kodix/ui/separator";
 import { useTranslations } from "next-intl";

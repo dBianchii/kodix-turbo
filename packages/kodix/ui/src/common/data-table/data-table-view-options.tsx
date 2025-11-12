@@ -1,10 +1,7 @@
 "use client";
 
 import type { Table } from "@tanstack/react-table";
-import { Settings2 } from "lucide-react";
-import { useTranslations } from "next-intl";
-
-import { Button } from "../button";
+import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -12,7 +9,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../dropdown-menu";
+} from "@kodix/ui/dropdown-menu";
+import { Settings2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 interface DataTableViewOptionsProps<TData> {
   table: Table<TData>;
@@ -49,7 +48,9 @@ export function DataTableViewOptions<TData>({
               checked={column.getIsVisible()}
               className="capitalize"
               key={column.id}
-              onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              onCheckedChange={(value: boolean) =>
+                column.toggleVisibility(!!value)
+              }
             >
               <span className="truncate">{column.id}</span>
             </DropdownMenuCheckboxItem>

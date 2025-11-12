@@ -12,7 +12,7 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
 import { toast } from "@kodix/ui/toast";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
