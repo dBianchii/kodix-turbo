@@ -46,19 +46,25 @@ export function findClientByCpf(cpf: string, db: Drizzle = _db) {
   });
 }
 
+export function findClientByCaId(caId: string, db: Drizzle = _db) {
+  return db.query.clients.findFirst({
+    where: eq(clients.caId, caId),
+  });
+}
+
 export function updateClientByCaId(
   caId: string,
   data: Partial<typeof clients.$inferInsert>,
   db: Drizzle | DrizzleTransaction = _db,
 ) {
-  return db.update(clients).set(data).where(eq(clients.caId, caId));
+  db.update(clients).set(data).where(eq(clients.caId, caId));
 }
 
 export function createClient(
   data: typeof clients.$inferInsert,
   db: Drizzle | DrizzleTransaction = _db,
 ) {
-  return db.insert(clients).values(data);
+  db.insert(clients).values(data);
 }
 
 export function upsertClientsByCaId(

@@ -33,45 +33,7 @@ function prepareAddress(input: TRegisterInputSchema) {
   };
 }
 
-async function syncToDatabase(
-  caId: string,
-  input: TRegisterInputSchema,
-  newAddress:
-    | NonNullable<CreateContaAzulPersonParams["enderecos"]>[number]
-    | undefined,
-  registeredFromFormAt: string,
-) {
-  const dbFields = {
-    bairro: newAddress?.bairro,
-    caId,
-    cep: newAddress?.cep,
-    cidade: newAddress?.cidade,
-    complemento: newAddress?.complemento,
-    document: input.cpf,
-    email: input.email,
-    estado: newAddress?.estado,
-    logradouro: newAddress?.logradouro,
-    numero: newAddress?.numero,
-    pais: newAddress?.pais,
-    phone: input.phone,
-    registeredFromFormAt,
-    type: "Física" as const,
-  };
-
-  if (input.isUpdate) {
-    await caRepository.updateClientByCaId(caId, {
-      ...dbFields,
-      name: input.name,
-    });
-    return;
-  }
-
-  await caRepository.createClient({
-    ...dbFields,
-    name: input.name,
-  });
-}
-
+// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Should we remove this rule?
 export async function registerHandler({ input }: RegisterHandlerInput) {
   const phoneWithoutCountryCode = input.phone?.replace(
     BRAZIL_PHONE_COUNTRY_CODE_REGEX,
@@ -105,7 +67,9 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
     const existingPerson = items?.[0];
 
     let caId: string;
+    let existingPersonName: string | undefined;
     if (existingPerson) {
+      existingPersonName = existingPerson.nome;
       const addresses = existingPerson.endereco
         ? [existingPerson.endereco]
         : [];
@@ -136,7 +100,44 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
       caId = id;
     }
 
-    await syncToDatabase(caId, input, newAddress, registeredFromFormAt);
+    const dbFields = {
+      bairro: newAddress?.bairro,
+      caId,
+      cep: newAddress?.cep,
+      cidade: newAddress?.cidade,
+      complemento: newAddress?.complemento,
+      document: input.cpf,
+      email: input.email,
+      estado: newAddress?.estado,
+      logradouro: newAddress?.logradouro,
+      numero: newAddress?.numero,
+      pais: newAddress?.pais,
+      phone: input.phone,
+      registeredFromFormAt,
+      type: "Física" as const,
+    };
+
+    const existingClient = await caRepository.findClientByCaId(caId);
+
+    if (existingClient) {
+      await caRepository.updateClientByCaId(caId, {
+        ...dbFields,
+        ...(input.name && { name: input.name }),
+      });
+    } else {
+      const name = input.name ?? existingPersonName;
+      if (!name) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Name is required to create a client",
+        });
+      }
+
+      await caRepository.createClient({
+        ...dbFields,
+        name,
+      });
+    }
   } catch (error) {
     const posthog = getPostHogServer();
 
