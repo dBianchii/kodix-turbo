@@ -57,14 +57,14 @@ export function updateClientByCaId(
   data: Partial<typeof clients.$inferInsert>,
   db: Drizzle | DrizzleTransaction = _db,
 ) {
-  db.update(clients).set(data).where(eq(clients.caId, caId));
+  return db.update(clients).set(data).where(eq(clients.caId, caId));
 }
 
 export function createClient(
   data: typeof clients.$inferInsert,
   db: Drizzle | DrizzleTransaction = _db,
 ) {
-  db.insert(clients).values(data);
+  return db.insert(clients).values(data);
 }
 
 export function upsertClientsByCaId(
