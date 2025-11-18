@@ -279,38 +279,39 @@ export function RegistrationForm({ onSuccess }: RegistrationFormProps) {
                 }}
               />
             )}
-            {cpfQuery.data?.status === "not-found" && (
-              <Controller
-                control={form.control}
-                name="withAddress"
-                render={({ field, fieldState }) => (
-                  <Field
-                    data-invalid={fieldState.invalid}
-                    orientation="horizontal"
-                  >
-                    <Switch
-                      checked={field.value}
-                      id="addAddress"
-                      onCheckedChange={(checked) => {
-                        const toSetValue = checked ? "" : undefined;
+            {cpfQuery.data?.status === "not-found" ||
+              (cpfQuery.data?.status === "missing-fields" && (
+                <Controller
+                  control={form.control}
+                  name="withAddress"
+                  render={({ field, fieldState }) => (
+                    <Field
+                      data-invalid={fieldState.invalid}
+                      orientation="horizontal"
+                    >
+                      <Switch
+                        checked={field.value}
+                        id="addAddress"
+                        onCheckedChange={(checked) => {
+                          const toSetValue = checked ? "" : undefined;
 
-                        for (const key of Object.keys(addressValues)) {
-                          form.setValue(
-                            key as keyof typeof addressValues,
-                            toSetValue,
-                          );
-                        }
+                          for (const key of Object.keys(addressValues)) {
+                            form.setValue(
+                              key as keyof typeof addressValues,
+                              toSetValue,
+                            );
+                          }
 
-                        field.onChange(checked);
-                      }}
-                    />
-                    <FieldLabel className="text-center" htmlFor="addAddress">
-                      Adicionar endereço (opcional)
-                    </FieldLabel>
-                  </Field>
-                )}
-              />
-            )}
+                          field.onChange(checked);
+                        }}
+                      />
+                      <FieldLabel className="text-center" htmlFor="addAddress">
+                        Adicionar endereço (opcional)
+                      </FieldLabel>
+                    </Field>
+                  )}
+                />
+              ))}
             {form.watch("withAddress") && (
               <>
                 <Controller
