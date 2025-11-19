@@ -1,7 +1,7 @@
 "use client";
 
-import * as SeparatorPrimitive from "@radix-ui/react-separator";
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
+import { Separator as SeparatorPrimitive } from "radix-ui";
 
 const Separator = ({
   className,

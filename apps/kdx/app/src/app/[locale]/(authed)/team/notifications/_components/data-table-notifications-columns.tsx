@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@kodix/ui/button";
 import { Checkbox } from "@kodix/ui/checkbox";
-import { DataTableColumnHeader } from "@kodix/ui/data-table/data-table-column-header";
+import { DataTableColumnHeader } from "@kodix/ui/common/data-table/data-table-column-header";
 import {
   DropdownMenu,
   DropdownMenuContent,

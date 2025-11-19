@@ -5,7 +5,7 @@ import { GeistSans } from "geist/font/sans";
 import "~/styles/globals.css";
 
 import { getBaseUrl } from "@kodix/shared/utils";
-import { cn } from "@kodix/ui";
+import { cn } from "@kodix/ui/lib/utils";
 
 import { Providers } from "./providers";
 

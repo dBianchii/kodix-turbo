@@ -1,7 +1,7 @@
 "use client";
 
-import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
+import { ScrollArea as ScrollAreaPrimitive } from "radix-ui";
 
 const ScrollArea = ({
   className,

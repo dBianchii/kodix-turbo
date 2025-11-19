@@ -4,14 +4,18 @@
   "rsc": true,
   "tsx": true,
   "tailwind": {
-    "config": "./tailwind.config.ts",
-    "css": "unused.css",
-    "baseColor": "zinc",
-    "cssVariables": true
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": true,
+    "prefix": ""
   },
   "aliases": {
-    "utils": "@kodix/ui",
-    "components": "src/",
-    "ui": "src/"
-  }
+    "components": "@kodix/ui/common",
+    "utils": "@kodix/ui/lib/utils",
+    "hooks": "@kodix/ui/hooks",
+    "lib": "@kodix/ui/lib",
+    "ui": "@kodix/ui/*"
+  },
+  "iconLibrary": "lucide"
 }

@@ -3,46 +3,27 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
     "./*": [
       "./src/*.tsx",
       "./src/*.ts"
     ],
+    "./lib/*": "./src/lib/*.ts",
     "./common/*": [
       "./src/common/*.tsx",
       "./src/common/*.ts"
     ],
     "./globals.css": "./src/styles/globals.css",
     "./themes/*.css": "./src/styles/themes/*",
-    "./data-table/export": "./src/data-table/export.ts"
+    "./common/data-table/export": "./src/common/data-table/export.ts"
   },
   "scripts": {
+    "ui:add": "pnpm dlx shadcn@latest add",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "catalog:",
     "@kdx/locales": "workspace:*",
-    "@radix-ui/react-alert-dialog": "catalog:",
-    "@radix-ui/react-avatar": "catalog:",
-    "@radix-ui/react-checkbox": "catalog:",
-    "@radix-ui/react-context-menu": "catalog:",
-    "@radix-ui/react-dialog": "catalog:",
-    "@radix-ui/react-dropdown-menu": "catalog:",
-    "@radix-ui/react-label": "catalog:",
-    "@radix-ui/react-navigation-menu": "catalog:",
-    "@radix-ui/react-popover": "catalog:",
-    "@radix-ui/react-radio-group": "catalog:",
-    "@radix-ui/react-scroll-area": "catalog:",
-    "@radix-ui/react-select": "catalog:",
-    "@radix-ui/react-separator": "catalog:",
-    "@radix-ui/react-slot": "catalog:",
-    "@radix-ui/react-switch": "catalog:",
-    "@radix-ui/react-tabs": "catalog:",
-    "@radix-ui/react-toast": "catalog:",
-    "@radix-ui/react-toggle": "catalog:",
-    "@radix-ui/react-tooltip": "catalog:",
-    "@radix-ui/react-visually-hidden": "catalog:",
     "@tanstack/react-table": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
@@ -62,7 +43,8 @@
     "tw-animate-css": "catalog:",
     "vaul": "catalog:",
     "zod": "catalog:",
-    "zustand": "catalog:"
+    "zustand": "catalog:",
+    "radix-ui": "catalog:"
   },
   "devDependencies": {
     "@kodix/shared": "workspace:*",

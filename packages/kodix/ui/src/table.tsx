@@ -1,4 +1,4 @@
-import { cn } from ".";
+import { cn } from "@kodix/ui/lib/utils";
 
 const Table = ({ className, ...props }: React.ComponentProps<"table">) => (
   <div className="relative w-full overflow-auto">

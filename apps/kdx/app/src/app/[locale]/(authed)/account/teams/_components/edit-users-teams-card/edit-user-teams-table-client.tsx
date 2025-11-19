@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kodix/ui/dropdown-menu";
+import { cn } from "@kodix/ui/lib/utils";
 import { Table, TableBody, TableCell, TableRow } from "@kodix/ui/table";
 import { toast } from "@kodix/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

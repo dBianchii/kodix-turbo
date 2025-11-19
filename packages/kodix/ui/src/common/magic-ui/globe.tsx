@@ -4,9 +4,9 @@
 
 import type { COBEOptions } from "cobe";
 import { useCallback, useEffect, useRef } from "react";
+import { cn } from "@kodix/ui/lib/utils";
 import createGlobe from "cobe";
 import { useSpring } from "react-spring";
-import { cn } from "..";
 
 const GLOBE_CONFIG: COBEOptions = {
   baseColor: [1, 1, 1],

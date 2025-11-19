@@ -6,12 +6,16 @@ import type {
   ReactNode,
 } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Command,
+  CommandGroup,
+  CommandItem,
+  CommandList,
+} from "@kodix/ui/command";
+import { useDebounce } from "@kodix/ui/hooks/use-debounce";
+import { cn } from "@kodix/ui/lib/utils";
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { XIcon } from "lucide-react";
-import { cn } from "..";
-
-import { Command, CommandGroup, CommandItem, CommandList } from "../command";
-import { useDebounce } from "../hooks/use-debounce";
 
 export interface Option {
   value: string;
@@ -336,7 +340,7 @@ const MultipleSelector = ({
     const Item = (
       <CommandItem
         className="cursor-pointer"
-        onMouseDown={(e) => {
+        onMouseDown={(e: React.MouseEvent) => {
           e.preventDefault();
           e.stopPropagation();
         }}
@@ -424,9 +428,10 @@ const MultipleSelector = ({
         commandProps?.className,
       )}
       filter={commandFilter()}
-      onKeyDown={(e) => {
-        handleKeyDown(e);
-        commandProps?.onKeyDown?.(e);
+      onKeyDown={(e: React.KeyboardEvent<Element>) => {
+        const divEvent = e as unknown as React.KeyboardEvent<HTMLDivElement>;
+        handleKeyDown(divEvent);
+        commandProps?.onKeyDown?.(divEvent);
       }} // When onSearch is provided, we don&lsquo;t want to filter the options. You can still override it.
       shouldFilter={commandProps?.shouldFilter ?? !onSearch}
     >
@@ -582,7 +587,7 @@ const MultipleSelector = ({
                           )}
                           disabled={option.disable}
                           key={option.value}
-                          onMouseDown={(e) => {
+                          onMouseDown={(e: React.MouseEvent) => {
                             e.preventDefault();
                             e.stopPropagation();
                           }}

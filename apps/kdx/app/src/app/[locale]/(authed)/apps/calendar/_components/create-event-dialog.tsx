@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import dayjs from "@kodix/dayjs";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import { Checkbox } from "@kodix/ui/checkbox";
 import {
@@ -13,8 +12,8 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kodix/ui/credenza";
-import { DateTimePicker } from "@kodix/ui/date-time-picker";
+} from "@kodix/ui/common/credenza";
+import { DateTimePicker } from "@kodix/ui/common/date-time-picker";
 import {
   Form,
   FormControl,
@@ -26,6 +25,7 @@ import {
   useForm,
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
+import { cn } from "@kodix/ui/lib/utils";
 import { Textarea } from "@kodix/ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";

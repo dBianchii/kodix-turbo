@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { cn } from "@kodix/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,8 +9,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@kodix/ui/alert-dialog";
-import { AvatarWrapper } from "@kodix/ui/avatar-wrapper";
 import { Button } from "@kodix/ui/button";
+import { AvatarWrapper } from "@kodix/ui/common/avatar-wrapper";
 import {
   Credenza,
   CredenzaBody,
@@ -20,8 +19,8 @@ import {
   CredenzaFooter,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kodix/ui/credenza";
-import { DateTimePicker } from "@kodix/ui/date-time-picker";
+} from "@kodix/ui/common/credenza";
+import { DateTimePicker } from "@kodix/ui/common/date-time-picker";
 import {
   Dialog,
   DialogContent,
@@ -38,6 +37,7 @@ import {
   FormMessage,
   useForm,
 } from "@kodix/ui/form";
+import { cn } from "@kodix/ui/lib/utils";
 import {
   Select,
   SelectContent,

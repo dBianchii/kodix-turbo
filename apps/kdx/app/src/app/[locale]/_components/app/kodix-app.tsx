@@ -4,7 +4,6 @@ import type { KodixAppId } from "@kodix/shared/db";
 import { useState } from "react";
 import Image from "next/image";
 import { kodixCareAppId, todoAppId } from "@kodix/shared/db";
-import { cn } from "@kodix/ui";
 import { Badge } from "@kodix/ui/badge";
 import { Button, buttonVariants } from "@kodix/ui/button";
 import {
@@ -23,13 +22,14 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@kodix/ui/dropdown-menu";
+import { cn } from "@kodix/ui/lib/utils";
 import { Skeleton } from "@kodix/ui/skeleton";
 import { toast } from "@kodix/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

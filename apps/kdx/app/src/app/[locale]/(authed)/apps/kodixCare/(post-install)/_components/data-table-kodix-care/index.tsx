@@ -4,7 +4,6 @@ import type { SortingState, VisibilityState } from "@tanstack/react-table";
 import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-care-task-central";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "@kodix/dayjs";
-import { cn } from "@kodix/ui";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,10 +25,10 @@ import {
   CredenzaHeader,
   CredenzaTitle,
   CredenzaTrigger,
-} from "@kodix/ui/credenza";
-import { DataTableColumnHeader } from "@kodix/ui/data-table/data-table-column-header";
-import { DataTableViewOptions } from "@kodix/ui/data-table/data-table-view-options";
-import { DateTimePicker } from "@kodix/ui/date-time-picker";
+} from "@kodix/ui/common/credenza";
+import { DataTableColumnHeader } from "@kodix/ui/common/data-table/data-table-column-header";
+import { DataTableViewOptions } from "@kodix/ui/common/data-table/data-table-view-options";
+import { DateTimePicker } from "@kodix/ui/common/date-time-picker";
 import {
   Dialog,
   DialogContent,
@@ -55,6 +54,7 @@ import {
   useForm,
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
+import { cn } from "@kodix/ui/lib/utils";
 import {
   Table,
   TableBody,
@@ -650,7 +650,7 @@ function AddCareTaskCredenzaButton() {
                     <FormControl>
                       <div className="flex flex-row gap-2">
                         <DateTimePicker
-                          onChange={(newDate) =>
+                          onChange={(newDate: Date | undefined) =>
                             field.onChange(newDate ?? new Date())
                           }
                           value={field.value}

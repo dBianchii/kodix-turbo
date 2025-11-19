@@ -1,7 +1,7 @@
 "use client";
 
+import { cn } from "@kodix/ui/lib/utils";
 import { motion } from "motion/react";
-import { cn } from "..";
 
 export const LampContainer = ({
   children,

@@ -2,7 +2,6 @@
 
 import { use } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
-import { cn } from "@kodix/ui";
 import { Button } from "@kodix/ui/button";
 import {
   Form,
@@ -13,6 +12,7 @@ import {
   FormLabel,
   useForm,
 } from "@kodix/ui/form";
+import { cn } from "@kodix/ui/lib/utils";
 import { Switch } from "@kodix/ui/switch";
 import { toast } from "@kodix/ui/toast";
 import { useTranslations } from "next-intl";

@@ -1,5 +1,3 @@
-"use client";
-
 import type { Frequency } from "rrule";
 import { useState } from "react";
 import { Button } from "@kodix/ui/button";
@@ -10,14 +8,14 @@ import {
   CommandItem,
   CommandList,
 } from "@kodix/ui/command";
-import { DatePicker } from "@kodix/ui/common/date-picker";
 import {
   Credenza,
   CredenzaContent,
   CredenzaDescription,
   CredenzaHeader,
   CredenzaTitle,
-} from "@kodix/ui/credenza";
+} from "@kodix/ui/common/credenza";
+import { DatePicker } from "@kodix/ui/common/date-picker";
 import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";

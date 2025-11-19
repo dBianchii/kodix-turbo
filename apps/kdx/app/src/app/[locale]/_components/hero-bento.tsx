@@ -1,5 +1,4 @@
 import { calendarAppId, kodixCareAppId, todoAppId } from "@kodix/shared/db";
-import { cn } from "@kodix/ui";
 import { Calendar } from "@kodix/ui/calendar";
 import {
   Command,
@@ -9,9 +8,10 @@ import {
   CommandItem,
   CommandList,
 } from "@kodix/ui/command";
-import { BentoCard, BentoGrid } from "@kodix/ui/magic-ui/bento-grid";
-import Globe from "@kodix/ui/magic-ui/globe";
-import Marquee from "@kodix/ui/magic-ui/marquee";
+import { BentoCard, BentoGrid } from "@kodix/ui/common/magic-ui/bento-grid";
+import Globe from "@kodix/ui/common/magic-ui/globe";
+import Marquee from "@kodix/ui/common/magic-ui/marquee";
+import { cn } from "@kodix/ui/lib/utils";
 import { getTranslations } from "next-intl/server";
 import { LuBox, LuCalendar, LuGlobe, LuTextCursorInput } from "react-icons/lu";
 
