@@ -3,19 +3,18 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
     "./*": [
       "./src/*.tsx",
       "./src/*.ts"
     ],
-    "./lib/utils": "./src/lib/utils.ts",
+    "./lib/*": "./src/lib/*.ts",
     "./common/*": [
       "./src/common/*.tsx",
       "./src/common/*.ts"
     ],
     "./globals.css": "./src/styles/globals.css",
     "./themes/*.css": "./src/styles/themes/*",
-    "./data-table/export": "./src/data-table/export.ts"
+    "./common/data-table/export": "./src/common/data-table/export.ts"
   },
   "scripts": {
     "ui:add": "pnpm dlx shadcn@latest add",
