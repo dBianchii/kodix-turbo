@@ -8,6 +8,7 @@
       "./src/*.tsx",
       "./src/*.ts"
     ],
+    "./lib/utils": "./src/lib/utils.ts",
     "./common/*": [
       "./src/common/*.tsx",
       "./src/common/*.ts"
