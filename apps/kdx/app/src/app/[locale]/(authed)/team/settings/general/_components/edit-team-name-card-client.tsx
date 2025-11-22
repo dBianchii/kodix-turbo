@@ -19,7 +19,7 @@ import {
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
 import { cn } from "@kodix/ui/lib/utils";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
@@ -58,7 +58,10 @@ export function EditTeamNameCardClient({
   );
 
   return (
-    <Card className="w-full text-left">
+    <Card>
+      <CardHeader>
+        <CardTitle>{t("Team name")}</CardTitle>
+      </CardHeader>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit((data) =>
@@ -69,35 +72,28 @@ export function EditTeamNameCardClient({
             }),
           )}
         >
-          <CardHeader>
-            <CardTitle>{t("Team name")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid w-full items-center gap-4">
-              <div className="flex flex-col space-y-1.5">
-                <FormField
-                  control={form.control}
-                  name="teamName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          className={cn({
-                            "cursor-not-allowed": !canEdit,
-                          })}
-                          disabled={!canEdit}
-                          placeholder="Acme"
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
+          <CardContent className="pb-6">
+            <FormField
+              control={form.control}
+              name="teamName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className={cn({
+                        "cursor-not-allowed": !canEdit,
+                      })}
+                      disabled={!canEdit}
+                      placeholder="Acme"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </CardContent>
-          <CardFooter className="flex justify-end border-t px-6 py-4">
+          <CardFooter className="justify-end border-t">
             <Button loading={mutation.isPending}>{t("Save")}</Button>
           </CardFooter>
         </form>

@@ -1,6 +1,5 @@
 "use client";
 
-import type * as React from "react";
 import { cn } from "@kodix/ui/lib/utils";
 import { CheckIcon } from "lucide-react";
 import { Checkbox as CheckboxPrimitive } from "radix-ui";

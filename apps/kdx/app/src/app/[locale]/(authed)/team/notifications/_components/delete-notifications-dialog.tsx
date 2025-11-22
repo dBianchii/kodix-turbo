@@ -13,7 +13,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from "@kodix/ui/common/credenza";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";

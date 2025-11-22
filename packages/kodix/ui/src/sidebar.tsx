@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import {
   type ComponentProps,
   type CSSProperties,
@@ -11,13 +10,13 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useIsMobile } from "@kodix/ui/hooks/use-mobile";
 import { cn } from "@kodix/ui/lib/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 import { Slot as SlotPrimitive } from "radix-ui";
 
 import { Button } from "./button";
-import { useIsMobile } from "./hooks/use-mobile";
 import { Input } from "./input";
 import { Separator } from "./separator";
 import {
@@ -84,7 +83,7 @@ function SidebarProvider({
   const [_open, _setOpen] = useState(defaultOpen);
   const open = openProp ?? _open;
   const setOpen = useCallback(
-    // biome-ignore lint/nursery/noShadow: <Just shadcn code>
+    // biome-ignore lint/nursery/noShadow: Just shadcn code
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value;
       if (setOpenProp) {
@@ -94,7 +93,6 @@ function SidebarProvider({
       }
 
       // This sets the cookie to keep the sidebar state.
-
       // biome-ignore lint/suspicious/noDocumentCookie: Just shadcn code
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
     },
@@ -615,10 +613,7 @@ function SidebarMenuSkeleton({
   showIcon?: boolean;
 }) {
   // Random width between 50 to 90%.
-  const width = React.useMemo(
-    () => `${Math.floor(Math.random() * 40) + 50}%`,
-    [],
-  );
+  const width = useMemo(() => `${Math.floor(Math.random() * 40) + 50}%`, []);
 
   return (
     <div

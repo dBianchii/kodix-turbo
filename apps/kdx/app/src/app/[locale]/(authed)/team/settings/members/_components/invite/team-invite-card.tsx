@@ -23,7 +23,7 @@ import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
 import { cn } from "@kodix/ui/lib/utils";
 import { Separator } from "@kodix/ui/separator";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuMail } from "react-icons/lu";
@@ -221,7 +221,7 @@ export default function TeamInviteCardClient({
             </Button>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-between border-t px-6 py-4">
+        <CardFooter className="justify-between border-t">
           <CardDescription className="text-xs italic">
             {t("Only the owner of the team can invite new members")}
           </CardDescription>

@@ -43,7 +43,7 @@ export default async function HomePage({
                 <p className="max-w-[64rem] text-balance text-muted-foreground text-xl md:text-xl">
                   {t("home.description")}
                 </p>
-                <div className="flex flex-col gap-4 lg:flex-row">
+                <div className="flex flex-col gap-4 lg:flex-row lg:justify-center">
                   <Link
                     className={cn(
                       buttonVariants({
@@ -51,7 +51,7 @@ export default async function HomePage({
                         variant: "default",
                       }),
                       "gap-2 whitespace-pre md:flex",
-                      "group relative w-full gap-1 overflow-hidden rounded-full font-semibold text-sm tracking-tighter",
+                      "group relative w-full gap-1 overflow-hidden rounded-full font-semibold text-sm tracking-tighter lg:w-auto",
                     )}
                     href="/apps"
                   >
@@ -65,7 +65,7 @@ export default async function HomePage({
                         variant: "ghost",
                       }),
                       "gap-2 whitespace-pre md:flex",
-                      "group relative w-full gap-1 overflow-hidden rounded-full font-semibold text-sm tracking-tighter",
+                      "group relative w-full gap-1 overflow-hidden rounded-full font-semibold text-sm tracking-tighter lg:w-auto",
                     )}
                     href="/signin"
                   >

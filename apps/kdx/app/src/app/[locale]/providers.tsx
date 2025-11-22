@@ -1,7 +1,7 @@
 "use client";
 
 import { DevDesignHelper } from "@kodix/ui/common/dev-design-helper";
-import { Toaster } from "@kodix/ui/toast";
+import { Toaster } from "@kodix/ui/sonner";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { type Locale, type Messages, NextIntlClientProvider } from "next-intl";

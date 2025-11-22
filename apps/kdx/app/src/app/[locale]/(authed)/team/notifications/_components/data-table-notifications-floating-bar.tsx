@@ -5,7 +5,7 @@ import { Button } from "@kodix/ui/button";
 import { exportTableToCSV } from "@kodix/ui/common/data-table/export";
 import { Kbd } from "@kodix/ui/kbd";
 import { Separator } from "@kodix/ui/separator";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import {
   Tooltip,
   TooltipContent,
@@ -68,9 +68,7 @@ export function DataTableNotificationsFloatingBar({
                 </TooltipTrigger>
                 <TooltipContent className="flex items-center border bg-accent px-2 py-1 font-semibold text-foreground dark:bg-zinc-900">
                   <p className="mr-2">{t("Clear selection")}</p>
-                  <Kbd abbrTitle="Escape" variant="outline">
-                    Esc
-                  </Kbd>
+                  <Kbd>Esc</Kbd>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

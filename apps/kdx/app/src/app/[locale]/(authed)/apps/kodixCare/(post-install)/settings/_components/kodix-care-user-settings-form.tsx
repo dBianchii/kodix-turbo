@@ -13,8 +13,8 @@ import {
   useForm,
 } from "@kodix/ui/form";
 import { cn } from "@kodix/ui/lib/utils";
+import { toast } from "@kodix/ui/sonner";
 import { Switch } from "@kodix/ui/switch";
-import { toast } from "@kodix/ui/toast";
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
 import { LuCircleAlert } from "react-icons/lu";

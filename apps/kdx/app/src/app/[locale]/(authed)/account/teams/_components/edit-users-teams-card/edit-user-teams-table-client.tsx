@@ -9,8 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@kodix/ui/dropdown-menu";
 import { cn } from "@kodix/ui/lib/utils";
+import { toast } from "@kodix/ui/sonner";
 import { Table, TableBody, TableCell, TableRow } from "@kodix/ui/table";
-import { toast } from "@kodix/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuChevronLeft } from "react-icons/lu";

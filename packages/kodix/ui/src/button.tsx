@@ -1,12 +1,12 @@
-import type { VariantProps } from "class-variance-authority";
 import { cn } from "@kodix/ui/lib/utils";
 import { Slottable } from "@radix-ui/react-slot";
-import { cva } from "class-variance-authority";
-import { Loader2 } from "lucide-react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { Slot as SlotPrimitive } from "radix-ui";
 
+import { Spinner } from "./spinner";
+
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm outline-none transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
   {
     defaultVariants: {
       size: "default",
@@ -14,66 +14,70 @@ const buttonVariants = cva(
     },
     variants: {
       size: {
-        default: "h-9 px-4 py-2",
-        icon: "h-9 w-9",
-        lg: "h-10 rounded-md px-8",
-        sm: "h-8 rounded-md px-3 text-xs",
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        icon: "size-9",
+        "icon-lg": "size-10",
+        "icon-sm": "size-8",
+        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        sm: "h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5",
       },
       variant: {
-        default:
-          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         destructive:
-          "bg-destructive text-destructive-foreground shadow-2xs hover:bg-destructive/90",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         orange:
           "bg-orange-600 text-destructive-foreground shadow-2xs hover:bg-orange-600/90", //TODO: Create orange CSS variable!
         outline:
-          "border border-input bg-background shadow-2xs hover:bg-accent hover:text-accent-foreground",
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-2xs hover:bg-secondary/80",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
       },
     },
   },
 );
 
-export interface ButtonProps
-  extends React.ComponentProps<"button">,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-  loading?: boolean;
-}
+type ButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    loading?: boolean;
+  };
 
-const Button = ({
-  ref,
+function Button({
   className,
   variant,
   size,
+  loading,
+  disabled,
   children,
   asChild = false,
-  disabled,
-  loading = false,
   ...props
-}: ButtonProps) => {
+}: ButtonProps) {
   const Comp = asChild ? SlotPrimitive.Slot : "button";
+
   return (
     <Comp
       className={cn(buttonVariants({ className, size, variant }))}
+      data-slot="button"
       disabled={loading || disabled}
-      ref={ref}
       {...props}
     >
-      {loading && (
-        <Loader2
-          aria-hidden="true"
-          className="-ms-1 me-2 animate-spin"
-          size={16}
-          strokeWidth={2}
-        />
+      {loading ? (
+        <div className="relative">
+          <span className="invisible">
+            <Slottable>{children}</Slottable>
+          </span>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Spinner />
+          </div>
+        </div>
+      ) : (
+        <Slottable>{children}</Slottable>
       )}
-      <Slottable>{children}</Slottable>
     </Comp>
   );
-};
+}
 
-export { Button, buttonVariants };
+export { Button, buttonVariants, type ButtonProps };

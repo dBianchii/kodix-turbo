@@ -23,7 +23,6 @@ import {
 import { Input } from "@kodix/ui/input";
 import { useTranslations } from "next-intl";
 import { useAction } from "next-safe-action/hooks";
-import { LuArrowRight, LuLoaderCircle } from "react-icons/lu";
 
 import { defaultSafeActionToastError } from "~/helpers/safe-action/default-action-error-toast";
 
@@ -84,19 +83,13 @@ export default function OnboardingCard() {
             </div>
           </CardContent>
           <CardFooter className="flex justify-end">
-            <Button className="group" disabled={isExecuting} type="submit">
+            <Button
+              className="group"
+              disabled={isExecuting}
+              loading={isExecuting}
+              type="submit"
+            >
               {t("apps.kodixCare.onboarding.goToKodixCare")}
-              {!isExecuting && (
-                <LuArrowRight
-                  aria-hidden="true"
-                  className="-me-1 ms-2 opacity-60 transition-transform group-hover:translate-x-0.5"
-                  size={16}
-                  strokeWidth={2}
-                />
-              )}
-              {isExecuting && (
-                <LuLoaderCircle className="ml-2 size-4 animate-spin" />
-              )}
             </Button>
           </CardFooter>
         </Card>

@@ -1,6 +1,6 @@
 import type { AppRole } from "@kodix/shared/db";
 import type { z } from "zod";
-import { and, eq, exists, inArray, not } from "drizzle-orm";
+import { and, eq, inArray, not } from "drizzle-orm";
 
 import type { Drizzle, DrizzleTransaction } from "../client";
 import type { Update } from "./_types";
@@ -102,16 +102,12 @@ export async function findAnyOtherTeamAssociatedWithUserThatIsNotTeamId(
 
 export function findTeamsByUserId(userId: string, db = _db) {
   return db.query.teams.findMany({
-    where: exists(
+    where: inArray(
+      teams.id,
       db
-        .select()
+        .select({ id: usersToTeams.teamId })
         .from(usersToTeams)
-        .where(
-          and(
-            eq(usersToTeams.teamId, teams.id),
-            eq(usersToTeams.userId, userId),
-          ),
-        ),
+        .where(eq(usersToTeams.userId, userId)),
     ),
     with: {
       UsersToTeams: true,

@@ -31,7 +31,7 @@ import {
 } from "@kodix/ui/dropdown-menu";
 import { cn } from "@kodix/ui/lib/utils";
 import { Skeleton } from "@kodix/ui/skeleton";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuTrash } from "react-icons/lu";
@@ -111,7 +111,7 @@ export function KodixApp({
             width={50}
           />
           {installed ? (
-            <Badge className="h-5" variant={"green"}>
+            <Badge className="h-5" variant={"success"}>
               {t("Installed")}
             </Badge>
           ) : null}
@@ -123,7 +123,7 @@ export function KodixApp({
           {appDescription}
         </CardDescription>
       </CardContent>
-      <CardFooter className="flex justify-between border-t px-6 py-4">
+      <CardFooter>
         {user && installed && (
           <Link
             className={cn(buttonVariants({ variant: "default" }))}
@@ -227,10 +227,9 @@ export function AppCardSkeleton() {
       <CardContent className="grow">
         <div className="space-y-2">
           <Skeleton className="h-4 w-5/6" />
-          <Skeleton className="h-4 w-4/6" />
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between border-t px-6 py-4">
+      <CardFooter>
         <Skeleton className="h-9 w-24" />
       </CardFooter>
     </Card>

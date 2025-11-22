@@ -45,8 +45,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@kodix/ui/select";
+import { toast } from "@kodix/ui/sonner";
 import { Textarea } from "@kodix/ui/textarea";
-import { toast } from "@kodix/ui/toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import { LuLoaderCircle, LuLock, LuLockOpen, LuTrash } from "react-icons/lu";

@@ -1,7 +1,7 @@
 "use client";
 
 import { CashTRPCReactProvider } from "@cash/api/trpc/react/client";
-import { Toaster } from "@kodix/ui/toast";
+import { Toaster } from "@kodix/ui/sonner";
 import { ThemeProvider } from "next-themes";
 
 export function Providers({ children }: { children: React.ReactNode }) {

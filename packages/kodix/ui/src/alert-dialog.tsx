@@ -4,7 +4,6 @@ import { cn } from "@kodix/ui/lib/utils";
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 
 import { buttonVariants } from "./button";
-import { useOverlayLifecycle_only_ui } from "./stores/use-overlay-store";
 
 function AlertDialog({
   ...props
@@ -32,11 +31,10 @@ function AlertDialogOverlay({
   className,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Overlay>) {
-  useOverlayLifecycle_only_ui("alert-dialog");
   return (
     <AlertDialogPrimitive.Overlay
       className={cn(
-        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80 data-[state=closed]:animate-out data-[state=open]:animate-in",
+        "data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50 data-[state=closed]:animate-out data-[state=open]:animate-in",
         className,
       )}
       data-slot="alert-dialog-overlay"

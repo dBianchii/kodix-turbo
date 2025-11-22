@@ -21,7 +21,7 @@ import {
   CardTitle,
 } from "@kodix/ui/card";
 import { Form, useForm } from "@kodix/ui/form";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 
