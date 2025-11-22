@@ -55,6 +55,7 @@ import {
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
 import { cn } from "@kodix/ui/lib/utils";
+import { toast } from "@kodix/ui/sonner";
 import {
   Table,
   TableBody,
@@ -64,7 +65,6 @@ import {
   TableRow,
 } from "@kodix/ui/table";
 import { Textarea } from "@kodix/ui/textarea";
-import { toast } from "@kodix/ui/toast";
 import {
   Tooltip,
   TooltipContent,

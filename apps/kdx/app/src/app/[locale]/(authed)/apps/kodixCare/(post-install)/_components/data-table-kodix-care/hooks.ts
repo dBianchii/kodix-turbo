@@ -1,5 +1,5 @@
 import { getErrorMessage } from "@kodix/shared/utils";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 

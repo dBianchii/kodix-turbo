@@ -1,12 +1,10 @@
 "use client";
 
-import type * as React from "react";
+import { Button } from "@kodix/ui/button";
+import { Input } from "@kodix/ui/input";
 import { cn } from "@kodix/ui/lib/utils";
+import { Textarea } from "@kodix/ui/textarea";
 import { cva, type VariantProps } from "class-variance-authority";
-
-import { Button } from "./button";
-import { Input } from "./input";
-import { Textarea } from "./textarea";
 
 function InputGroup({ className, ...props }: React.ComponentProps<"div">) {
   return (

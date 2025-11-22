@@ -1,27 +1,23 @@
 "use client";
 
-import type { ComponentProps } from "react";
-import type {
-  ControllerProps,
-  FieldPath,
-  FieldValues,
-  UseFormProps,
-} from "react-hook-form";
 import type { ZodType } from "zod";
-import { createContext, useContext, useId } from "react";
+import { type ComponentProps, createContext, useContext, useId } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Label } from "@kodix/ui/label";
 import { cn } from "@kodix/ui/lib/utils";
 import { type Label as LabelPrimitive, Slot as SlotPrimitive } from "radix-ui";
 import {
   useForm as __useForm,
   Controller,
+  type ControllerProps,
+  type FieldPath,
+  type FieldValues,
   FormProvider,
+  type UseFormProps,
   type UseFormReturn,
   useFormContext,
   useFormState,
 } from "react-hook-form";
-
-import { Label } from "./label";
 
 function createForm<TOut extends FieldValues, TIn extends FieldValues>(
   schema: ZodType<TOut, TIn>,
@@ -84,6 +80,10 @@ const useFormField = () => {
   const formState = useFormState({ name: fieldContext.name });
   const fieldState = getFieldState(fieldContext.name, formState);
 
+  if (!fieldContext) {
+    throw new Error("useFormField should be used within <FormField>");
+  }
+
   const { id } = itemContext;
 
   return {
@@ -126,7 +126,7 @@ function FormLabel({
 
   return (
     <Label
-      className={cn("data-[error=true]:text-destructive-foreground", className)}
+      className={cn("data-[error=true]:text-destructive", className)}
       data-error={!!error}
       data-slot="form-label"
       htmlFor={formItemId}
@@ -167,7 +167,7 @@ function FormDescription({ className, ...props }: ComponentProps<"p">) {
 
 function FormMessage({ className, ...props }: ComponentProps<"p">) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error.message ?? "") : props.children;
+  const body = error ? String(error?.message ?? "") : props.children;
 
   if (!body) {
     return null;
@@ -175,7 +175,7 @@ function FormMessage({ className, ...props }: ComponentProps<"p">) {
 
   return (
     <p
-      className={cn("text-destructive-foreground text-sm", className)}
+      className={cn("text-destructive text-sm", className)}
       data-slot="form-message"
       id={formMessageId}
       {...props}

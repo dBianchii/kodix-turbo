@@ -1,11 +1,10 @@
 "use client";
 
 import { useMemo } from "react";
+import { Label } from "@kodix/ui/label";
 import { cn } from "@kodix/ui/lib/utils";
+import { Separator } from "@kodix/ui/separator";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Label as LabelPrimitive } from "radix-ui";
-
-import { Separator } from "./separator";
 
 function FieldSet({ className, ...props }: React.ComponentProps<"fieldset">) {
   return (
@@ -111,9 +110,9 @@ function FieldContent({ className, ...props }: React.ComponentProps<"div">) {
 function FieldLabel({
   className,
   ...props
-}: React.ComponentProps<typeof LabelPrimitive.Root>) {
+}: React.ComponentProps<typeof Label>) {
   return (
-    <LabelPrimitive.Root
+    <Label
       className={cn(
         "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col has-[>[data-slot=field]]:rounded-md has-[>[data-slot=field]]:border [&>*]:data-[slot=field]:p-4",

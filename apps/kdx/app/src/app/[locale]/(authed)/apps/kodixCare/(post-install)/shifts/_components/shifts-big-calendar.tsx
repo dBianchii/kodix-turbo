@@ -18,7 +18,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "./rbc-styles.css";
 
 import { useDebounce } from "@kodix/ui/hooks/use-debounce";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useLocale } from "next-intl";
 
 import { CreateShiftCredenzaButton } from "./create-care-shift-credenza";

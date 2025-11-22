@@ -30,7 +30,7 @@ import {
   useForm,
 } from "@kodix/ui/form";
 import { Input } from "@kodix/ui/input";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import { useMutation } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import z from "zod";
@@ -61,7 +61,7 @@ export function DeleteAccountCard() {
   );
 
   return (
-    <Card className="w-full border-destructive text-left">
+    <Card className="w-full overflow-hidden border-destructive pb-0 text-left">
       <CardHeader>
         <CardTitle>{t("Delete account")}</CardTitle>
         <CardDescription>
@@ -73,7 +73,7 @@ export function DeleteAccountCard() {
           <div className="flex flex-col space-y-1.5" />
         </div>
       </CardContent>
-      <CardFooter className="flex justify-end border-destructive border-t bg-destructive/40 px-6 py-4">
+      <CardFooter className="justify-end border-destructive border-t bg-destructive/40 py-6">
         {/* <CardDescription>
               {t("Please use 32 characters at maximum")}
             </CardDescription> */}

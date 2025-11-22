@@ -3,7 +3,7 @@
 import { Button } from "@kodix/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@kodix/ui/popover";
 import { Separator } from "@kodix/ui/separator";
-import { toast } from "@kodix/ui/toast";
+import { toast } from "@kodix/ui/sonner";
 import {
   Tooltip,
   TooltipContent,

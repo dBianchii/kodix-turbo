@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@kodix/ui/dropdown-menu";
 import { cn } from "@kodix/ui/lib/utils";
+import { toast } from "@kodix/ui/sonner";
 import {
   Table,
   TableBody,
@@ -18,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@kodix/ui/table";
-import { toast } from "@kodix/ui/toast";
 import {
   Tooltip,
   TooltipContent,
