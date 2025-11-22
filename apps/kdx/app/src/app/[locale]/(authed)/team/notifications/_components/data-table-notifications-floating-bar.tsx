@@ -68,9 +68,7 @@ export function DataTableNotificationsFloatingBar({
                 </TooltipTrigger>
                 <TooltipContent className="flex items-center border bg-accent px-2 py-1 font-semibold text-foreground dark:bg-zinc-900">
                   <p className="mr-2">{t("Clear selection")}</p>
-                  <Kbd>
-                    Esc
-                  </Kbd>
+                  <Kbd>Esc</Kbd>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
