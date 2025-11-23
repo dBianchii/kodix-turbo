@@ -54,6 +54,7 @@ export async function verifyMagicLinkHandler({
 
   if (!user) {
     const [newUser] = await userRepository.createUser({
+      clientId: client.id,
       email: client.email,
       name: client.name,
     });

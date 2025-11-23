@@ -6,6 +6,10 @@ import { clients } from "./ca";
 import { DEFAULTLENGTH, nanoidPrimaryKey } from "./utils";
 
 export const users = pgTable("user", (t) => ({
+  clientId: t
+    .text()
+    .notNull()
+    .references(() => clients.id, { onDelete: "cascade", onUpdate: "cascade" }),
   email: t.varchar({ length: DEFAULTLENGTH }).notNull().unique(),
   id: nanoidPrimaryKey(t),
   image: t.varchar({ length: DEFAULTLENGTH }),
@@ -13,7 +17,8 @@ export const users = pgTable("user", (t) => ({
   name: t.varchar({ length: DEFAULTLENGTH }).notNull(),
   passwordHash: t.varchar({ length: 255 }),
 }));
-export const usersRelations = relations(users, ({ many }) => ({
+export const usersRelations = relations(users, ({ many, one }) => ({
+  Client: one(clients, { fields: [users.clientId], references: [clients.id] }),
   Sessions: many(sessions),
 }));
 export const userSchema = createInsertSchema(users);
