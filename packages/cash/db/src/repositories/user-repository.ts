@@ -13,5 +13,5 @@ export async function createUser(
   user: typeof users.$inferInsert,
   db: Drizzle | DrizzleTransaction = _db,
 ) {
-  await db.insert(users).values(user);
+  return await db.insert(users).values(user).returning({ id: users.id });
 }

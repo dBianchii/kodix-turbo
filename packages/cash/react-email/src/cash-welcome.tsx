@@ -18,7 +18,7 @@ import {
 export const CashWelcome = ({
   username = "Usuário",
   cashbackAmount = "5,00",
-  registerUrl = `${getBaseUrl()}/cadastro`,
+  registerUrl = `${getBaseUrl()}/auth/magic-link?token=xxx`,
 }: {
   username: string;
   cashbackAmount: string;
@@ -54,14 +54,15 @@ export const CashWelcome = ({
             <Text className="m-0 mt-2 text-[#666666] text-sm">de cashback</Text>
           </Section>
           <Text className="text-black text-sm leading-6">
-            Para receber seu cashback, clique no botão abaixo
+            Para acessar sua conta e receber seu cashback, clique no botão
+            abaixo:
           </Text>
           <Section className="my-8 text-center">
             <Button
               className="rounded bg-[#F5931A] px-8 py-4 text-center font-semibold text-sm text-white no-underline"
               href={registerUrl}
             >
-              Criar minha conta e receber cashback
+              Acessar minha conta
             </Button>
           </Section>
           <Text className="text-black text-sm leading-6">

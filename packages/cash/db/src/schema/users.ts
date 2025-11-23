@@ -2,6 +2,7 @@ import { relations } from "drizzle-orm";
 import { index, pgTable, primaryKey } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
+import { clients } from "./ca";
 import { DEFAULTLENGTH, nanoidPrimaryKey } from "./utils";
 
 export const users = pgTable("user", (t) => ({
@@ -65,3 +66,44 @@ export const sessionsRelations = relations(sessions, ({ one }) => ({
   }),
 }));
 export const sessionSchema = createInsertSchema(sessions);
+
+export const magicLinkTokens = pgTable(
+  "magicLinkToken",
+  (t) => ({
+    clientId: t
+      .text()
+      .notNull()
+      .references(() => clients.id, {
+        onDelete: "cascade",
+        onUpdate: "cascade",
+      }),
+    createdAt: t
+      .timestamp({
+        mode: "string",
+        precision: 3,
+        withTimezone: true,
+      })
+      .notNull()
+      .defaultNow(),
+    expiresAt: t
+      .timestamp({
+        mode: "string",
+        precision: 3,
+        withTimezone: true,
+      })
+      .notNull(),
+    id: nanoidPrimaryKey(t),
+    token: t.text().notNull().unique(),
+  }),
+  (table) => [index().on(table.token), index().on(table.clientId)],
+);
+export const magicLinkTokenRelations = relations(
+  magicLinkTokens,
+  ({ one }) => ({
+    Client: one(clients, {
+      fields: [magicLinkTokens.clientId],
+      references: [clients.id],
+    }),
+  }),
+);
+export const magicLinkTokenSchema = createInsertSchema(magicLinkTokens);

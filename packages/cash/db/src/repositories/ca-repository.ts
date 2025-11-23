@@ -52,6 +52,12 @@ export function findClientByCaId(caId: string, db: Drizzle = _db) {
   });
 }
 
+export function findClientById(id: string, db: Drizzle = _db) {
+  return db.query.clients.findFirst({
+    where: eq(clients.id, id),
+  });
+}
+
 export function updateClientByCaId(
   caId: string,
   data: Partial<typeof clients.$inferInsert>,
@@ -64,7 +70,7 @@ export function createClient(
   data: typeof clients.$inferInsert,
   db: Drizzle | DrizzleTransaction = _db,
 ) {
-  return db.insert(clients).values(data);
+  return db.insert(clients).values(data).returning();
 }
 
 export function upsertClientsByCaId(

@@ -967,6 +967,9 @@ importers:
       '@cash/db':
         specifier: workspace:*
         version: link:../db
+      '@cash/react-email':
+        specifier: workspace:*
+        version: link:../react-email
       '@kodix/dayjs':
         specifier: workspace:*
         version: link:../../kodix/dayjs
@@ -1107,9 +1110,6 @@ importers:
       react-email:
         specifier: 'catalog:'
         version: 3.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
-      tw-animate-css:
-        specifier: 'catalog:'
-        version: 1.4.0
     devDependencies:
       '@kodix/tsconfig':
         specifier: workspace:*
