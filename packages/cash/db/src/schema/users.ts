@@ -9,6 +9,7 @@ export const users = pgTable("user", (t) => ({
   email: t.varchar({ length: DEFAULTLENGTH }).notNull().unique(),
   id: nanoidPrimaryKey(t),
   image: t.varchar({ length: DEFAULTLENGTH }),
+  isAdmin: t.boolean().notNull().default(false),
   name: t.varchar({ length: DEFAULTLENGTH }).notNull(),
   passwordHash: t.varchar({ length: 255 }),
 }));
