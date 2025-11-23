@@ -49,6 +49,11 @@ export const clients = pgTable("client", (t) => ({
   document: t.text(),
   email: t.text(),
   estado: t.text(),
+  firstCashbackEmailSentAt: t.timestamp({
+    mode: "string",
+    precision: 3,
+    withTimezone: true,
+  }),
   id: nanoidPrimaryKey(t),
   logradouro: t.text(),
   name: t.text().notNull(),

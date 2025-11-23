@@ -1,8 +1,10 @@
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, inArray, isNull, sql } from "drizzle-orm";
 import { buildConflictUpdateAllColumns } from "..";
 
 import { db as _db, type Drizzle, type DrizzleTransaction } from "../client";
 import { caTokens, clients, sales } from "../schema";
+import { cashbacks } from "../schema/cashback";
+import { users } from "../schema/users";
 
 export async function getCAToken(db = _db) {
   const token = await db.query.caTokens.findFirst({
@@ -66,6 +68,23 @@ export function updateClientByCaId(
   return db.update(clients).set(data).where(eq(clients.caId, caId));
 }
 
+export function updateClientById(
+  id: string,
+  data: Partial<typeof clients.$inferInsert>,
+  db: Drizzle | DrizzleTransaction = _db,
+) {
+  return db.update(clients).set(data).where(eq(clients.id, id));
+}
+
+export function updateClientsByIds(
+  ids: string[],
+  data: Partial<typeof clients.$inferInsert>,
+  db: Drizzle | DrizzleTransaction = _db,
+) {
+  if (ids.length === 0) return Promise.resolve([]);
+  return db.update(clients).set(data).where(inArray(clients.id, ids));
+}
+
 export function createClient(
   data: typeof clients.$inferInsert,
   db: Drizzle | DrizzleTransaction = _db,
@@ -108,4 +127,17 @@ export function upsertSalesByCaId(
       id: sales.id,
       inserted: sql<boolean>`xmax = 0`, // true if inserted, false if updated
     });
+}
+
+export function getClientsWithCashbackWithoutAccount(db: Drizzle = _db) {
+  return db
+    .selectDistinct({
+      email: clients.email,
+      id: clients.id,
+      name: clients.name,
+    })
+    .from(clients)
+    .innerJoin(cashbacks, eq(cashbacks.clientId, clients.id))
+    .leftJoin(users, eq(users.clientId, clients.id))
+    .where(and(isNull(users.id), isNull(clients.firstCashbackEmailSentAt)));
 }
