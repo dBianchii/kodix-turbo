@@ -1,13 +1,9 @@
 {
-  "name": "@kdx/react-email",
+  "name": "@cash/react-email",
   "private": true,
   "type": "module",
   "exports": {
-    "./constants": "./src/constants.ts",
-    "./team-invite": "./src/team-invite.tsx",
-    "./warn-previous-shift-not-ended": "./src/kodixCare/warn-previous-shift-not-ended.tsx",
-    "./warn-delayed-critical-tasks": "./src/kodixCare/warn-delayed-critical-tasks.tsx",
-    "./reset-password": "./src/reset-password.tsx"
+    "./*": "./src/*.tsx"
   },
   "scripts": {
     "export": "email export --dir='src'",
@@ -16,7 +12,6 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "@kdx/locales": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@react-email/components": "catalog:",
     "react": "catalog:react",
@@ -24,6 +19,7 @@
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
+    "@react-email/preview-server": "5.0.5",
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
     "typescript": "catalog:"
