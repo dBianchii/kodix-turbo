@@ -13,6 +13,7 @@ import {
 } from "../services/conta-azul.service";
 import { verifiedQstashCron } from "./_utils";
 
+const MONTHS_TO_EXPIRE_CASHBACK = 5;
 const LOOKBACK_DAYS = 1;
 
 // type CAPersonPhone = NonNullable<
@@ -297,6 +298,10 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
         tx,
       );
 
+      const caSaleIdToCaSaleMap = new Map(
+        allCASales.map((caSale) => [caSale.id, caSale]),
+      );
+
       const txUpsertedCashbacks =
         await cashbackRepository.upsertCashbacksByCaId(
           cashbackAmounts.map((item) => {
@@ -304,10 +309,23 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             if (!sale)
               throw new Error(`Sale not found for cashback ${item.caSaleId}`);
 
+            const caSale = caSaleIdToCaSaleMap.get(item.caSaleId);
+            if (!caSale)
+              throw new Error(
+                `CA sale not found for cashback ${item.caSaleId}`,
+              );
+
+            const expiresAtUtc = dayjs
+              .tz(caSale.criado_em, "America/Sao_Paulo")
+              .add(MONTHS_TO_EXPIRE_CASHBACK, "months")
+              .utc()
+              .toISOString();
+
             return {
               amount: toReais(item.cashbackAmountCents),
               caProductId: item.caProductId,
               clientId: sale.clientId,
+              expiresAt: expiresAtUtc,
               saleId: sale.id,
             };
           }),

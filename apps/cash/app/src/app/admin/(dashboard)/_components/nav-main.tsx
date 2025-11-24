@@ -21,6 +21,11 @@ const navItems: {
     name: "Buscar Vendas",
     url: "/admin/vendas",
   },
+  {
+    icon: Receipt,
+    name: "Buscar Vendas",
+    url: "/admin/vendas",
+  },
 ] as const;
 
 export function NavMain() {
