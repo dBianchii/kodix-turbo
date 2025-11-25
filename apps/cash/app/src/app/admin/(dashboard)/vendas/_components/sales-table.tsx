@@ -3,7 +3,6 @@
 import type { RouterOutputs } from "@cash/api";
 import { useMemo, useState } from "react";
 import { useTRPC } from "@cash/api/trpc/react/client";
-import { Badge } from "@kodix/ui/badge";
 import { Button } from "@kodix/ui/button";
 import { DataTableColumnHeader } from "@kodix/ui/common/data-table/data-table-column-header";
 import { DataTablePagination } from "@kodix/ui/common/data-table/data-table-pagination";
@@ -75,27 +74,6 @@ export function SalesTable() {
         ),
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>Cliente</DataTableColumnHeader>
-        ),
-      }),
-      columnHelper.accessor("clientType", {
-        cell: (info) => {
-          const type = info.getValue();
-
-          let variant: "default" | "secondary" | "outline";
-          if (type === "Jurídica") {
-            variant = "default";
-          } else if (type === "Física") {
-            variant = "secondary";
-          } else {
-            variant = "outline";
-          }
-
-          return <Badge variant={variant}>{type}</Badge>;
-        },
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column}>
-            Tipo Cliente
-          </DataTableColumnHeader>
         ),
       }),
       columnHelper.accessor("total", {

@@ -1,7 +1,7 @@
 import type z from "zod";
 import { db } from "@cash/db/client";
 import { cashbacks, clients, sales } from "@cash/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, gt, sql } from "drizzle-orm";
 
 import type { TProtectedProcedureContext } from "../../procedures";
 import type { ZGetClientByIdInputSchema } from "../../schemas/client";
@@ -27,13 +27,17 @@ export const getByIdHandler = async ({ input }: GetClientByIdOptions) => {
     return null;
   }
 
-  // Get total cashback
   const cashbackTotal = await db
     .select({
       total: sql<number>`COALESCE(SUM(${cashbacks.amount}), 0)`,
     })
     .from(cashbacks)
-    .where(eq(cashbacks.clientId, input.clientId))
+    .where(
+      and(
+        eq(cashbacks.clientId, input.clientId),
+        gt(cashbacks.expiresAt, new Date().toISOString()),
+      ),
+    )
     .then((res) => res[0]?.total ?? 0);
 
   const salesData = await db.query.sales.findMany({

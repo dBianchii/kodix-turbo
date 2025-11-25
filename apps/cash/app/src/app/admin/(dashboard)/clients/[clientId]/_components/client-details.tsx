@@ -131,7 +131,9 @@ export function ClientDetails({ clientId }: { clientId: string }) {
                     </TableCell>
                     <TableCell
                       className={`text-right font-medium ${
-                        isExpired ? "text-muted-foreground" : "text-green-600"
+                        isExpired
+                          ? "text-muted-foreground line-through"
+                          : "text-green-600"
                       }`}
                     >
                       {sale.cashbackAmount
@@ -143,22 +145,25 @@ export function ClientDetails({ clientId }: { clientId: string }) {
                     </TableCell>
                     <TableCell>
                       {sale.expiresAt ? (
-                        isExpired ? (
-                          <Badge className="gap-1.5" variant="destructive">
-                            <AlertCircle className="h-3 w-3" />
-                            Expirado
-                          </Badge>
-                        ) : (
-                          new Intl.DateTimeFormat("pt-BR", {
-                            day: "2-digit",
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            month: "2-digit",
-                            year: "numeric",
-                          }).format(sale.expiresAt)
-                        )
+                        <div className="flex flex-col items-start gap-1.5">
+                          <span className="text-sm">
+                            {new Intl.DateTimeFormat("pt-BR", {
+                              day: "2-digit",
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              month: "2-digit",
+                              year: "numeric",
+                            }).format(sale.expiresAt)}
+                          </span>
+                          {isExpired && (
+                            <Badge className="gap-1" variant="destructive">
+                              <AlertCircle className="h-3 w-3" />
+                              Expirado
+                            </Badge>
+                          )}
+                        </div>
                       ) : (
-                        "-"
+                        <span className="text-muted-foreground">-</span>
                       )}
                     </TableCell>
                   </TableRow>

@@ -27,7 +27,6 @@ export const cashbacks = pgTable(
         precision: 3,
         withTimezone: true,
       })
-      .defaultNow()
       .notNull(),
     id: nanoidPrimaryKey(t),
     saleId: t
