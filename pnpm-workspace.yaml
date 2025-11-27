@@ -40,6 +40,7 @@ catalog:
   '@upstash/redis': 1.35.4
   '@vercel/analytics': 1.5.0
   '@vercel/speed-insights': 1.2.0
+  '@react-email/preview-server': 5.0.5
   arctic: 1.9.2
   burnt: 0.12.2
   cep-promise: 4.4.1
