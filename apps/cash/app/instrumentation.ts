@@ -60,5 +60,4 @@ export const onRequestError: Instrumentation.onRequestError = async (
   }
 
   posthog.captureException(error, distinctId || undefined);
-  await posthog.shutdown();
 };
