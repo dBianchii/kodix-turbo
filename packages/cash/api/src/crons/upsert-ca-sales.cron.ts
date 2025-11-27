@@ -2,7 +2,7 @@ import type { clients, sales } from "@cash/db/schema";
 import { db } from "@cash/db/client";
 import { caRepository, cashbackRepository } from "@cash/db/repositories";
 import dayjs from "@kodix/dayjs";
-import { getPostHogServer } from "@kodix/posthog";
+import { captureException } from "@kodix/posthog";
 import { uniqBy } from "es-toolkit";
 
 import {
@@ -39,8 +39,6 @@ const FULL_CASHBACK_PERCENT = 5; // 5%
 const DISCOUNTED_CASHBACK_PERCENT = 1; // 1%
 
 export const upsertCASalesCron = verifiedQstashCron(async () => {
-  const posthog = getPostHogServer();
-
   const now = dayjs().tz("America/Sao_Paulo");
 
   const yesterday = now.subtract(LOOKBACK_DAYS, "day").format("YYYY-MM-DD");
@@ -70,7 +68,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       currentPage++;
     } while (allCASales.length < totalItens);
   } catch (error) {
-    posthog.captureException(error, undefined, {
+    captureException(error, undefined, {
       context: "listContaAzulSales",
       currentPage,
       today,
@@ -117,7 +115,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             caSaleId: caSale.id,
           }));
         } catch (error) {
-          posthog.captureException(error, undefined, {
+          captureException(error, undefined, {
             caSaleId: caSale.id,
             context: "listSaleItemsBySaleId",
           });
@@ -151,7 +149,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             valor_venda: product.estoque.valor_venda,
           };
         } catch (error) {
-          posthog.captureException(error, undefined, {
+          captureException(error, undefined, {
             context: "getProductById",
             productId: item.id_item,
           });
@@ -240,7 +238,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       currentClientPage++;
     } while (allCAClients.length < totalClients);
   } catch (error) {
-    posthog.captureException(error, undefined, {
+    captureException(error, undefined, {
       context: "listContaAzulPersons",
       currentClientPage,
       totalClients,
@@ -345,8 +343,6 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   console.log(
     `[CA Sales Sync] Created Cashbacks: ${cashbackCreatedCount}, Updated Cashbacks: ${cashbackUpdatedCount}`,
   );
-
-  await posthog.shutdown();
 
   return new Response(`Upserted ${upsertedSales.length} sales`);
 });

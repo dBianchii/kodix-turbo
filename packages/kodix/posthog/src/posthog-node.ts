@@ -8,3 +8,16 @@ export const getPostHogServer = () =>
     flushInterval: 0,
     host: process.env.NEXT_PUBLIC_POSTHOG_HOST,
   });
+
+type CaptureExceptionParams = Parameters<
+  ReturnType<typeof getPostHogServer>["captureException"]
+>;
+
+export const captureException = (...args: CaptureExceptionParams) => {
+  // Don't send any events to PostHog locally
+  if (process.env.NODE_ENV === "development") {
+    return;
+  }
+
+  getPostHogServer().captureException(...args);
+};

@@ -1,5 +1,5 @@
 import { caRepository } from "@cash/db/repositories";
-import { getPostHogServer } from "@kodix/posthog";
+import { captureException } from "@kodix/posthog";
 import { TRPCError } from "@trpc/server";
 
 import type { TPublicProcedureContext } from "../../procedures";
@@ -139,10 +139,7 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
       });
     }
   } catch (error) {
-    const posthog = getPostHogServer();
-
-    posthog.captureException(error);
-    await posthog.shutdown();
+    captureException(error);
 
     if (error instanceof TRPCError) {
       throw error;
