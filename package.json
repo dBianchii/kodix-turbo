@@ -8,7 +8,8 @@
   "scripts": {
     "dev:kdx": "turbo watch dev studio -F @kdx/app... @kdx/db-dev#dev",
     "dev:cash": "turbo watch dev studio -F @cash/app... @cash/db-dev#dev",
-    "dev:email": "turbo dev -F @kdx/react-email...",
+    "email:kdx": "turbo dev -F @kdx/react-email",
+    "email:cash": "turbo dev -F @cash/react-email",
     "push:kdx": "turbo @kdx/db-dev#dev @kdx/db#push",
     "push:cash": "turbo @cash/db-dev#dev @cash/db#push",
     "seed:kdx": "turbo @kdx/db-dev#dev @kdx/db#seed",

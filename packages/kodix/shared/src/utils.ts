@@ -14,10 +14,10 @@ export const nanoid = customAlphabet(
  * @description Base URL for the current environment.
  */
 export const getBaseUrl = () => {
-  // biome-ignore lint/suspicious/noTsIgnore: <This is to avoid having to make all other packages need dom>
+  // biome-ignore lint/suspicious/noTsIgnore: This is to avoid having to make all other packages need dom
   //@ts-ignore-error
   if (typeof window !== "undefined") {
-    // biome-ignore lint/suspicious/noTsIgnore: <This is to avoid having to make all other packages need dom>
+    // biome-ignore lint/suspicious/noTsIgnore: This is to avoid having to make all other packages need dom
     //@ts-ignore-error
     return window.location.origin;
   }

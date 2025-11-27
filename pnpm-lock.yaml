@@ -970,6 +970,9 @@ importers:
       '@cash/db':
         specifier: workspace:*
         version: link:../db
+      '@cash/react-email':
+        specifier: workspace:*
+        version: link:../react-email
       '@kodix/dayjs':
         specifier: workspace:*
         version: link:../../kodix/dayjs
@@ -1095,6 +1098,37 @@ importers:
         version: 5.9.2
 
   packages/cash/db-dev: {}
+
+  packages/cash/react-email:
+    dependencies:
+      '@kodix/shared':
+        specifier: workspace:*
+        version: link:../../kodix/shared
+      '@react-email/components':
+        specifier: 'catalog:'
+        version: 0.0.33(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      react:
+        specifier: ^19.2.0
+        version: 19.2.0
+      react-email:
+        specifier: 'catalog:'
+        version: 3.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+    devDependencies:
+      '@kodix/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/typescript
+      '@react-email/preview-server':
+        specifier: 5.0.5
+        version: 5.0.5(@babel/core@7.24.5)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@types/node':
+        specifier: 'catalog:'
+        version: 22.15.0
+      '@types/react':
+        specifier: catalog:react
+        version: 19.2.2
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
 
   packages/kdx/api:
     dependencies:
@@ -4913,6 +4947,9 @@ packages:
     engines: {node: '>=18.0.0'}
     peerDependencies:
       react: 19.2.0
+
+  '@react-email/preview-server@5.0.5':
+    resolution: {integrity: sha512-dNZ8G7PqQ+BUGkBRJgo+8PDjEtRj8c2vRzUMA3s7Q6zTfXFrBrSchG37UT5TsL6zi/RAOVN2P0wBZqz60J3hsw==}
 
   '@react-email/preview-server@5.0.5':
     resolution: {integrity: sha512-dNZ8G7PqQ+BUGkBRJgo+8PDjEtRj8c2vRzUMA3s7Q6zTfXFrBrSchG37UT5TsL6zi/RAOVN2P0wBZqz60J3hsw==}
@@ -9676,6 +9713,27 @@ packages:
       babel-plugin-react-compiler: '*'
       react: 19.2.0
       react-dom: 19.2.0
+      sass: ^1.3.0
+    peerDependenciesMeta:
+      '@opentelemetry/api':
+        optional: true
+      '@playwright/test':
+        optional: true
+      babel-plugin-react-compiler:
+        optional: true
+      sass:
+        optional: true
+
+  next@16.0.1:
+    resolution: {integrity: sha512-e9RLSssZwd35p7/vOa+hoDFggUZIUbZhIUSLZuETCwrCVvxOs87NamoUzT+vbcNAL8Ld9GobBnWOA6SbV/arOw==}
+    engines: {node: '>=20.9.0'}
+    hasBin: true
+    peerDependencies:
+      '@opentelemetry/api': ^1.1.0
+      '@playwright/test': ^1.51.1
+      babel-plugin-react-compiler: '*'
+      react: ^19.2.0
+      react-dom: ^19.2.0
       sass: ^1.3.0
     peerDependenciesMeta:
       '@opentelemetry/api':

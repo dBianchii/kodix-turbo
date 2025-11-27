@@ -140,16 +140,9 @@ export async function registerHandler({ input }: RegisterHandlerInput) {
     }
   } catch (error) {
     const posthog = getPostHogServer();
-
     posthog.captureException(error);
     await posthog.shutdown();
 
-    if (error instanceof TRPCError) {
-      throw error;
-    }
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: error instanceof Error ? error.message : "Unknown error",
-    });
+    throw error;
   }
 }

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
 
-import DespertarLogo from "./_assets/despertar-logo.png";
+import DespertarLogo from "../../../../public/emails/despertar-logo.png";
 import { CadastroSuccess } from "./_components/cadastro-success";
 import { RegistrationForm } from "./_components/registration-form";
 

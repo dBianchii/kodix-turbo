@@ -17,6 +17,7 @@
     "server-only": "catalog:",
     "@cash/auth": "workspace:*",
     "@cash/db": "workspace:*",
+    "@cash/react-email": "workspace:*",
     "@kodix/dayjs": "workspace:*",
     "@kodix/posthog": "workspace:*",
     "@kodix/shared": "workspace:*",
