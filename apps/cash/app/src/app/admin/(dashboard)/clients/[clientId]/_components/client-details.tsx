@@ -87,7 +87,7 @@ export function ClientDetails({ clientId }: { clientId: string }) {
 
       <div className="space-y-4">
         <h2 className="font-semibold text-xl tracking-tight">
-          Histórico de Compras
+          Histórico de Cashbacks
         </h2>
         <div className="rounded-md border">
           <Table>
