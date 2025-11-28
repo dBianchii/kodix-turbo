@@ -4,6 +4,7 @@ import { createInsertSchema } from "drizzle-zod";
 
 import { cashbacks } from "./cashback";
 import { nanoidPrimaryKey } from "./utils";
+import { vouchers } from "./voucher";
 
 export const caTokens = pgTable("caToken", (t) => ({
   accessToken: t.text().notNull(),
@@ -73,6 +74,7 @@ export const clients = pgTable("client", (t) => ({
 }));
 export const clientsRelations = relations(clients, ({ many }) => ({
   Sales: many(sales),
+  Vouchers: many(vouchers),
 }));
 export const clientsSchema = createInsertSchema(clients);
 

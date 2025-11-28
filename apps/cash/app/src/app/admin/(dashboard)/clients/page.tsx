@@ -43,7 +43,7 @@ async function PageContent({
   const params = await loadSearchParams(searchParams);
 
   prefetch(
-    trpc.client.list.queryOptions({
+    trpc.admin.client.list.queryOptions({
       clientName: params.clientName,
       page: params.page,
       perPage: params.perPage,

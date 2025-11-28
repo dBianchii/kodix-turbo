@@ -9,7 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@kodix/ui/sidebar";
-import { Receipt } from "lucide-react";
+import { Receipt, Users } from "lucide-react";
 
 const navItems: {
   icon: React.ElementType;
@@ -22,9 +22,9 @@ const navItems: {
     url: "/admin/vendas",
   },
   {
-    icon: Receipt,
-    name: "Buscar Vendas",
-    url: "/admin/vendas",
+    icon: Users,
+    name: "Clientes",
+    url: "/admin/clients",
   },
 ] as const;
 

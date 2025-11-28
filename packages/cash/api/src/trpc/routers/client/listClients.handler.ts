@@ -3,11 +3,11 @@ import { db } from "@cash/db/client";
 import { cashbacks, clients } from "@cash/db/schema";
 import { and, asc, count, desc, eq, ilike, sql } from "drizzle-orm";
 
-import type { TProtectedProcedureContext } from "../../procedures";
+import type { TAdminProcedureContext } from "../../procedures";
 import type { ZListClientsInputSchema } from "../../schemas/client";
 
 interface ListClientsOptions {
-  ctx: TProtectedProcedureContext;
+  ctx: TAdminProcedureContext;
   input: z.infer<typeof ZListClientsInputSchema>;
 }
 

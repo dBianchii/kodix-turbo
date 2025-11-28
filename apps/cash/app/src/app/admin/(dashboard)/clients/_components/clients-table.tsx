@@ -39,7 +39,9 @@ import {
 import { useClientsSearchParams } from "./clients-url-state";
 
 const columnHelper =
-  createColumnHelper<RouterOutputs["client"]["list"]["data"][number]>();
+  createColumnHelper<
+    RouterOutputs["admin"]["client"]["list"]["data"][number]
+  >();
 
 export function ClientsTable() {
   const [params, setParams] = useClientsSearchParams();
@@ -49,7 +51,7 @@ export function ClientsTable() {
   const trpc = useTRPC();
 
   const { data, isPending, error } = useQuery(
-    trpc.client.list.queryOptions({
+    trpc.admin.client.list.queryOptions({
       clientName,
       page,
       perPage,
