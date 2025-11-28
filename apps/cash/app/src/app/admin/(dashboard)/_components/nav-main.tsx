@@ -5,32 +5,31 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@kodix/ui/sidebar";
 import { Receipt } from "lucide-react";
 
+const navItems: {
+  icon: React.ElementType;
+  name: string;
+  url: Route;
+}[] = [
+  {
+    icon: Receipt,
+    name: "Buscar Vendas",
+    url: "/admin/vendas",
+  },
+] as const;
+
 export function NavMain() {
   const pathname = usePathname();
-  const projects: {
-    icon: React.ElementType;
-    name: string;
-    url: Route;
-  }[] = [
-    {
-      icon: Receipt,
-      name: "Buscar Vendas",
-      url: "/admin/vendas",
-    },
-  ] as const;
 
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+    <SidebarGroup>
       <SidebarMenu>
-        {projects.map((item) => (
+        {navItems.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild isActive={item.url === pathname}>
               <Link href={item.url}>
