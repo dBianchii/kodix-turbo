@@ -42,7 +42,7 @@ export default function CashSidebar() {
         <NavMain />
       </SidebarContent>
       <SidebarFooter>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense>
           <NavUserWrapper />
         </Suspense>
       </SidebarFooter>

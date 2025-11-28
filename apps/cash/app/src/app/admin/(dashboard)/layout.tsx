@@ -1,13 +1,11 @@
 import { type PropsWithChildren, Suspense } from "react";
 import { cookies } from "next/headers";
+import { ThemeToggle } from "@kodix/ui/common/theme";
 import { Separator } from "@kodix/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@kodix/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@kodix/ui/sidebar";
 
 import CashSidebar from "./_components/sidebar";
+import { SidebarTrigger } from "./_components/sidebar-trigger";
 
 async function SidebarProviderAsync({ children }: PropsWithChildren) {
   return (
@@ -31,18 +29,21 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
     <SidebarProviderWrapper>
       <CashSidebar />
-      <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+      <div className="flex flex-1 flex-col">
+        <header className="sticky top-0 z-10 flex h-16 shrink-0 flex-row items-center justify-between gap-2 bg-sidebar transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:pr-4">
           <div className="flex items-center gap-2 px-4">
-            <SidebarTrigger className="-ml-1" />
+            <SidebarTrigger />
             <Separator
               className="mr-2 data-[orientation=vertical]:h-4"
               orientation="vertical"
             />
           </div>
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+          </div>
         </header>
-        {children}
-      </SidebarInset>
+        <SidebarInset>{children}</SidebarInset>
+      </div>
     </SidebarProviderWrapper>
   );
 }
