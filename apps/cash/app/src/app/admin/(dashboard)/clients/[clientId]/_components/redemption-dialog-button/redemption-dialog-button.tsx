@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { CASHBACK_REDEMPTION_PERCENTAGE } from "@cash/api/constants";
-import { useTRPC } from "@cash/api/trpc/react/client";
 import { formatCurrency } from "@kodix/shared/intl-utils";
 import { Button } from "@kodix/ui/button";
 import { CurrencyInput } from "@kodix/ui/common/currency-input";
@@ -19,12 +18,13 @@ import {
 } from "@kodix/ui/dialog";
 import { usePromiseLoader } from "@kodix/ui/hooks/use-promise-loader";
 import { Label } from "@kodix/ui/label";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { CheckCircle2, Loader2, Printer, Ticket } from "lucide-react";
 
 import { formatVoucherCode } from "~/utils/voucherUtils";
 
 import type { ClientDataPromise } from "../data";
+import { createVoucherAction } from "./createVoucher.action";
 
 export interface RedemptionDialogButtonClientProps {
   getClientDataPromise: ClientDataPromise;
@@ -34,9 +34,6 @@ export function RedemptionDialogButtonClient({
   getClientDataPromise,
 }: RedemptionDialogButtonClientProps) {
   const { data } = usePromiseLoader(getClientDataPromise);
-
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
 
   const { clientId } = useParams<{ clientId: string }>();
 
@@ -50,15 +47,9 @@ export function RedemptionDialogButtonClient({
   );
   const canRedeem = purchaseValue > 0 && maxRedeemable > 0;
 
-  const createVoucherMutation = useMutation(
-    trpc.admin.voucher.create.mutationOptions({
-      onSuccess: () => {
-        void queryClient.invalidateQueries(
-          trpc.admin.client.getById.pathFilter(),
-        );
-      },
-    }),
-  );
+  const createVoucherMutation = useMutation({
+    mutationFn: createVoucherAction,
+  });
 
   const handleSubmit = () => {
     if (!canRedeem) return;

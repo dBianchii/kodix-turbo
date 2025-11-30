@@ -1,13 +1,14 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { adminAction, trpcCaller } from "@cash/api/trpc/react/server";
-import { ZCreateVoucherInputSchema } from "@cash/api/trpc/schemas/voucher";
+import { trpcCaller } from "@cash/api/trpc/react/server";
 
-export const createVoucherAction = adminAction
-  .input(ZCreateVoucherInputSchema)
-  .mutation(async ({ input }) => {
-    const result = await trpcCaller.admin.voucher.create(input);
-    revalidatePath(`/admin/clients/${input.clientId}`);
-    return result;
-  });
+export async function createVoucherAction(input: {
+  clientId: string;
+  purchaseTotal: number;
+  redemptionAmount: number;
+}) {
+  const result = await trpcCaller.admin.voucher.create(input);
+  revalidatePath(`/admin/clients/${input.clientId}`);
+  return result;
+}
