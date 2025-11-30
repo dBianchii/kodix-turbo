@@ -1,13 +1,16 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@kodix/ui/button";
 import { ArrowLeft } from "lucide-react";
 
-import { useGetClientByIdSuspenseQuery } from "./utils/use-get-client-by-id-query";
+import { getClientData } from "./data";
 
-export function ClientHeader() {
-  const { data } = useGetClientByIdSuspenseQuery();
+export async function ClientHeader({
+  paramsPromise,
+}: {
+  paramsPromise: Promise<{ clientId: string }>;
+}) {
+  const { clientId } = await paramsPromise;
+  const data = await getClientData(clientId);
 
   return (
     <div className="flex items-center gap-4">

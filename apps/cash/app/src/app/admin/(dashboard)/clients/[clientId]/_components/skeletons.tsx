@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
+import { DataTableSkeleton } from "@kodix/ui/common/data-table/data-table-skeleton";
 import { Skeleton } from "@kodix/ui/skeleton";
 
 export function ClientHeaderSkeleton() {
@@ -42,14 +43,22 @@ export function TableSkeleton() {
   );
 }
 
-export function TabsHeaderSkeleton() {
+export function TabsSkeleton() {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex gap-2">
-        <Skeleton className="h-10 w-40" />
-        <Skeleton className="h-10 w-28" />
+    <>
+      <div className="mb-4 flex items-center justify-between">
+        <div className="flex gap-2">
+          <Skeleton className="h-8 w-32" />
+          <Skeleton className="h-8 w-32" />
+        </div>
+        <Skeleton className="h-9 w-32" />
       </div>
-      <Skeleton className="h-10 w-40" />
-    </div>
+      <DataTableSkeleton
+        columnCount={5}
+        rowCount={5}
+        showViewOptions={false}
+        withPagination={false}
+      />
+    </>
   );
 }

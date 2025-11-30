@@ -1,5 +1,3 @@
-"use client";
-
 import { formatCurrency, formatDate } from "@kodix/shared/intl-utils";
 import { Badge } from "@kodix/ui/badge";
 import {
@@ -12,12 +10,15 @@ import {
 } from "@kodix/ui/table";
 import { AlertCircle } from "lucide-react";
 
-import { useGetClientByIdSuspenseQuery } from "./utils/use-get-client-by-id-query";
+import { getClientData } from "../data";
 
-export function CashbacksTable() {
-  const {
-    data: { sales },
-  } = useGetClientByIdSuspenseQuery();
+export async function CashbacksTable({
+  paramsPromise,
+}: {
+  paramsPromise: Promise<{ clientId: string }>;
+}) {
+  const { clientId } = await paramsPromise;
+  const { sales } = await getClientData(clientId);
 
   return (
     <Table containerClassName="rounded-md border">

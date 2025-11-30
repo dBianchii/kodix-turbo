@@ -1,13 +1,14 @@
-"use client";
-
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
 
-import { useGetClientByIdSuspenseQuery } from "./utils/use-get-client-by-id-query";
+import { getClientData } from "./data";
 
-export function TotalPurchasesCard() {
-  const {
-    data: { sales },
-  } = useGetClientByIdSuspenseQuery();
+export async function TotalPurchasesCard({
+  paramsPromise,
+}: {
+  paramsPromise: Promise<{ clientId: string }>;
+}) {
+  const { clientId } = await paramsPromise;
+  const { sales } = await getClientData(clientId);
 
   return (
     <Card>

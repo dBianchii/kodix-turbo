@@ -1,27 +1,21 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { redirect } from "next/navigation";
-import {
-  batchPrefetch,
-  HydrateClient,
-  trpc,
-} from "@cash/api/trpc/react/server";
-import { auth } from "@cash/auth";
-import { ZNanoId } from "@kodix/shared/utils";
+import { DataTableSkeleton } from "@kodix/ui/common/data-table/data-table-skeleton";
 
 import PageWrapper from "~/app/_components/page-wrapper";
 
 import { AvailableCashbackCard } from "./_components/available-cashback-card";
 import { ClientHeader } from "./_components/client-header";
-import { ClientTabs } from "./_components/client-tabs";
-import { ErrorFallback } from "./_components/error-fallback";
+import { getClientData } from "./_components/data";
+import { RedemptionDialogButtonClient } from "./_components/redemption-dialog-button/redemption-dialog-button";
 import {
   CardSkeleton,
   ClientHeaderSkeleton,
-  TableSkeleton,
-  TabsHeaderSkeleton,
+  TabsSkeleton,
 } from "./_components/skeletons";
+import { CashbacksTable } from "./_components/tabs/cashbacks-table";
+import { ClientTabs } from "./_components/tabs/client-tabs";
+import { VoucherHistoryTable } from "./_components/tabs/voucher-history-table";
 import { TotalPurchasesCard } from "./_components/total-purchases-card";
 
 export const metadata: Metadata = {
@@ -33,62 +27,59 @@ export default function ClientIdPage({
 }: PageProps<"/admin/clients/[clientId]">) {
   return (
     <PageWrapper>
-      <Suspense fallback={<ClientIdPageSkeleton />}>
-        <ClientIdPageContent paramsPromise={params} />
-      </Suspense>
-    </PageWrapper>
-  );
-}
-
-function ClientIdPageSkeleton() {
-  return (
-    <div className="min-w-0 space-y-8">
-      <ClientHeaderSkeleton />
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <CardSkeleton />
-        <CardSkeleton />
-      </div>
-      <div className="space-y-4">
-        <TabsHeaderSkeleton />
-        <TableSkeleton />
-      </div>
-    </div>
-  );
-}
-
-async function ClientIdPageContent({
-  paramsPromise,
-}: {
-  paramsPromise: Promise<{ clientId: string }>;
-}) {
-  const session = await auth();
-  if (!session.user) {
-    redirect("/admin/auth/login");
-  }
-
-  const { clientId } = await paramsPromise;
-
-  if (!ZNanoId.safeParse(clientId).success) {
-    redirect("/admin/clients");
-  }
-
-  batchPrefetch([
-    trpc.admin.client.getById.queryOptions({ clientId }),
-    trpc.admin.voucher.list.queryOptions({ clientId }),
-  ]);
-
-  return (
-    <HydrateClient>
-      <ErrorBoundary errorComponent={ErrorFallback}>
-        <div className="min-w-0 space-y-8">
-          <ClientHeader />
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <AvailableCashbackCard />
-            <TotalPurchasesCard />
-          </div>
-          <ClientTabs />
+      <div className="min-w-0 space-y-8">
+        <Suspense fallback={<ClientHeaderSkeleton />}>
+          <ClientHeader paramsPromise={params} />
+        </Suspense>
+        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Suspense fallback={<CardSkeleton />}>
+            <AvailableCashbackCard paramsPromise={params} />
+          </Suspense>
+          <Suspense fallback={<CardSkeleton />}>
+            <TotalPurchasesCard paramsPromise={params} />
+          </Suspense>
         </div>
-      </ErrorBoundary>
-    </HydrateClient>
+
+        <Suspense fallback={<TabsSkeleton />}>
+          <ClientTabs
+            cashbacksContent={
+              <Suspense
+                fallback={
+                  <DataTableSkeleton
+                    columnCount={5}
+                    rowCount={5}
+                    showViewOptions={false}
+                    withPagination={false}
+                  />
+                }
+              >
+                <CashbacksTable paramsPromise={params} />
+              </Suspense>
+            }
+            redemptionButton={
+              <RedemptionDialogButtonClient
+                getClientDataPromise={params.then((p) =>
+                  getClientData(p.clientId),
+                )}
+              />
+            }
+            vouchersContent={
+              <Suspense
+                fallback={
+                  <DataTableSkeleton
+                    columnCount={5}
+                    rowCount={5}
+                    showViewOptions={false}
+                    withPagination={false}
+                  />
+                }
+              >
+                <VoucherHistoryTable paramsPromise={params} />
+              </Suspense>
+            }
+          />
+        </Suspense>
+      </div>
+    </PageWrapper>
   );
 }

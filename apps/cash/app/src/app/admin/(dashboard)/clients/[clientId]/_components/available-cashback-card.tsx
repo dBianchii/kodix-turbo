@@ -1,14 +1,15 @@
-"use client";
-
 import { formatCurrency } from "@kodix/shared/intl-utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
 
-import { useGetClientByIdSuspenseQuery } from "./utils/use-get-client-by-id-query";
+import { getClientData } from "./data";
 
-export function AvailableCashbackCard() {
-  const {
-    data: { totalAvailableCashback },
-  } = useGetClientByIdSuspenseQuery();
+export async function AvailableCashbackCard({
+  paramsPromise,
+}: {
+  paramsPromise: Promise<{ clientId: string }>;
+}) {
+  const { clientId } = await paramsPromise;
+  const { totalAvailableCashback } = await getClientData(clientId);
 
   return (
     <Card>
