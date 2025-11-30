@@ -2,3 +2,4 @@
 export * from "./ca";
 export * from "./cashback";
 export * from "./users";
+export * from "./voucher";

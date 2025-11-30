@@ -39,7 +39,9 @@ export default function CashSidebar() {
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain />
+        <Suspense>
+          <NavMain />
+        </Suspense>
       </SidebarContent>
       <SidebarFooter>
         <Suspense>

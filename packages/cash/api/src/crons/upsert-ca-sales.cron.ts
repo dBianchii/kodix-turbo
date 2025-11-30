@@ -5,6 +5,7 @@ import dayjs from "@kodix/dayjs";
 import { captureException } from "@kodix/posthog";
 import { uniqBy } from "es-toolkit";
 
+import { MONTHS_TO_EXPIRE_CASHBACK } from "../constants";
 import {
   getProductById,
   listContaAzulPersons,
@@ -297,6 +298,10 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
         tx,
       );
 
+      const caSaleIdToCaSaleMap = new Map(
+        allCASales.map((caSale) => [caSale.id, caSale]),
+      );
+
       const txUpsertedCashbacks =
         await cashbackRepository.upsertCashbacksByCaId(
           cashbackAmounts.map((item) => {
@@ -304,10 +309,23 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             if (!sale)
               throw new Error(`Sale not found for cashback ${item.caSaleId}`);
 
+            const caSale = caSaleIdToCaSaleMap.get(item.caSaleId);
+            if (!caSale)
+              throw new Error(
+                `CA sale not found for cashback ${item.caSaleId}`,
+              );
+
+            const expiresAtUtc = dayjs
+              .tz(caSale.criado_em, "America/Sao_Paulo")
+              .add(MONTHS_TO_EXPIRE_CASHBACK, "months")
+              .utc()
+              .toISOString();
+
             return {
               amount: toReais(item.cashbackAmountCents),
               caProductId: item.caProductId,
               clientId: sale.clientId,
+              expiresAt: expiresAtUtc,
               saleId: sale.id,
             };
           }),

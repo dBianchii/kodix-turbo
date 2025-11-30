@@ -10,6 +10,11 @@ export const nanoid = customAlphabet(
   NANOID_SIZE,
 );
 
+export const NANOID_REGEX = new RegExp(`^[0-9a-z]{${NANOID_SIZE}}$`);
+export const ZNanoId = z
+  .string()
+  .regex(NANOID_REGEX, { message: "Not a valid id" });
+
 /**
  * @description Base URL for the current environment.
  */

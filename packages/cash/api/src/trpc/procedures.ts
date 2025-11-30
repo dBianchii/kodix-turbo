@@ -38,3 +38,13 @@ export const protectedProcedure = publicProcedure.use(({ ctx, next }) => {
 export type TProtectedProcedureContext = inferProcedureBuilderResolverOptions<
   typeof protectedProcedure
 >["ctx"];
+
+export const adminProcedure = protectedProcedure.use(({ ctx, next }) => {
+  if (!ctx.auth.user.isAdmin) {
+    throw new TRPCError({ code: "FORBIDDEN" });
+  }
+  return next({ ctx });
+});
+export type TAdminProcedureContext = inferProcedureBuilderResolverOptions<
+  typeof adminProcedure
+>["ctx"];

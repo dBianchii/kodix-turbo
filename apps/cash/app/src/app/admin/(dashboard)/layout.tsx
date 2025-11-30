@@ -42,7 +42,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
             <ThemeToggle />
           </div>
         </header>
-        <SidebarInset>{children}</SidebarInset>
+        <SidebarInset className="pt-3 md:pt-6">{children}</SidebarInset>
       </div>
     </SidebarProviderWrapper>
   );

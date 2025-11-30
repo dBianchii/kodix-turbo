@@ -9,13 +9,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@kodix/ui/sidebar";
-import { Receipt } from "lucide-react";
+import { Receipt, Users } from "lucide-react";
 
 const navItems: {
   icon: React.ElementType;
   name: string;
   url: Route;
 }[] = [
+  {
+    icon: Users,
+    name: "Clientes",
+    url: "/admin/clients",
+  },
   {
     icon: Receipt,
     name: "Buscar Vendas",
