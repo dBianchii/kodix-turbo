@@ -15,7 +15,7 @@ export const vouchers = pgTable(
       .references(() => clients.id, {
         onUpdate: "cascade",
       }),
-    code: t.text().notNull().unique(),
+    codeNumber: t.integer().generatedAlwaysAsIdentity().unique(),
     createdAt: t
       .timestamp({
         mode: "string",

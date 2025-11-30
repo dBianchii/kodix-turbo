@@ -16,7 +16,7 @@ export const listVouchersHandler = ({ input }: ListVouchersHandlerOptions) => {
 
   return db.query.vouchers.findMany({
     columns: {
-      code: true,
+      codeNumber: true,
       createdAt: true,
       id: true,
       purchaseTotal: true,

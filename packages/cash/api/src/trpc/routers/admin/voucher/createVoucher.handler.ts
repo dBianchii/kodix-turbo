@@ -1,15 +1,12 @@
 import type z from "zod";
 import { db } from "@cash/db/client";
 import { cashbacks, voucherCashbacks, vouchers } from "@cash/db/schema";
-import { nanoid } from "@kodix/shared/utils";
 import { TRPCError } from "@trpc/server";
-import { and, asc, desc, eq, gt } from "drizzle-orm";
+import { and, asc, eq, gt } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZCreateVoucherInputSchema } from "../../../schemas/voucher";
 import { CASHBACK_REDEMPTION_PERCENTAGE } from "../../../../constants";
-
-const VOUCHER_CODE_REGEX = /VC-(\d+)/;
 
 interface CreateVoucherHandlerOptions {
   ctx: TAdminProcedureContext;
@@ -72,33 +69,20 @@ export const createVoucherHandler = async ({
     });
   }
 
-  // Get next sequential code
-  const lastVoucher = await db.query.vouchers.findFirst({
-    columns: { code: true },
-    orderBy: desc(vouchers.code),
-  });
-
-  let nextNumber = 1;
-  if (lastVoucher) {
-    const match = lastVoucher.code.match(VOUCHER_CODE_REGEX);
-    if (match?.[1]) {
-      nextNumber = Number.parseInt(match[1], 10) + 1;
-    }
-  }
-  const voucherCode = `VC-${nextNumber.toString().padStart(4, "0")}`;
-
   // Create voucher and voucherCashbacks in transaction
   const result = await db.transaction(async (tx) => {
-    const voucherId = nanoid();
+    const [inserted] = await tx
+      .insert(vouchers)
+      .values({
+        clientId,
+        createdBy: ctx.auth.user.id,
+        purchaseTotal,
+      })
+      .returning({ codeNumber: vouchers.codeNumber, id: vouchers.id });
 
-    // Insert voucher
-    await tx.insert(vouchers).values({
-      clientId,
-      code: voucherCode,
-      createdBy: ctx.auth.user.id,
-      id: voucherId,
-      purchaseTotal,
-    });
+    if (!inserted) {
+      throw new Error("Failed to create voucher");
+    }
 
     // Allocate redemption amount across cashbacks (FIFO)
     let remainingToAllocate = redemptionAmount;
@@ -115,21 +99,21 @@ export const createVoucherHandler = async ({
       remainingToAllocate -= toAllocate;
     }
 
-    // Insert voucherCashbacks
-    for (const allocation of allocations) {
-      await tx.insert(voucherCashbacks).values({
-        amount: allocation.amount,
-        cashbackId: allocation.cashbackId,
-        id: nanoid(),
-        voucherId,
-      });
+    if (allocations.length > 0) {
+      await tx.insert(voucherCashbacks).values(
+        allocations.map((allocation) => ({
+          amount: allocation.amount,
+          cashbackId: allocation.cashbackId,
+          voucherId: inserted.id,
+        })),
+      );
     }
 
     return {
       allocations,
       amount: redemptionAmount,
-      code: voucherCode,
-      id: voucherId,
+      codeNumber: inserted.codeNumber,
+      id: inserted.id,
       purchaseTotal,
     };
   });

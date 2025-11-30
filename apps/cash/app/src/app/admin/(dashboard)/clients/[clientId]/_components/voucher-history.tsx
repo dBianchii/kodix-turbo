@@ -10,6 +10,8 @@ import {
   TableRow,
 } from "@kodix/ui/table";
 
+import { formatVoucherCode } from "~/utils/voucherUtils";
+
 import { useListVouchersQuery } from "./utils/use-list-vouchers-query";
 
 export function VoucherHistory() {
@@ -35,7 +37,9 @@ export function VoucherHistory() {
             );
             return (
               <TableRow key={voucher.id}>
-                <TableCell className="font-mono">{voucher.code}</TableCell>
+                <TableCell className="font-mono">
+                  {formatVoucherCode(voucher.codeNumber)}
+                </TableCell>
                 <TableCell className="text-green-600 tabular-nums">
                   {formatCurrency("BRL", amount)}
                 </TableCell>

@@ -19,6 +19,8 @@ import { Label } from "@kodix/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckCircle2, Loader2, Printer, Ticket } from "lucide-react";
 
+import { formatVoucherCode } from "~/utils/voucherUtils";
+
 interface RedemptionDialogButtonProps {
   availableCashback: number;
   clientId: string;
@@ -33,7 +35,7 @@ export function RedemptionDialogButton({
 
   const [purchaseTotal, setPurchaseTotal] = useState<number | undefined>();
   const [createdVoucher, setCreatedVoucher] = useState<{
-    code: string;
+    codeNumber: number;
     amount: number;
   } | null>(null);
 
@@ -45,7 +47,7 @@ export function RedemptionDialogButton({
   const createVoucherMutation = useMutation(
     trpc.admin.voucher.create.mutationOptions({
       onSuccess: (data) => {
-        setCreatedVoucher({ amount: data.amount, code: data.code });
+        setCreatedVoucher({ amount: data.amount, codeNumber: data.codeNumber });
         queryClient.invalidateQueries({
           queryKey: trpc.admin.client.getById.queryKey({ clientId }),
         });
@@ -107,7 +109,7 @@ export function RedemptionDialogButton({
               <div className="rounded-lg bg-muted p-6 text-center">
                 <p className="text-muted-foreground text-sm">Código</p>
                 <p className="font-bold font-mono text-3xl">
-                  {createdVoucher.code}
+                  {formatVoucherCode(createdVoucher.codeNumber)}
                 </p>
               </div>
               <div className="text-center">
