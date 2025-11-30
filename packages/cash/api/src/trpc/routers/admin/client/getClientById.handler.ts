@@ -14,7 +14,7 @@ interface GetClientByIdHandlerOptions {
 export const getClientByIdHandler = async ({
   input,
 }: GetClientByIdHandlerOptions) => {
-  const clientData = await db.query.clients.findFirst({
+  const client = await db.query.clients.findFirst({
     columns: {
       email: true,
       id: true,
@@ -23,7 +23,7 @@ export const getClientByIdHandler = async ({
     where: eq(clients.id, input.clientId),
   });
 
-  if (!clientData) {
+  if (!client) {
     return null;
   }
 
@@ -44,7 +44,8 @@ export const getClientByIdHandler = async ({
           id: true,
         },
         extras: {
-          //TODO: Make this use the tables/columns directly
+          // Note: voucherCashback refs must be raw SQL since it's a subquery
+          // Only ${cashbacks.id} can use Drizzle ref (correlates to parent row)
           usedAmount: sql<number>`COALESCE((
             SELECT SUM("voucherCashback"."amount")
             FROM "voucherCashback"
@@ -55,56 +56,8 @@ export const getClientByIdHandler = async ({
     },
   });
 
-  const now = new Date();
-
-  let cashbackAvailable = 0;
-  for (const sale of salesData) {
-    for (const cb of sale.Cashbacks) {
-      if (new Date(cb.expiresAt) > now) {
-        cashbackAvailable += cb.amount - cb.usedAmount;
-      }
-    }
-  }
-
-  const clientSales = salesData.map((sale) => {
-    const cashbackOriginal = sale.Cashbacks.reduce(
-      (sum, cb) => sum + cb.amount,
-      0,
-    );
-    const cashbackUsed = sale.Cashbacks.reduce(
-      (sum, cb) => sum + cb.usedAmount,
-      0,
-    );
-    const cashbackAvail = cashbackOriginal - cashbackUsed;
-
-    const expiresAt =
-      sale.Cashbacks.length > 0
-        ? sale.Cashbacks.reduce(
-            (earliest, cb) => {
-              const cbExpiresAt = new Date(cb.expiresAt);
-              return earliest === null || cbExpiresAt < earliest
-                ? cbExpiresAt
-                : earliest;
-            },
-            null as Date | null,
-          )
-        : null;
-
-    return {
-      caCreatedAt: sale.caCreatedAt,
-      caNumero: sale.caNumero,
-      cashbackAvailable: sale.Cashbacks.length > 0 ? cashbackAvail : null,
-      cashbackOriginal: sale.Cashbacks.length > 0 ? cashbackOriginal : null,
-      cashbackUsed: sale.Cashbacks.length > 0 ? cashbackUsed : null,
-      expiresAt,
-      id: sale.id,
-      total: sale.total,
-    };
-  });
-
   return {
-    cashbackAvailable,
-    client: clientData,
-    sales: clientSales,
+    client,
+    sales: salesData,
   };
 };

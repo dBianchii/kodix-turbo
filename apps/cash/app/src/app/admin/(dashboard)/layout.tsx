@@ -29,7 +29,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   return (
     <SidebarProviderWrapper>
       <CashSidebar />
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <header className="sticky top-0 z-10 flex h-16 shrink-0 flex-row items-center justify-between gap-2 bg-sidebar transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:pr-4">
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger />

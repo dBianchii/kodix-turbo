@@ -42,6 +42,10 @@ export const vouchersRelations = relations(vouchers, ({ one, many }) => ({
     fields: [vouchers.clientId],
     references: [clients.id],
   }),
+  CreatedByUser: one(users, {
+    fields: [vouchers.createdBy],
+    references: [users.id],
+  }),
   VoucherCashbacks: many(voucherCashbacks),
 }));
 

@@ -1,7 +1,7 @@
 import type z from "zod";
 import { db } from "@cash/db/client";
-import { voucherCashbacks, vouchers } from "@cash/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { vouchers } from "@cash/db/schema";
+import { desc, eq } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZListVouchersInputSchema } from "../../../schemas/voucher";
@@ -11,27 +11,29 @@ interface ListVouchersHandlerOptions {
   input: z.infer<typeof ZListVouchersInputSchema>;
 }
 
-export const listVouchersHandler = async ({
-  input,
-}: ListVouchersHandlerOptions) => {
+export const listVouchersHandler = ({ input }: ListVouchersHandlerOptions) => {
   const { clientId } = input;
 
-  const vouchersList = await db
-    .select({
-      amount: sql<number>`COALESCE((
-        SELECT SUM(${voucherCashbacks.amount})
-        FROM ${voucherCashbacks}
-        WHERE ${voucherCashbacks.voucherId} = ${vouchers.id}
-      ), 0)`,
-      code: vouchers.code,
-      createdAt: vouchers.createdAt,
-      createdBy: vouchers.createdBy,
-      id: vouchers.id,
-      purchaseTotal: vouchers.purchaseTotal,
-    })
-    .from(vouchers)
-    .where(eq(vouchers.clientId, clientId))
-    .orderBy(desc(vouchers.createdAt));
-
-  return vouchersList;
+  return db.query.vouchers.findMany({
+    columns: {
+      code: true,
+      createdAt: true,
+      id: true,
+      purchaseTotal: true,
+    },
+    orderBy: desc(vouchers.createdAt),
+    where: eq(vouchers.clientId, clientId),
+    with: {
+      CreatedByUser: {
+        columns: {
+          name: true,
+        },
+      },
+      VoucherCashbacks: {
+        columns: {
+          amount: true,
+        },
+      },
+    },
+  });
 };

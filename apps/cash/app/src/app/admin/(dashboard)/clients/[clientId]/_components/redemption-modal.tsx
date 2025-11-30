@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CASHBACK_REDEMPTION_PERCENTAGE } from "@cash/api/constants";
 import { useTRPC } from "@cash/api/trpc/react/client";
 import { Button } from "@kodix/ui/button";
 import {
@@ -10,13 +11,12 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@kodix/ui/dialog";
 import { Input } from "@kodix/ui/input";
 import { Label } from "@kodix/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CheckCircle2, Loader2, Printer } from "lucide-react";
-
-const REDEMPTION_PERCENTAGE = 0.4; // 40%
+import { CheckCircle2, Loader2, Printer, Ticket } from "lucide-react";
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat("pt-BR", {
@@ -24,22 +24,19 @@ const formatCurrency = (value: number) =>
     style: "currency",
   }).format(value);
 
-interface RedemptionModalProps {
+interface RedemptionDialogButtonProps {
   availableCashback: number;
   clientId: string;
-  onOpenChange: (open: boolean) => void;
-  open: boolean;
 }
 
-export function RedemptionModal({
+export function RedemptionDialogButton({
   availableCashback,
   clientId,
-  onOpenChange,
-  open,
-}: RedemptionModalProps) {
+}: RedemptionDialogButtonProps) {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
+  const [open, setOpen] = useState(false);
   const [purchaseTotal, setPurchaseTotal] = useState("");
   const [createdVoucher, setCreatedVoucher] = useState<{
     code: string;
@@ -47,7 +44,7 @@ export function RedemptionModal({
   } | null>(null);
 
   const purchaseValue = Number(purchaseTotal.replace(",", ".")) || 0;
-  const maxFromPurchase = purchaseValue * REDEMPTION_PERCENTAGE;
+  const maxFromPurchase = purchaseValue * CASHBACK_REDEMPTION_PERCENTAGE;
   const maxRedeemable = Math.min(maxFromPurchase, availableCashback);
   const canRedeem = purchaseValue > 0 && maxRedeemable > 0;
 
@@ -79,7 +76,7 @@ export function RedemptionModal({
     setPurchaseTotal("");
     setCreatedVoucher(null);
     createVoucherMutation.reset();
-    onOpenChange(false);
+    setOpen(false);
   };
 
   const handlePrint = () => {
@@ -88,6 +85,12 @@ export function RedemptionModal({
 
   return (
     <Dialog onOpenChange={handleClose} open={open}>
+      <DialogTrigger asChild>
+        <Button disabled={availableCashback <= 0} onClick={() => setOpen(true)}>
+          <Ticket className="mr-2 h-4 w-4" />
+          Resgatar Cashback
+        </Button>
+      </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         {createdVoucher ? (
           <>
@@ -161,7 +164,7 @@ export function RedemptionModal({
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
-                      Máx. {REDEMPTION_PERCENTAGE * 100}% da compra
+                      Máx. {CASHBACK_REDEMPTION_PERCENTAGE * 100}% da compra
                     </span>
                     <span>{formatCurrency(maxFromPurchase)}</span>
                   </div>
