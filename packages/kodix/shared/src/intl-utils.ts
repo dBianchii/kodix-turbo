@@ -5,7 +5,7 @@ export const formatDate = (date: Date | string) =>
   }).format(new Date(date));
 
 export const formatCurrency = (currency: string, value: number) =>
-  new Intl.NumberFormat(undefined, {
+  new Intl.NumberFormat("pt-BR", {
     currency,
     style: "currency",
   }).format(value);

@@ -38,6 +38,7 @@
     "react": "catalog:react",
     "react-day-picker": "catalog:",
     "react-hook-form": "catalog:",
+    "react-number-format": "catalog:",
     "react-phone-number-input": "catalog:",
     "sonner": "catalog:",
     "tailwind-merge": "catalog:",

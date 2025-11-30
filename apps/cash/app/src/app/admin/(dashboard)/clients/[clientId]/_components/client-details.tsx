@@ -17,7 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kodix/ui/tabs";
 import { AlertCircle, ArrowLeft } from "lucide-react";
 
 import { useClientDetailsSearchParams } from "./client-details-url-state";
-import { RedemptionDialogButton } from "./redemption-modal";
+import { RedemptionDialogButton } from "./redemption-dialog-button";
 import { useGetClientByIdQuery } from "./utils/use-get-client-by-id-query";
 import { VoucherHistory } from "./voucher-history";
 
@@ -101,7 +101,6 @@ export function ClientDetails() {
               {sales.map((sale) => {
                 const isExpired =
                   sale.expiresAt && new Date(sale.expiresAt) < new Date();
-                const hasAvailable = sale.availableCashback > 0;
 
                 return (
                   <TableRow key={sale.id}>
@@ -145,7 +144,7 @@ export function ClientDetails() {
                       {sale.expiresAt ? (
                         <div className="flex items-center gap-2">
                           <span>{formatDate(sale.expiresAt)}</span>
-                          {isExpired && hasAvailable && (
+                          {isExpired && sale.availableCashback > 0 && (
                             <Badge className="gap-1" variant="destructive">
                               <AlertCircle className="h-3 w-3" />
                               Expirado
@@ -159,7 +158,7 @@ export function ClientDetails() {
                   </TableRow>
                 );
               })}
-              {sales.length === 0 && (
+              {!sales.length && (
                 <TableRow>
                   <TableCell
                     className="h-24 text-center text-muted-foreground"
@@ -172,7 +171,6 @@ export function ClientDetails() {
             </TableBody>
           </Table>
         </TabsContent>
-
         <TabsContent value="vouchers">
           <VoucherHistory />
         </TabsContent>

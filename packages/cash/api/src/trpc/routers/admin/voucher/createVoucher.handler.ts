@@ -3,7 +3,7 @@ import { db } from "@cash/db/client";
 import { cashbacks, voucherCashbacks, vouchers } from "@cash/db/schema";
 import { nanoid } from "@kodix/shared/utils";
 import { TRPCError } from "@trpc/server";
-import { and, asc, eq, gt, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gt } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZCreateVoucherInputSchema } from "../../../schemas/voucher";
@@ -22,9 +22,7 @@ export const createVoucherHandler = async ({
 }: CreateVoucherHandlerOptions) => {
   const { clientId, purchaseTotal, redemptionAmount } = input;
 
-  // Calculate max redeemable amount (40% of purchase)
   const maxRedeemable = purchaseTotal * CASHBACK_REDEMPTION_PERCENTAGE;
-
   if (redemptionAmount > maxRedeemable) {
     throw new TRPCError({
       code: "BAD_REQUEST",
@@ -33,31 +31,31 @@ export const createVoucherHandler = async ({
   }
 
   // Get available cashbacks (FIFO by expiration, not expired, with available amount)
-  const availableCashbacks = await db
-    .select({
-      amount: cashbacks.amount,
-      expiresAt: cashbacks.expiresAt,
-      id: cashbacks.id,
-      usedAmount: sql<number>`COALESCE((
-        SELECT SUM("voucherCashback"."amount")
-        FROM "voucherCashback"
-        WHERE "voucherCashback"."cashbackId" = "cashback"."id"
-      ), 0)`,
-    })
-    .from(cashbacks)
-    .where(
-      and(
+  const availableCashbacks = await db.query.cashbacks
+    .findMany({
+      columns: {
+        amount: true,
+        id: true,
+      },
+      orderBy: asc(cashbacks.expiresAt),
+      where: and(
         eq(cashbacks.clientId, clientId),
         gt(cashbacks.expiresAt, new Date().toISOString()),
       ),
-    )
-    .orderBy(asc(cashbacks.expiresAt))
+      with: { VoucherCashbacks: true },
+    })
     .then((rows) =>
       rows
-        .map((row) => ({
-          ...row,
-          available: row.amount - row.usedAmount,
-        }))
+        .map((row) => {
+          const usedAmount = row.VoucherCashbacks.reduce(
+            (sum, vc) => sum + vc.amount,
+            0,
+          );
+          return {
+            available: row.amount - usedAmount,
+            id: row.id,
+          };
+        })
         .filter((row) => row.available > 0),
     );
 
@@ -75,12 +73,10 @@ export const createVoucherHandler = async ({
   }
 
   // Get next sequential code
-  const lastVoucher = await db
-    .select({ code: vouchers.code })
-    .from(vouchers)
-    .orderBy(sql`${vouchers.code} DESC`)
-    .limit(1)
-    .then((rows) => rows[0]);
+  const lastVoucher = await db.query.vouchers.findFirst({
+    columns: { code: true },
+    orderBy: desc(vouchers.code),
+  });
 
   let nextNumber = 1;
   if (lastVoucher) {

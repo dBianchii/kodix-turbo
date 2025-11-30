@@ -280,6 +280,9 @@ catalogs:
     react-native-svg:
       specifier: 15.13.0
       version: 15.13.0
+    react-number-format:
+      specifier: 5.4.4
+      version: 5.4.4
     react-phone-number-input:
       specifier: 3.4.12
       version: 3.4.12
@@ -1678,6 +1681,9 @@ importers:
       react-hook-form:
         specifier: 'catalog:'
         version: 7.63.0(react@19.2.0)
+      react-number-format:
+        specifier: 'catalog:'
+        version: 5.4.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       react-phone-number-input:
         specifier: 'catalog:'
         version: 3.4.12(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -10471,6 +10477,12 @@ packages:
     peerDependenciesMeta:
       '@types/react':
         optional: true
+
+  react-number-format@5.4.4:
+    resolution: {integrity: sha512-wOmoNZoOpvMminhifQYiYSTCLUDOiUbBunrMrMjA+dV52sY+vck1S4UhR6PkgnoCquvvMSeJjErXZ4qSaWCliA==}
+    peerDependencies:
+      react: 19.2.0
+      react-dom: 19.2.0
 
   react-overlays@5.2.1:
     resolution: {integrity: sha512-GLLSOLWr21CqtJn8geSwQfoJufdt3mfdsnIiQswouuQ2MMPns+ihZklxvsTDKD3cR2tF8ELbi5xUsvqVhR6WvA==}
@@ -22278,6 +22290,11 @@ snapshots:
       - encoding
       - supports-color
       - utf-8-validate
+
+  react-number-format@5.4.4(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
+    dependencies:
+      react: 19.2.0
+      react-dom: 19.2.0(react@19.2.0)
 
   react-overlays@5.2.1(react-dom@19.2.0(react@19.2.0))(react@19.2.0):
     dependencies:
