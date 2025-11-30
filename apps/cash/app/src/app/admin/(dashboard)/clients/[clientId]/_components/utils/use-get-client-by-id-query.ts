@@ -5,7 +5,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 
 import { ClientNotFoundError } from "./not-found-error";
 
-export const useGetClientByIdQuery = () => {
+export const useGetClientByIdSuspenseQuery = () => {
   const trpc = useTRPC();
   const { clientId } =
     useParams<Awaited<PageProps<"/admin/clients/[clientId]">["params"]>>();

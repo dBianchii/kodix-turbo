@@ -18,7 +18,7 @@ import { AlertCircle, ArrowLeft } from "lucide-react";
 
 import { useClientDetailsSearchParams } from "./client-details-url-state";
 import { RedemptionDialogButton } from "./redemption-dialog-button";
-import { useGetClientByIdQuery } from "./utils/use-get-client-by-id-query";
+import { useGetClientByIdSuspenseQuery } from "./utils/use-get-client-by-id-query";
 import { VoucherHistory } from "./voucher-history";
 
 export function ClientDetails() {
@@ -26,7 +26,7 @@ export function ClientDetails() {
 
   const {
     data: { client, totalAvailableCashback, sales },
-  } = useGetClientByIdQuery();
+  } = useGetClientByIdSuspenseQuery();
 
   return (
     <div className="min-w-0 space-y-8">

@@ -12,10 +12,10 @@ import {
 
 import { formatVoucherCode } from "~/utils/voucherUtils";
 
-import { useListVouchersQuery } from "./utils/use-list-vouchers-query";
+import { useListVouchersSuspenseQuery } from "./utils/use-list-vouchers-query";
 
 export function VoucherHistory() {
-  const vouchers = useListVouchersQuery();
+  const vouchers = useListVouchersSuspenseQuery();
 
   return (
     <div className="rounded-md border">
