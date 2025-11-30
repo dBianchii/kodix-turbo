@@ -11,7 +11,7 @@ import { CASHBACK_REDEMPTION_PERCENTAGE } from "../../../../constants";
 
 const VOUCHER_CODE_REGEX = /VC-(\d+)/;
 
-interface CreateVoucherOptions {
+interface CreateVoucherHandlerOptions {
   ctx: TAdminProcedureContext;
   input: z.infer<typeof ZCreateVoucherInputSchema>;
 }
@@ -19,7 +19,7 @@ interface CreateVoucherOptions {
 export const createVoucherHandler = async ({
   ctx,
   input,
-}: CreateVoucherOptions) => {
+}: CreateVoucherHandlerOptions) => {
   const { clientId, purchaseTotal, redemptionAmount } = input;
 
   // Calculate max redeemable amount (40% of purchase)

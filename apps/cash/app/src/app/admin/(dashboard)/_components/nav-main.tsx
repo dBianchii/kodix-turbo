@@ -17,14 +17,14 @@ const navItems: {
   url: Route;
 }[] = [
   {
-    icon: Receipt,
-    name: "Buscar Vendas",
-    url: "/admin/vendas",
-  },
-  {
     icon: Users,
     name: "Clientes",
     url: "/admin/clients",
+  },
+  {
+    icon: Receipt,
+    name: "Buscar Vendas",
+    url: "/admin/vendas",
   },
 ] as const;
 

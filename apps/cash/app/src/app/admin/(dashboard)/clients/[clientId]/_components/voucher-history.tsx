@@ -1,6 +1,8 @@
 "use client";
 
+import { useParams } from "next/navigation";
 import { useTRPC } from "@cash/api/trpc/react/client";
+import { formatCurrency, formatDate } from "@kodix/shared/intl-utils";
 import {
   Table,
   TableBody,
@@ -12,27 +14,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("pt-BR", {
-    currency: "BRL",
-    style: "currency",
-  }).format(value);
-
-const formatDate = (date: Date | string) =>
-  new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(new Date(date));
-
-interface VoucherHistoryProps {
-  clientId: string;
-}
-
-export function VoucherHistory({ clientId }: VoucherHistoryProps) {
+export function VoucherHistory() {
   const trpc = useTRPC();
+
+  const { clientId } =
+    useParams<Awaited<PageProps<"/admin/clients/[clientId]">["params"]>>();
 
   const { data: vouchers, isPending } = useQuery(
     trpc.admin.voucher.list.queryOptions({ clientId }),
@@ -65,10 +51,10 @@ export function VoucherHistory({ clientId }: VoucherHistoryProps) {
                 {voucher.code}
               </TableCell>
               <TableCell className="text-right text-green-600">
-                {formatCurrency(voucher.amount)}
+                {formatCurrency("BRL", voucher.amount)}
               </TableCell>
               <TableCell className="text-right">
-                {formatCurrency(voucher.purchaseTotal)}
+                {formatCurrency("BRL", voucher.purchaseTotal)}
               </TableCell>
               <TableCell>{formatDate(voucher.createdAt)}</TableCell>
               <TableCell className="text-muted-foreground">

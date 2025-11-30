@@ -6,12 +6,14 @@ import { desc, eq, sql } from "drizzle-orm";
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZGetClientByIdInputSchema } from "../../../schemas/client";
 
-interface GetClientByIdOptions {
+interface GetClientByIdHandlerOptions {
   ctx: TAdminProcedureContext;
   input: z.infer<typeof ZGetClientByIdInputSchema>;
 }
 
-export const getByIdHandler = async ({ input }: GetClientByIdOptions) => {
+export const getClientByIdHandler = async ({
+  input,
+}: GetClientByIdHandlerOptions) => {
   const clientData = await db.query.clients.findFirst({
     columns: {
       email: true,

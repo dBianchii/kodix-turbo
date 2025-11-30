@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useTRPC } from "@cash/api/trpc/react/client";
+import { formatCurrency, formatDate } from "@kodix/shared/intl-utils";
 import { Badge } from "@kodix/ui/badge";
 import { Button } from "@kodix/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@kodix/ui/card";
@@ -15,56 +15,21 @@ import {
   TableRow,
 } from "@kodix/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@kodix/ui/tabs";
-import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, ArrowLeft, Loader2, Ticket } from "lucide-react";
+import { AlertCircle, ArrowLeft, Ticket } from "lucide-react";
 
+import { useClientDetailsSearchParams } from "./client-details-url-state";
 import { RedemptionModal } from "./redemption-modal";
+import { useGetClientByIdQuery } from "./use-get-client-by-id-query";
 import { VoucherHistory } from "./voucher-history";
 
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat("pt-BR", {
-    currency: "BRL",
-    style: "currency",
-  }).format(value);
-
-const formatDate = (date: Date | string) =>
-  new Intl.DateTimeFormat("pt-BR", {
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  }).format(new Date(date));
-
-export function ClientDetails({ clientId }: { clientId: string }) {
-  const trpc = useTRPC();
+export function ClientDetails() {
   const router = useRouter();
   const [redemptionModalOpen, setRedemptionModalOpen] = useState(false);
+  const [{ tab }, setSearchParams] = useClientDetailsSearchParams();
 
-  const { data, isPending, error } = useQuery(
-    trpc.admin.client.getById.queryOptions({ clientId }),
-  );
-
-  if (isPending) {
-    return (
-      <div className="flex h-96 items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
-
-  if (error || !data) {
-    return (
-      <div className="flex h-96 flex-col items-center justify-center gap-4">
-        <p className="text-muted-foreground">
-          {error ? error.message : "Cliente não encontrado"}
-        </p>
-        <Button onClick={() => router.back()}>Voltar</Button>
-      </div>
-    );
-  }
-
-  const { client, cashbackAvailable, sales } = data;
+  const {
+    data: { client, cashbackAvailable, sales },
+  } = useGetClientByIdQuery();
 
   return (
     <div className="space-y-8">
@@ -94,7 +59,7 @@ export function ClientDetails({ clientId }: { clientId: string }) {
           </CardHeader>
           <CardContent>
             <div className="font-bold text-2xl text-green-600">
-              {formatCurrency(cashbackAvailable)}
+              {formatCurrency("BRL", cashbackAvailable)}
             </div>
           </CardContent>
         </Card>
@@ -110,7 +75,12 @@ export function ClientDetails({ clientId }: { clientId: string }) {
         </Card>
       </div>
 
-      <Tabs defaultValue="cashbacks">
+      <Tabs
+        onValueChange={(v) =>
+          setSearchParams({ tab: v as "cashbacks" | "vouchers" })
+        }
+        value={tab}
+      >
         <TabsList>
           <TabsTrigger value="cashbacks">Histórico de Cashbacks</TabsTrigger>
           <TabsTrigger value="vouchers">Vale-Compras</TabsTrigger>
@@ -144,29 +114,31 @@ export function ClientDetails({ clientId }: { clientId: string }) {
                         {sale.caNumero}
                       </TableCell>
                       <TableCell className="text-right">
-                        {formatCurrency(Number(sale.total))}
+                        {formatCurrency("BRL", sale.total)}
                       </TableCell>
                       <TableCell className="text-right">
                         {sale.cashbackOriginal !== null
-                          ? formatCurrency(sale.cashbackOriginal)
+                          ? formatCurrency("BRL", sale.cashbackOriginal)
                           : "-"}
                       </TableCell>
                       <TableCell className="text-right text-orange-600">
-                        {sale.cashbackUsed !== null && sale.cashbackUsed > 0
-                          ? formatCurrency(sale.cashbackUsed)
+                        {sale.cashbackUsed
+                          ? formatCurrency("BRL", sale.cashbackUsed)
                           : "-"}
                       </TableCell>
                       <TableCell
-                        className={`text-right font-medium ${
-                          isExpired && hasAvailable
-                            ? "text-muted-foreground line-through"
-                            : hasAvailable
-                              ? "text-green-600"
-                              : "text-muted-foreground"
-                        }`}
+                        className={`text-right font-medium ${() => {
+                          if (isExpired && hasAvailable) {
+                            return "text-muted-foreground line-through";
+                          }
+                          if (hasAvailable) {
+                            return "text-green-600";
+                          }
+                          return "text-muted-foreground";
+                        }}`}
                       >
-                        {sale.cashbackAvailable !== null
-                          ? formatCurrency(sale.cashbackAvailable)
+                        {sale.cashbackAvailable
+                          ? formatCurrency("BRL", sale.cashbackAvailable)
                           : "-"}
                       </TableCell>
                       <TableCell>
@@ -205,13 +177,13 @@ export function ClientDetails({ clientId }: { clientId: string }) {
         </TabsContent>
 
         <TabsContent value="vouchers">
-          <VoucherHistory clientId={clientId} />
+          <VoucherHistory />
         </TabsContent>
       </Tabs>
 
       <RedemptionModal
         availableCashback={cashbackAvailable}
-        clientId={clientId}
+        clientId={client.id}
         onOpenChange={setRedemptionModalOpen}
         open={redemptionModalOpen}
       />

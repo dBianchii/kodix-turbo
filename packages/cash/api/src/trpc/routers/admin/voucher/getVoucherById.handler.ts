@@ -6,14 +6,14 @@ import { eq } from "drizzle-orm";
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZGetVoucherByIdInputSchema } from "../../../schemas/voucher";
 
-interface GetVoucherByIdOptions {
+interface GetVoucherByIdHandlerOptions {
   ctx: TAdminProcedureContext;
   input: z.infer<typeof ZGetVoucherByIdInputSchema>;
 }
 
 export const getVoucherByIdHandler = async ({
   input,
-}: GetVoucherByIdOptions) => {
+}: GetVoucherByIdHandlerOptions) => {
   const { voucherId } = input;
 
   const voucher = await db.query.vouchers.findFirst({

@@ -6,12 +6,14 @@ import { desc, eq, sql } from "drizzle-orm";
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZListVouchersInputSchema } from "../../../schemas/voucher";
 
-interface ListVouchersOptions {
+interface ListVouchersHandlerOptions {
   ctx: TAdminProcedureContext;
   input: z.infer<typeof ZListVouchersInputSchema>;
 }
 
-export const listVouchersHandler = async ({ input }: ListVouchersOptions) => {
+export const listVouchersHandler = async ({
+  input,
+}: ListVouchersHandlerOptions) => {
   const { clientId } = input;
 
   const vouchersList = await db

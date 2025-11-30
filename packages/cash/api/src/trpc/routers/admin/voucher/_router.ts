@@ -6,9 +6,9 @@ import {
   ZGetVoucherByIdInputSchema,
   ZListVouchersInputSchema,
 } from "../../../schemas/voucher";
-import { createVoucherHandler } from "./create.handler";
-import { getVoucherByIdHandler } from "./getById.handler";
-import { listVouchersHandler } from "./list.handler";
+import { createVoucherHandler } from "./createVoucher.handler";
+import { getVoucherByIdHandler } from "./getVoucherById.handler";
+import { listVouchersHandler } from "./listVouchers.handler";
 
 export const voucherRouter = {
   create: adminProcedure

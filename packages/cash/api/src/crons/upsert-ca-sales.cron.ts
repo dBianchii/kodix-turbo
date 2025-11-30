@@ -5,6 +5,7 @@ import dayjs from "@kodix/dayjs";
 import { captureException } from "@kodix/posthog";
 import { uniqBy } from "es-toolkit";
 
+import { MONTHS_TO_EXPIRE_CASHBACK } from "../constants";
 import {
   getProductById,
   listContaAzulPersons,
@@ -13,7 +14,6 @@ import {
 } from "../services/conta-azul.service";
 import { verifiedQstashCron } from "./_utils";
 
-const MONTHS_TO_EXPIRE_CASHBACK = 5;
 const LOOKBACK_DAYS = 1;
 
 // type CAPersonPhone = NonNullable<
