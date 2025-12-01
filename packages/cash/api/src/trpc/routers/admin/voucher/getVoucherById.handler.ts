@@ -52,7 +52,7 @@ export const getVoucherByIdHandler = async ({
       caCreatedAt: vc.Cashback.Sale.caCreatedAt,
       caNumero: vc.Cashback.Sale.caNumero,
     })),
-    code: voucher.code,
+    codeNumber: voucher.codeNumber,
     createdAt: voucher.createdAt,
     createdBy: voucher.createdBy,
     id: voucher.id,

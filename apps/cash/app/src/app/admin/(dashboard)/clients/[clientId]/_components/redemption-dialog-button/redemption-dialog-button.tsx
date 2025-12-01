@@ -1,5 +1,6 @@
 "use client";
 
+import type { vouchers } from "@cash/db/schema";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { CASHBACK_REDEMPTION_PERCENTAGE } from "@cash/api/constants";
@@ -19,11 +20,12 @@ import {
 import { usePromiseLoader } from "@kodix/ui/hooks/use-promise-loader";
 import { Label } from "@kodix/ui/label";
 import { useMutation } from "@tanstack/react-query";
-import { CheckCircle2, Loader2, Printer, Ticket } from "lucide-react";
+import { CheckCircle2, FileText, Loader2, Ticket } from "lucide-react";
 
 import { formatVoucherCode } from "~/utils/voucherUtils";
 
 import type { ClientDataPromise } from "../data";
+import { useRenderVoucherPdf } from "../tabs/use-render-voucher-pdf";
 import { createVoucherAction } from "./createVoucher.action";
 
 export interface RedemptionDialogButtonClientProps {
@@ -33,7 +35,7 @@ export interface RedemptionDialogButtonClientProps {
 export function RedemptionDialogButtonClient({
   getClientDataPromise,
 }: RedemptionDialogButtonClientProps) {
-  const { data } = usePromiseLoader(getClientDataPromise);
+  const { data: clientData } = usePromiseLoader(getClientDataPromise);
 
   const { clientId } = useParams<{ clientId: string }>();
 
@@ -43,7 +45,7 @@ export function RedemptionDialogButtonClient({
   const maxFromPurchase = purchaseValue * CASHBACK_REDEMPTION_PERCENTAGE;
   const maxRedeemable = Math.min(
     maxFromPurchase,
-    data?.totalAvailableCashback ?? 0,
+    clientData?.totalAvailableCashback ?? 0,
   );
   const canRedeem = purchaseValue > 0 && maxRedeemable > 0;
 
@@ -66,10 +68,6 @@ export function RedemptionDialogButtonClient({
     createVoucherMutation.reset();
   };
 
-  const handlePrint = () => {
-    // TODO: Implement PDF generation
-  };
-
   return (
     <Dialog
       onOpenChange={(open) => {
@@ -79,17 +77,17 @@ export function RedemptionDialogButtonClient({
       }}
     >
       <DialogTrigger asChild>
-        <Button disabled={(data?.totalAvailableCashback ?? 0) <= 0}>
+        <Button disabled={(clientData?.totalAvailableCashback ?? 0) <= 0}>
           <Ticket className="mr-2 h-4 w-4" />
           Resgatar Cashback
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
-        {createVoucherMutation.data ? (
+        {createVoucherMutation.data && clientData ? (
           <CreatedVoucherDialogContent
+            clientData={clientData}
             createdVoucher={createVoucherMutation.data}
             handleClose={handleClose}
-            handlePrint={handlePrint}
           />
         ) : (
           <>
@@ -120,7 +118,10 @@ export function RedemptionDialogButtonClient({
                       Cashback disponível
                     </span>
                     <span>
-                      {formatCurrency("BRL", data?.totalAvailableCashback ?? 0)}
+                      {formatCurrency(
+                        "BRL",
+                        clientData?.totalAvailableCashback ?? 0,
+                      )}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
@@ -171,16 +172,20 @@ export function RedemptionDialogButtonClient({
 
 function CreatedVoucherDialogContent({
   createdVoucher,
-  handlePrint,
   handleClose,
+  clientData,
 }: {
-  createdVoucher: {
-    codeNumber: number;
+  createdVoucher: Pick<
+    typeof vouchers.$inferSelect,
+    "codeNumber" | "purchaseTotal" | "createdAt"
+  > & {
     amount: number;
   };
-  handlePrint: () => void;
   handleClose: () => void;
+  clientData: Awaited<ClientDataPromise>;
 }) {
+  const renderPdfMutation = useRenderVoucherPdf();
+
   return (
     <>
       <DialogHeader>
@@ -209,9 +214,22 @@ function CreatedVoucherDialogContent({
       </div>
 
       <DialogFooter className="grid grid-cols-2 pt-5 sm:flex">
-        <Button onClick={handlePrint} variant="outline">
-          <Printer className="mr-2" />
-          Imprimir
+        <Button
+          disabled={renderPdfMutation.isPending}
+          onClick={() => {
+            renderPdfMutation.mutate({
+              client: clientData.client,
+              voucher: createdVoucher,
+            });
+          }}
+          variant="outline"
+        >
+          {renderPdfMutation.isPending ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <FileText className="mr-2" />
+          )}
+          Visualizar PDF
         </Button>
         <DialogClose asChild>
           <Button onClick={handleClose}>Fechar</Button>

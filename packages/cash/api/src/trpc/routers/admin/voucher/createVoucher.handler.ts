@@ -78,7 +78,11 @@ export const createVoucherHandler = async ({
         createdBy: ctx.auth.user.id,
         purchaseTotal,
       })
-      .returning({ codeNumber: vouchers.codeNumber, id: vouchers.id });
+      .returning({
+        codeNumber: vouchers.codeNumber,
+        createdAt: vouchers.createdAt,
+        id: vouchers.id,
+      });
 
     if (!inserted) {
       throw new Error("Failed to create voucher");
@@ -113,6 +117,7 @@ export const createVoucherHandler = async ({
       allocations,
       amount: redemptionAmount,
       codeNumber: inserted.codeNumber,
+      createdAt: inserted.createdAt,
       id: inserted.id,
       purchaseTotal,
     };

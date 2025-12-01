@@ -16,9 +16,11 @@ export const getClientByIdHandler = async ({
 }: GetClientByIdHandlerOptions) => {
   const client = await db.query.clients.findFirst({
     columns: {
+      document: true,
       email: true,
       id: true,
       name: true,
+      phone: true,
     },
     where: eq(clients.id, input.clientId),
   });

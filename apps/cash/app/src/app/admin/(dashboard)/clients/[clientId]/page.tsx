@@ -4,7 +4,7 @@ import { DataTableSkeleton } from "@kodix/ui/common/data-table/data-table-skelet
 
 import PageWrapper from "~/app/_components/page-wrapper";
 
-import { AvailableCashbackCard } from "./_components/available-cashback-card";
+import { AvailableCashbackCard, TotalPurchasesCard } from "./_components/cards";
 import { ClientHeader } from "./_components/client-header";
 import { getClientData } from "./_components/data";
 import { RedemptionDialogButtonClient } from "./_components/redemption-dialog-button/redemption-dialog-button";
@@ -16,7 +16,6 @@ import {
 import { CashbacksTable } from "./_components/tabs/cashbacks-table";
 import { ClientTabs } from "./_components/tabs/client-tabs";
 import { VoucherHistoryTable } from "./_components/tabs/voucher-history-table";
-import { TotalPurchasesCard } from "./_components/total-purchases-card";
 
 export const metadata: Metadata = {
   title: "Detalhes do Cliente | Cash Admin",

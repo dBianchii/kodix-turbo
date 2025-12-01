@@ -10,7 +10,8 @@ import {
 
 import { formatVoucherCode } from "~/utils/voucherUtils";
 
-import { getVouchers } from "../data";
+import { getClientData, getVouchers } from "../data";
+import { ViewVoucherButton } from "./view-voucher-button";
 
 export async function VoucherHistoryTable({
   paramsPromise,
@@ -18,7 +19,10 @@ export async function VoucherHistoryTable({
   paramsPromise: Promise<{ clientId: string }>;
 }) {
   const { clientId } = await paramsPromise;
-  const vouchers = await getVouchers(clientId);
+  const [vouchers, clientData] = await Promise.all([
+    getVouchers(clientId),
+    getClientData(clientId),
+  ]);
 
   return (
     <Table containerClassName="rounded-md border">
@@ -29,6 +33,7 @@ export async function VoucherHistoryTable({
           <TableHead>Valor da Compra</TableHead>
           <TableHead>Data</TableHead>
           <TableHead>Gerado por</TableHead>
+          <TableHead />
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -52,10 +57,19 @@ export async function VoucherHistoryTable({
               <TableCell className="text-muted-foreground">
                 {voucher.CreatedByUser.name}
               </TableCell>
+              <TableCell className="text-right">
+                <ViewVoucherButton
+                  client={clientData.client}
+                  voucher={{
+                    ...voucher,
+                    amount,
+                  }}
+                />
+              </TableCell>
             </TableRow>
           );
         })}
-        {(!vouchers || vouchers.length === 0) && (
+        {vouchers.length ? null : (
           <TableRow>
             <TableCell
               className="h-24 text-center text-muted-foreground"

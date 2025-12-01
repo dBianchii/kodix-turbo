@@ -253,8 +253,7 @@ export function ClientsTable() {
                   data-state={row.getIsSelected() && "selected"}
                   key={row.id}
                   onClick={() => {
-                    // biome-ignore lint/suspicious/noExplicitAny: workaround for typed routes
-                    router.push(`/admin/clients/${row.original.id}` as any);
+                    router.push(`/admin/clients/${row.original.id}`);
                   }}
                 >
                   {row.getVisibleCells().map((cell) => (
