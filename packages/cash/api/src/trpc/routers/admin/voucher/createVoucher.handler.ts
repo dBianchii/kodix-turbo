@@ -2,7 +2,7 @@ import type z from "zod";
 import { db } from "@cash/db/client";
 import { cashbacks, voucherCashbacks, vouchers } from "@cash/db/schema";
 import { TRPCError } from "@trpc/server";
-import { and, asc, eq, gt } from "drizzle-orm";
+import { inArray, sql } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZCreateVoucherInputSchema } from "../../../schemas/voucher";
@@ -27,50 +27,58 @@ export const createVoucherHandler = async ({
     });
   }
 
-  // Get available cashbacks (FIFO by expiration, not expired, with available amount)
-  const availableCashbacks = await db.query.cashbacks
-    .findMany({
-      columns: {
-        amount: true,
-        id: true,
-      },
-      orderBy: asc(cashbacks.expiresAt),
-      where: and(
-        eq(cashbacks.clientId, clientId),
-        gt(cashbacks.expiresAt, new Date().toISOString()),
-      ),
-      with: { VoucherCashbacks: true },
-    })
-    .then((rows) =>
-      rows
-        .map((row) => {
-          const usedAmount = row.VoucherCashbacks.reduce(
-            (sum, vc) => sum + vc.amount,
-            0,
-          );
-          return {
-            available: row.amount - usedAmount,
-            id: row.id,
-          };
-        })
-        .filter((row) => row.available > 0),
+  // Create voucher and voucherCashbacks in transaction with row locking
+  const result = await db.transaction(async (tx) => {
+    // Lock and get available cashbacks atomically to prevent race conditions
+    // First, lock all non-expired cashbacks for this client
+    const lockedCashbacks = await tx.execute<{ id: string; amount: number }>(
+      sql`SELECT ${cashbacks.id}, ${cashbacks.amount} FROM ${cashbacks}
+          WHERE ${cashbacks.clientId} = ${clientId}
+          AND ${cashbacks.expiresAt} > ${new Date().toISOString()}
+          ORDER BY ${cashbacks.expiresAt} ASC
+          FOR UPDATE`,
     );
 
-  // Calculate total available
-  const totalAvailable = availableCashbacks.reduce(
-    (sum, cb) => sum + cb.available,
-    0,
-  );
+    if (!lockedCashbacks.rows.length) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Nenhum cashback disponível para resgate",
+      });
+    }
 
-  if (redemptionAmount > totalAvailable) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: `Saldo disponível insuficiente. Disponível: R$ ${totalAvailable.toFixed(2)}`,
+    const cashbackIds = lockedCashbacks.rows.map((row) => row.id as string);
+
+    // Now get the used amounts from voucherCashbacks (safe since we hold the lock)
+    const usedAmounts = await tx.query.voucherCashbacks.findMany({
+      columns: { amount: true, cashbackId: true },
+      where: inArray(voucherCashbacks.cashbackId, cashbackIds),
     });
-  }
 
-  // Create voucher and voucherCashbacks in transaction
-  const result = await db.transaction(async (tx) => {
+    const cbIdToTotalUsedAmount = usedAmounts.reduce((acc, vc) => {
+      acc.set(vc.cashbackId, (acc.get(vc.cashbackId) ?? 0) + vc.amount);
+      return acc;
+    }, new Map<string, number>());
+
+    const availableCashbacks = lockedCashbacks.rows
+      .map((row) => ({
+        available: row.amount - (cbIdToTotalUsedAmount.get(row.id) ?? 0),
+        id: row.id,
+      }))
+      .filter((row) => row.available > 0);
+
+    // Calculate total available
+    const totalAvailable = availableCashbacks.reduce(
+      (sum, cb) => sum + cb.available,
+      0,
+    );
+
+    if (redemptionAmount > totalAvailable) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Saldo disponível insuficiente. Disponível: R$ ${totalAvailable.toFixed(2)}`,
+      });
+    }
+
     const [inserted] = await tx
       .insert(vouchers)
       .values({
