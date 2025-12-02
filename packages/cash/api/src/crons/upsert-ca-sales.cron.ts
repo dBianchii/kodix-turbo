@@ -254,24 +254,24 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       client.documento !== null,
   );
 
-  // Get the IDs of anonymous clients to filter out their sales
-  const anonymousClientIds = new Set(
-    allCAClients
-      .filter((client) => client.documento === null)
-      .map((client) => client.id),
+  // Get the IDs of clients with documents for O(1) lookup
+  const identifiedClientIds = new Set(
+    clientsWithDocument.map((client) => client.id),
   );
 
   // Filter out sales from anonymous clients
-  const salesFromIdentifiedClients = allCASales.filter(
-    (sale) => !anonymousClientIds.has(sale.cliente.id),
+  const salesFromIdentifiedClients = allCASales.filter((sale) =>
+    identifiedClientIds.has(sale.cliente.id),
+  );
+
+  // Create a Map from caSaleId to cliente.id for O(1) lookups
+  const caSaleIdToClienteId = new Map(
+    allCASales.map((sale) => [sale.id, sale.cliente.id]),
   );
 
   // Filter out cashback amounts for sales from anonymous clients
-  const cashbackAmountsFiltered = cashbackAmounts.filter(
-    (item) =>
-      !anonymousClientIds.has(
-        allCASales.find((sale) => sale.id === item.caSaleId)?.cliente.id ?? "",
-      ),
+  const cashbackAmountsFiltered = cashbackAmounts.filter((item) =>
+    identifiedClientIds.has(caSaleIdToClienteId.get(item.caSaleId) ?? ""),
   );
 
   if (!(clientsWithDocument.length && salesFromIdentifiedClients.length)) {
