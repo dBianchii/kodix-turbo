@@ -1,7 +1,7 @@
 import type z from "zod";
 import { db } from "@cash/db/client";
-import { cashbacks, clients, sales } from "@cash/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { clients, sales } from "@cash/db/schema";
+import { desc, eq } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZGetClientByIdInputSchema } from "../../../schemas/client";
@@ -45,21 +45,31 @@ export const getClientByIdHandler = async ({
           expiresAt: true,
           id: true,
         },
-        extras: {
-          // Note: voucherCashback refs must be raw SQL since it's a subquery
-          // Only ${cashbacks.id} can use Drizzle ref (correlates to parent row)
-          usedAmount: sql<number>`COALESCE((
-            SELECT SUM("voucherCashback"."amount")
-            FROM "voucherCashback"
-            WHERE "voucherCashback"."cashbackId" = ${cashbacks.id}
-          ), 0)`.as("usedAmount"),
+        with: {
+          VoucherCashbacks: {
+            columns: {
+              amount: true,
+            },
+          },
         },
       },
     },
   });
 
+  const salesDataWithUsedAmount = salesData.map((sale) => ({
+    ...sale,
+    Cashbacks: sale.Cashbacks.map((cashback) => {
+      const { VoucherCashbacks, ...cashbackWithoutVoucherCashbacks } = cashback;
+      return {
+        ...cashbackWithoutVoucherCashbacks,
+        usedAmount:
+          VoucherCashbacks.reduce((sum, vc) => sum + Number(vc.amount), 0) ?? 0,
+      };
+    }),
+  }));
+
   return {
     client,
-    sales: salesData,
+    sales: salesDataWithUsedAmount,
   };
 };
