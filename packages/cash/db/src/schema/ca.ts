@@ -48,7 +48,7 @@ export const clients = pgTable("client", (t) => ({
   cep: t.text(),
   cidade: t.text(),
   complemento: t.text(),
-  document: t.text(),
+  document: t.text().notNull(),
   email: t.text(),
   estado: t.text(),
   id: nanoidPrimaryKey(t),

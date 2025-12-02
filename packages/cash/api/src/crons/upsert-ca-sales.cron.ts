@@ -247,10 +247,46 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
     });
     throw error;
   }
+
+  // Filter out anonymous clients (those without a document)
+  const clientsWithDocument = allCAClients.filter(
+    (client): client is typeof client & { documento: string } =>
+      client.documento !== null,
+  );
+
+  // Get the IDs of anonymous clients to filter out their sales
+  const anonymousClientIds = new Set(
+    allCAClients
+      .filter((client) => client.documento === null)
+      .map((client) => client.id),
+  );
+
+  // Filter out sales from anonymous clients
+  const salesFromIdentifiedClients = allCASales.filter(
+    (sale) => !anonymousClientIds.has(sale.cliente.id),
+  );
+
+  // Filter out cashback amounts for sales from anonymous clients
+  const cashbackAmountsFiltered = cashbackAmounts.filter(
+    (item) =>
+      !anonymousClientIds.has(
+        allCASales.find((sale) => sale.id === item.caSaleId)?.cliente.id ?? "",
+      ),
+  );
+
+  if (!(clientsWithDocument.length && salesFromIdentifiedClients.length)) {
+    return new Response(
+      "No sales from identified clients found. Skipping anonymous clients.",
+      {
+        status: 202,
+      },
+    );
+  }
+
   const { upsertedClients, upsertedSales, upsertedCashbacks } =
     await db.transaction(async (tx) => {
       const txUpsertedClients = await caRepository.upsertClientsByCaId(
-        allCAClients.map(
+        clientsWithDocument.map(
           (caClient) =>
             ({
               bairro: caClient.endereco?.bairro,
@@ -277,7 +313,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       );
 
       const txUpsertedSales = await caRepository.upsertSalesByCaId(
-        allCASales.map((caSale) => {
+        salesFromIdentifiedClients.map((caSale) => {
           const client = caClientIdToClientMap.get(caSale.cliente.id);
           if (!client)
             throw new Error(`Client not found for sale ${caSale.id}`);
@@ -299,12 +335,12 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       );
 
       const caSaleIdToCaSaleMap = new Map(
-        allCASales.map((caSale) => [caSale.id, caSale]),
+        salesFromIdentifiedClients.map((caSale) => [caSale.id, caSale]),
       );
 
       const txUpsertedCashbacks =
         await cashbackRepository.upsertCashbacksByCaId(
-          cashbackAmounts.map((item) => {
+          cashbackAmountsFiltered.map((item) => {
             const sale = txUpsertedSales.find((s) => s.caId === item.caSaleId);
             if (!sale)
               throw new Error(`Sale not found for cashback ${item.caSaleId}`);
