@@ -1,7 +1,10 @@
 import type { TRPCRouterRecord } from "@trpc/server";
 
 import { publicProcedure } from "../../procedures";
-import { ZGetByCpfInputSchema, ZRegisterInputSchema } from "../../schemas/client";
+import {
+  ZGetByCpfInputSchema,
+  ZRegisterInputSchema,
+} from "../../schemas/client";
 import { getByCpfHandler } from "./getByCpf.handler";
 import { registerHandler } from "./register.handler";
 
