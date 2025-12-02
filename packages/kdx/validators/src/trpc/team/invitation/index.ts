@@ -1,6 +1,5 @@
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
-
-import { ZNanoId } from "../../..";
 
 export const ZAcceptInputSchema = z.object({
   invitationId: ZNanoId,

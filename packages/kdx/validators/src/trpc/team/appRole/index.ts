@@ -1,8 +1,7 @@
 import type { AppRole, KodixAppId } from "@kodix/shared/db";
 import { allRoles } from "@kodix/shared/db";
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
-
-import { ZNanoId } from "../../..";
 
 export const ZGetUsersWithRolesInputSchema = z.object({
   appId: z.custom<KodixAppId>(),

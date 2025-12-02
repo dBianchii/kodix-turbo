@@ -6,11 +6,10 @@ import {
   kodixCareUserAppTeamConfigSchema,
   todoAppId,
 } from "@kodix/shared/db";
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
 
 import type { appActivityLogs } from "@kdx/db/schema";
-
-import { ZNanoId } from "../..";
 
 export type AppIdsWithConfig = typeof kodixCareAppId; //? Some apps might not have config implemented
 export type AppIdsWithUserAppTeamConfig = typeof kodixCareAppId; //? Some apps might not have userAppTeamConfig implemented

@@ -1,9 +1,8 @@
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
 
 import type { notifications } from "@kdx/db/schema";
 import type { IsomorficT } from "@kdx/locales";
-
-import { ZNanoId } from "../..";
 
 export const ZChangeNameInputSchema = (t: IsomorficT) =>
   z.object({

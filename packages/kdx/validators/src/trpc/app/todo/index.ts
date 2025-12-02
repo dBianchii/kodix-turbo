@@ -1,8 +1,9 @@
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
 
 import type { todos } from "@kdx/db/schema";
 
-import { adjustDateToMinute, ZNanoId } from "../../..";
+import { adjustDateToMinute } from "../../..";
 
 export const ZCreateInputSchema = z.object({
   assignedToUserId: ZNanoId.optional().nullish(),
