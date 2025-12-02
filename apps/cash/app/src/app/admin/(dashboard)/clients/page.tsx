@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { HydrateClient, prefetch, trpc } from "@cash/api/trpc/react/server";
 import { auth } from "@cash/auth";
-import { createLoader, type SearchParams } from "nuqs/server";
+import { createLoader } from "nuqs/server";
 
 import PageWrapper, { LoadingPage } from "~/app/_components/page-wrapper";
 
@@ -18,9 +18,7 @@ export const metadata: Metadata = {
 
 export default function AdminClientsPage({
   searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
+}: PageProps<"/admin/clients">) {
   return (
     <PageWrapper>
       <Suspense fallback={<LoadingPage />}>
@@ -32,9 +30,7 @@ export default function AdminClientsPage({
 
 async function PageContent({
   searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
+}: Pick<PageProps<"/admin/clients">, "searchParams">) {
   const session = await auth();
   if (!session.user) {
     redirect("/admin/auth/login");
@@ -44,7 +40,7 @@ async function PageContent({
 
   prefetch(
     trpc.admin.client.list.queryOptions({
-      clientName: params.clientName,
+      globalSearch: params.globalSearch,
       page: params.page,
       perPage: params.perPage,
       sort: params.sort,
