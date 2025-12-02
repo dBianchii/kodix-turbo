@@ -1,7 +1,9 @@
+import { relations } from "drizzle-orm";
 import { index, pgTable, unique } from "drizzle-orm/pg-core";
 
 import { clients, sales } from "./ca";
 import { nanoidPrimaryKey } from "./utils";
+import { voucherCashbacks } from "./voucher";
 
 export const cashbacks = pgTable(
   "cashback",
@@ -20,6 +22,13 @@ export const cashbacks = pgTable(
       })
       .notNull()
       .defaultNow(),
+    expiresAt: t
+      .timestamp({
+        mode: "string",
+        precision: 3,
+        withTimezone: true,
+      })
+      .notNull(),
     id: nanoidPrimaryKey(t),
     saleId: t
       .text()
@@ -31,3 +40,12 @@ export const cashbacks = pgTable(
     index().on(table.clientId, table.createdAt),
   ],
 );
+
+export const cashbacksRelations = relations(cashbacks, ({ one, many }) => ({
+  Client: one(clients, {
+    fields: [cashbacks.clientId],
+    references: [clients.id],
+  }),
+  Sale: one(sales, { fields: [cashbacks.saleId], references: [sales.id] }),
+  VoucherCashbacks: many(voucherCashbacks),
+}));

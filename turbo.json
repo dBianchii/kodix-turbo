@@ -67,10 +67,6 @@
       "cache": false,
       "interactive": true
     },
-    "push:production": {
-      "cache": false,
-      "interactive": true
-    },
     "studio": {
       "cache": false,
       "persistent": true

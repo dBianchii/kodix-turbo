@@ -9,7 +9,7 @@ import { getQueryClient } from "@kodix/trpc/react/server";
 import { experimental_nextAppDirCaller as nextAppDirCaller } from "@trpc/server/adapters/next-app-dir";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 
-import { publicProcedure } from "../procedures";
+import { adminProcedure, publicProcedure } from "../procedures";
 import { createCallerFactory } from "../trpc";
 
 const createCaller = createCallerFactory(cashTRPCRouter);
@@ -48,3 +48,5 @@ const nextCaller = nextAppDirCaller({
 });
 
 export const publicAction = publicProcedure.experimental_caller(nextCaller);
+
+export const adminAction = adminProcedure.experimental_caller(nextCaller);

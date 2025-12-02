@@ -1,8 +1,7 @@
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
 
 import type { IsomorficT } from "@kdx/locales";
-
-import { ZNanoId } from "../..";
 
 export const ZCreateInputSchema = z.object({
   teamName: z.string().min(3).max(32, {

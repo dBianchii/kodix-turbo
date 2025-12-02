@@ -11,6 +11,7 @@
     "dev:email": "turbo dev -F @kdx/react-email...",
     "push:kdx": "turbo @kdx/db-dev#dev @kdx/db#push",
     "push:cash": "turbo @cash/db-dev#dev @cash/db#push",
+    "push:cash:production": "pnpm -F @cash/db push:production",
     "seed:kdx": "turbo @kdx/db-dev#dev @kdx/db#seed",
     "seed:cash": "turbo @cash/db-dev#dev @cash/db#seed",
     "check": "biome check .",

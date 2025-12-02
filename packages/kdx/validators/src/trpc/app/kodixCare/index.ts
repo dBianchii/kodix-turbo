@@ -1,9 +1,10 @@
 import dayjs from "@kodix/dayjs";
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
 
 import type { IsomorficT } from "@kdx/locales";
 
-import { adjustDateToMinute, ZNanoId } from "../../..";
+import { adjustDateToMinute } from "../../..";
 import { ZSignInByPasswordInputSchema as default_ZSignInByPasswordInputSchema } from "../../user";
 
 export const ZDoCheckoutForShiftInputSchema = (t: IsomorficT) =>

@@ -36,7 +36,7 @@ interface DataTableProps<TData> {
    * @default "No results found"
    * @type string | undefined
    */
-  noResultsMessage?: string;
+  noResultsMessage?: React.ReactNode;
 
   /**
    * Whether to show pagination or not.
@@ -51,7 +51,6 @@ export function DataTable<TData>({
   onClickRow,
   showPagination = true,
 }: DataTableProps<TData> & {
-  noResultsMessage?: string;
   onClickRow?: () => void;
 }) {
   const t = useTranslations();

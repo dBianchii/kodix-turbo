@@ -2,7 +2,9 @@ import { relations } from "drizzle-orm";
 import { pgEnum, pgTable } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 
+import { cashbacks } from "./cashback";
 import { nanoidPrimaryKey } from "./utils";
+import { vouchers } from "./voucher";
 
 export const caTokens = pgTable("caToken", (t) => ({
   accessToken: t.text().notNull(),
@@ -72,6 +74,7 @@ export const clients = pgTable("client", (t) => ({
 }));
 export const clientsRelations = relations(clients, ({ many }) => ({
   Sales: many(sales),
+  Vouchers: many(vouchers),
 }));
 export const clientsSchema = createInsertSchema(clients);
 
@@ -92,7 +95,8 @@ export const sales = pgTable("sale", (t) => ({
   id: nanoidPrimaryKey(t),
   total: t.numeric({ mode: "number", precision: 10, scale: 2 }).notNull(),
 }));
-export const salesRelations = relations(sales, ({ one }) => ({
+export const salesRelations = relations(sales, ({ one, many }) => ({
+  Cashbacks: many(cashbacks),
   Client: one(clients, { fields: [sales.clientId], references: [clients.id] }),
 }));
 export const salesSchema = createInsertSchema(sales);

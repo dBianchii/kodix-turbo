@@ -102,6 +102,7 @@ async function createUserInteractive() {
       await userRepository.createUser({
         email: userDetails.email,
         id: userId,
+        isAdmin: true,
         name: userDetails.name,
         passwordHash,
       });

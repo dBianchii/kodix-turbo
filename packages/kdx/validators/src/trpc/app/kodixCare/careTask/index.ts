@@ -1,10 +1,11 @@
 import dayjs from "@kodix/dayjs";
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
 
 import type { careTasks } from "@kdx/db/schema";
 import type { IsomorficT } from "@kdx/locales";
 
-import { adjustDateToMinute, ZNanoId } from "../../../..";
+import { adjustDateToMinute } from "../../../..";
 
 export const ZGetCareTasksInputSchema = z.object({
   dateEnd: z.date().transform(adjustDateToMinute),

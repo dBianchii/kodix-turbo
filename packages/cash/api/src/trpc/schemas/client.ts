@@ -52,3 +52,18 @@ export const ZGetByCpfInputSchema = z.object({
   cpf: ZCpfSchema,
 });
 export type TGetByCpfInputSchema = z.infer<typeof ZGetByCpfInputSchema>;
+
+export const ZListClientsInputSchema = z.object({
+  globalSearch: z.string().optional(),
+  page: z.coerce.number().default(1),
+  perPage: z.coerce.number().default(10),
+  sort: z.string().optional().default("cashback.desc"),
+});
+export type TListClientsInputSchema = z.infer<typeof ZListClientsInputSchema>;
+
+export const ZGetClientByIdInputSchema = z.object({
+  clientId: z.string(),
+});
+export type TGetClientByIdInputSchema = z.infer<
+  typeof ZGetClientByIdInputSchema
+>;

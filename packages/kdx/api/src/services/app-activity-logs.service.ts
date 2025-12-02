@@ -1,13 +1,13 @@
 import type { KodixAppId } from "@kodix/shared/db";
 import type { getFormatter } from "next-intl/server";
 import dayjs from "@kodix/dayjs";
+import { ZNanoId } from "@kodix/shared/utils";
 import z from "zod";
 
 import type { appActivityLogs } from "@kdx/db/schema";
 import type { ServerSideT } from "@kdx/locales";
 import { db as _db } from "@kdx/db/client";
 import { appRepository } from "@kdx/db/repositories";
-import { ZNanoId } from "@kdx/validators";
 
 const baseDiffSchema = z.object({
   path: z.array(z.string()),

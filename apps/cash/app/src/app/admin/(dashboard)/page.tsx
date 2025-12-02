@@ -1,8 +1,13 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@cash/auth";
 
 import PageWrapper, { LoadingPage } from "~/app/_components/page-wrapper";
+
+export const metadata: Metadata = {
+  title: "Dashboard | Cash Admin",
+};
 
 async function PageContent() {
   const session = await auth();

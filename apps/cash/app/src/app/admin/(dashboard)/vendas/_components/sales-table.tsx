@@ -3,7 +3,7 @@
 import type { RouterOutputs } from "@cash/api";
 import { useMemo, useState } from "react";
 import { useTRPC } from "@cash/api/trpc/react/client";
-import { Badge } from "@kodix/ui/badge";
+import { formatCurrency, formatDate } from "@kodix/shared/intl-utils";
 import { Button } from "@kodix/ui/button";
 import { DataTableColumnHeader } from "@kodix/ui/common/data-table/data-table-column-header";
 import { DataTablePagination } from "@kodix/ui/common/data-table/data-table-pagination";
@@ -77,54 +77,24 @@ export function SalesTable() {
           <DataTableColumnHeader column={column}>Cliente</DataTableColumnHeader>
         ),
       }),
-      columnHelper.accessor("clientType", {
-        cell: (info) => {
-          const type = info.getValue();
-
-          let variant: "default" | "secondary" | "outline";
-          if (type === "Jurídica") {
-            variant = "default";
-          } else if (type === "Física") {
-            variant = "secondary";
-          } else {
-            variant = "outline";
-          }
-
-          return <Badge variant={variant}>{type}</Badge>;
-        },
-        header: ({ column }) => (
-          <DataTableColumnHeader column={column}>
-            Tipo Cliente
-          </DataTableColumnHeader>
-        ),
-      }),
       columnHelper.accessor("total", {
         cell: (info) => {
           const amount = info.getValue();
-          const formatted = new Intl.NumberFormat("pt-BR", {
-            currency: "BRL",
-            style: "currency",
-          }).format(amount);
 
-          return <div className="text-right font-medium">{formatted}</div>;
+          return (
+            <div className="text-right font-medium">
+              {formatCurrency("BRL", amount)}
+            </div>
+          );
         },
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>Total</DataTableColumnHeader>
         ),
       }),
       columnHelper.accessor("caCreatedAt", {
-        cell: (info) => {
-          const date = new Date(info.getValue());
-          const formatted = new Intl.DateTimeFormat("pt-BR", {
-            day: "2-digit",
-            hour: "2-digit",
-            minute: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          }).format(date);
-
-          return <div className="text-sm">{formatted}</div>;
-        },
+        cell: (info) => (
+          <div className="text-sm">{formatDate(info.getValue())}</div>
+        ),
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>Data</DataTableColumnHeader>
         ),
