@@ -1,4 +1,4 @@
-import { exec as nodeExec } from "node:child_process";
+import { exec as nodeExec, spawn } from "node:child_process";
 import readline from "node:readline";
 
 type AppName = "kdx" | "cash";
@@ -33,13 +33,34 @@ export const pushDatabaseSchema = async (app: AppName, url: string) => {
     }
   }
 
-  await execCommand(`pnpm -F @${app}/db exec drizzle-kit push`, {
+  await execCommandInteractive(`pnpm -F @${app}/db exec drizzle-kit push`, {
     env: {
       ...process.env,
       DATABASE_URL: url,
     },
   });
 };
+
+/** Runs a command with inherited stdio - use for interactive commands that need TTY */
+export const execCommandInteractive = (
+  command: string,
+  options?: { env?: NodeJS.ProcessEnv },
+): Promise<void> =>
+  new Promise((resolve, reject) => {
+    const childProcess = spawn(command, {
+      env: options?.env,
+      shell: true,
+      stdio: "inherit",
+    });
+
+    childProcess.on("close", (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Command failed with exit code ${code}`));
+      }
+    });
+  });
 
 export const execCommand = (
   command: string,
