@@ -22,11 +22,11 @@ import { Label } from "@kodix/ui/label";
 import { useMutation } from "@tanstack/react-query";
 import { CheckCircle2, FileText, Loader2, Ticket } from "lucide-react";
 
-import { formatVoucherCode } from "~/utils/voucherUtils";
+import { formatVoucherCode } from "~/utils/voucher-utils";
 
 import type { ClientDataPromise } from "../data";
 import { useRenderVoucherPdf } from "../tabs/use-render-voucher-pdf";
-import { createVoucherAction } from "./createVoucher.action";
+import { createVoucherAction } from "./create-voucher.action";
 
 export interface RedemptionDialogButtonClientProps {
   getClientDataPromise: ClientDataPromise;

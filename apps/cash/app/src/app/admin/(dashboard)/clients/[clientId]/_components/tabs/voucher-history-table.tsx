@@ -8,7 +8,7 @@ import {
   TableRow,
 } from "@kodix/ui/table";
 
-import { formatVoucherCode } from "~/utils/voucherUtils";
+import { formatVoucherCode } from "~/utils/voucher-utils";
 
 import { getClientData, getVouchers } from "../data";
 import { ViewVoucherButton } from "./view-voucher-button";

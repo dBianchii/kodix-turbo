@@ -2,7 +2,7 @@ import type { clients, vouchers } from "@cash/db/schema";
 import { formatCurrency, formatDate } from "@kodix/shared/intl-utils";
 import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 
-import { formatVoucherCode } from "~/utils/voucherUtils";
+import { formatVoucherCode } from "~/utils/voucher-utils";
 
 const styles = StyleSheet.create({
   amountLabel: {
