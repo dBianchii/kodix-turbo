@@ -988,6 +988,9 @@ importers:
       '@kodix/dayjs':
         specifier: workspace:*
         version: link:../../kodix/dayjs
+      '@kodix/drizzle-utils':
+        specifier: workspace:*
+        version: link:../../kodix/drizzle-utils
       '@kodix/posthog':
         specifier: workspace:*
         version: link:../../kodix/posthog
@@ -1533,6 +1536,19 @@ importers:
       dayjs:
         specifier: 'catalog:'
         version: 1.11.18
+    devDependencies:
+      '@kodix/tsconfig':
+        specifier: workspace:*
+        version: link:../../../tooling/typescript
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.2
+
+  packages/kodix/drizzle-utils:
+    dependencies:
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.44.5(@neondatabase/serverless@1.0.1)(@types/pg@8.15.5)(@upstash/redis@1.35.4)(mysql2@3.15.1)(postgres@3.4.7)
     devDependencies:
       '@kodix/tsconfig':
         specifier: workspace:*

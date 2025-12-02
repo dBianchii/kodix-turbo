@@ -1,0 +1,20 @@
+{
+  "name": "@kodix/drizzle-utils",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "clean": "git clean -xdf .cache .turbo dist node_modules",
+    "dev": "tsc",
+    "tsc": "tsc --noEmit"
+  },
+  "dependencies": {
+    "drizzle-orm": "catalog:"
+  },
+  "devDependencies": {
+    "@kodix/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "server-only": "catalog:",
+    "@kodix/drizzle-utils": "workspace:*",
     "@cash/auth": "workspace:*",
     "@cash/db": "workspace:*",
     "@kodix/dayjs": "workspace:*",

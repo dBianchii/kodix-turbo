@@ -4,10 +4,16 @@ import type { RouterOutputs } from "@cash/api";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useTRPC } from "@cash/api/trpc/react/client";
+import { formatCurrency, formatDate } from "@kodix/shared/intl-utils";
 import { Button } from "@kodix/ui/button";
 import { DataTableColumnHeader } from "@kodix/ui/common/data-table/data-table-column-header";
 import { DataTablePagination } from "@kodix/ui/common/data-table/data-table-pagination";
-import { Input } from "@kodix/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from "@kodix/ui/input-group";
 import { Label } from "@kodix/ui/label";
 import {
   Table,
@@ -28,6 +34,7 @@ import {
 import {
   AlertCircle,
   Calendar,
+  FileText,
   Loader2,
   Search,
   User,
@@ -38,6 +45,8 @@ import {
 
 import { useClientsSearchParams } from "./clients-url-state";
 
+const CPF_FORMAT_REGEX = /(\d{3})(\d{3})(\d{3})(\d{2})/;
+
 const columnHelper =
   createColumnHelper<
     RouterOutputs["admin"]["client"]["list"]["data"][number]
@@ -45,14 +54,14 @@ const columnHelper =
 
 export function ClientsTable() {
   const [params, setParams] = useClientsSearchParams();
-  const { clientName = "", page = 1, perPage = 50 } = params;
+  const { globalSearch = "", page = 1, perPage = 50 } = params;
 
   const router = useRouter();
   const trpc = useTRPC();
 
   const { data, isPending, error } = useQuery(
     trpc.admin.client.list.queryOptions({
-      clientName,
+      globalSearch,
       page,
       perPage,
       sort: params.sort,
@@ -81,16 +90,30 @@ export function ClientsTable() {
           </DataTableColumnHeader>
         ),
       }),
-      columnHelper.accessor("cashback", {
+      columnHelper.accessor("document", {
         cell: (info) => {
-          const amount = info.getValue();
-          const formatted = new Intl.NumberFormat("pt-BR", {
-            currency: "BRL",
-            style: "currency",
-          }).format(amount);
-
-          return <div className="text-left font-medium">{formatted}</div>;
+          const value = info.getValue();
+          if (!value) {
+            return <span className="text-muted-foreground">-</span>;
+          }
+          const formatted = value.replace(CPF_FORMAT_REGEX, "$1.$2.$3-$4");
+          return <span className="font-mono text-sm">{formatted}</span>;
         },
+        header: ({ column }) => (
+          <DataTableColumnHeader column={column}>
+            <div className="flex items-center gap-2">
+              <FileText className="h-4 w-4" />
+              <span>CPF</span>
+            </div>
+          </DataTableColumnHeader>
+        ),
+      }),
+      columnHelper.accessor("cashback", {
+        cell: (info) => (
+          <div className="text-left font-medium">
+            {formatCurrency("BRL", info.getValue())}
+          </div>
+        ),
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             <div className="flex items-center gap-2">
@@ -100,7 +123,7 @@ export function ClientsTable() {
           </DataTableColumnHeader>
         ),
       }),
-      columnHelper.accessor("createdAt", {
+      columnHelper.accessor("registeredFromFormAt", {
         cell: (info) => {
           const value = info.getValue();
           if (!value) {
@@ -109,14 +132,7 @@ export function ClientsTable() {
             );
           }
 
-          const date = new Date(value);
-          const formatted = new Intl.DateTimeFormat("pt-BR", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          }).format(date);
-
-          return <div className="text-center text-sm">{formatted}</div>;
+          return <div className="text-center text-sm">{formatDate(value)}</div>;
         },
         header: ({ column }) => (
           <DataTableColumnHeader className="justify-center" column={column}>
@@ -156,11 +172,11 @@ export function ClientsTable() {
     },
   });
 
-  const isFiltered = clientName;
+  const isFiltered = globalSearch;
 
   const handleResetFilters = () => {
     setParams({
-      clientName: null,
+      globalSearch: null,
       page: 1,
       perPage: 50,
     });
@@ -170,22 +186,25 @@ export function ClientsTable() {
     <div className="space-y-4">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end">
         <div className="relative flex-1 space-y-2">
-          <Label htmlFor="clientName">Nome do Cliente</Label>
-          <div className="relative max-w-xs">
-            <Search className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              className="pl-9"
-              id="clientName"
+          <Label htmlFor="globalSearch">Buscar</Label>
+          <InputGroup className="max-w-xs">
+            <InputGroupAddon>
+              <InputGroupText>
+                <Search />
+              </InputGroupText>
+            </InputGroupAddon>
+            <InputGroupInput
+              id="globalSearch"
               onChange={(e) => {
                 setParams({
-                  clientName: e.target.value || null,
+                  globalSearch: e.target.value || null,
                   page: 1,
                 });
               }}
-              placeholder="Buscar por nome do cliente..."
-              value={clientName}
+              placeholder="Buscar..."
+              value={globalSearch}
             />
-          </div>
+          </InputGroup>
         </div>
         {isFiltered && (
           <Button className="h-10" onClick={handleResetFilters} variant="ghost">
