@@ -92,11 +92,9 @@ export function ClientsTable() {
       }),
       columnHelper.accessor("document", {
         cell: (info) => {
-          const value = info.getValue();
-          if (!value) {
-            return <span className="text-muted-foreground">-</span>;
-          }
-          const formatted = value.replace(CPF_FORMAT_REGEX, "$1.$2.$3-$4");
+          const formatted = info
+            .getValue()
+            .replace(CPF_FORMAT_REGEX, "$1.$2.$3-$4");
           return <span className="font-mono text-sm">{formatted}</span>;
         },
         header: ({ column }) => (

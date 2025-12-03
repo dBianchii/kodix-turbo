@@ -232,7 +232,7 @@ export const ZCAListPersonsResponseSchema = z.object({
         documento: z
           .string()
           .transform(emptyToNull) // Some clients have an empty string for the document
-          .describe("Documento da pessoa (CPF/CNPJ)"),
+          .describe("CPF/CNPJ"),
         email: z
           .string()
           .transform(emptyToNull) // Some clients have an empty string for the email
@@ -397,10 +397,7 @@ export function updateContaAzulPerson(params: UpdateContaAzulPersonParams) {
 }
 
 const ZCAGetPersonResponseSchema = z.object({
-  documento: z
-    .string()
-    .transform(emptyToNull)
-    .describe("Documento da pessoa (CPF/CNPJ)"),
+  documento: z.string().transform(emptyToNull).describe("CPF/CNPJ"),
   email: z.string().transform(emptyToNull).describe("Email da pessoa"),
   enderecos: z
     .array(
