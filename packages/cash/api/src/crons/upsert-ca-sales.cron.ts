@@ -16,18 +16,6 @@ import { verifiedQstashCron } from "./_utils";
 
 const LOOKBACK_DAYS = 1;
 
-// type CAPersonPhone = NonNullable<
-//   Awaited<ReturnType<typeof listContaAzulPersons>>["items"]
-// >[number]["telefone"];
-
-// function normalizePhoneNumber(phone: CAPersonPhone) {
-//   if (!phone) return;
-//   if (phone.startsWith("+")) {
-//     return phone;
-//   }
-//   return `+55${phone}`;
-// }
-
 function toCents(amount: number) {
   return Math.round(amount * 100);
 }
@@ -42,8 +30,8 @@ const DISCOUNTED_CASHBACK_PERCENT = 1; // 1%
 export const upsertCASalesCron = verifiedQstashCron(async () => {
   const now = dayjs().tz("America/Sao_Paulo");
 
-  const yesterday = now.subtract(LOOKBACK_DAYS, "day").format("YYYY-MM-DD");
-  const today = now.format("YYYY-MM-DD");
+  const data_inicio = now.subtract(LOOKBACK_DAYS, "day").format("YYYY-MM-DD");
+  const data_fim = now.format("YYYY-MM-DD");
 
   let allCASales: Awaited<ReturnType<typeof listContaAzulSales>>["itens"] = [];
   let currentPage = 1;
@@ -53,8 +41,8 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   try {
     do {
       const { itens, total_itens } = await listContaAzulSales({
-        data_fim: today,
-        data_inicio: yesterday,
+        data_fim,
+        data_inicio,
         pagina: currentPage,
         tamanho_pagina: pageSize,
       });
@@ -72,9 +60,9 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
     captureException(error, undefined, {
       context: "listContaAzulSales",
       currentPage,
-      today,
+      data_fim,
+      data_inicio,
       totalItens,
-      yesterday,
     });
     throw error;
   }
@@ -247,10 +235,44 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
     });
     throw error;
   }
+
+  // Filter out anonymous clients (without document)
+  const clientsWithDocument = allCAClients.filter(
+    (client): client is typeof client & { documento: string } =>
+      client.documento !== null,
+  );
+
+  const identifiedClientIds = new Set(
+    clientsWithDocument.map((client) => client.id),
+  );
+
+  // Filter out sales from anonymous clients
+  const salesFromIdentifiedClients = allCASales.filter((sale) =>
+    identifiedClientIds.has(sale.cliente.id),
+  );
+
+  const caSaleIdToClienteId = new Map(
+    allCASales.map((sale) => [sale.id, sale.cliente.id]),
+  );
+
+  // Filter out cashback amounts for sales from anonymous clients
+  const cashbackAmountsFiltered = cashbackAmounts.filter((item) =>
+    identifiedClientIds.has(caSaleIdToClienteId.get(item.caSaleId) ?? ""),
+  );
+
+  if (!(clientsWithDocument.length && salesFromIdentifiedClients.length)) {
+    return new Response(
+      "No sales from identified clients found. Skipping anonymous clients.",
+      {
+        status: 202,
+      },
+    );
+  }
+
   const { upsertedClients, upsertedSales, upsertedCashbacks } =
     await db.transaction(async (tx) => {
       const txUpsertedClients = await caRepository.upsertClientsByCaId(
-        allCAClients.map(
+        clientsWithDocument.map(
           (caClient) =>
             ({
               bairro: caClient.endereco?.bairro,
@@ -277,7 +299,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       );
 
       const txUpsertedSales = await caRepository.upsertSalesByCaId(
-        allCASales.map((caSale) => {
+        salesFromIdentifiedClients.map((caSale) => {
           const client = caClientIdToClientMap.get(caSale.cliente.id);
           if (!client)
             throw new Error(`Client not found for sale ${caSale.id}`);
@@ -299,12 +321,12 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
       );
 
       const caSaleIdToCaSaleMap = new Map(
-        allCASales.map((caSale) => [caSale.id, caSale]),
+        salesFromIdentifiedClients.map((caSale) => [caSale.id, caSale]),
       );
 
       const txUpsertedCashbacks =
         await cashbackRepository.upsertCashbacksByCaId(
-          cashbackAmounts.map((item) => {
+          cashbackAmountsFiltered.map((item) => {
             const sale = txUpsertedSales.find((s) => s.caId === item.caSaleId);
             if (!sale)
               throw new Error(`Sale not found for cashback ${item.caSaleId}`);

@@ -30,7 +30,7 @@ export const onRequestError: Instrumentation.onRequestError = async (
     return;
   }
 
-  if (process.env.VERCEL_ENV === "development") {
+  if (process.env.NODE_ENV === "development") {
     //Skip in development
     return;
   }
