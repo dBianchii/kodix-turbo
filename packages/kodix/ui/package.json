@@ -24,7 +24,6 @@
   "dependencies": {
     "@hookform/resolvers": "catalog:",
     "@kdx/locales": "workspace:*",
-    "@radix-ui/react-separator": "^1.1.8",
     "@tanstack/react-table": "catalog:",
     "class-variance-authority": "catalog:",
     "clsx": "catalog:",
