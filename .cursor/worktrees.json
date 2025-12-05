@@ -1,0 +1,9 @@
+{
+  "setup-worktree": [
+    "pnpm install",
+    "pnpm vercel-link",
+    "vercel switch kodix",
+    "cd apps/cash/app && vercel link --yes",
+    "cd ../kdx/app && vercel link --yes"
+  ]
+}
