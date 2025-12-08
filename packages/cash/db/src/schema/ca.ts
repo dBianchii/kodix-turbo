@@ -73,6 +73,7 @@ export const clients = pgTable("client", (t) => ({
     .notNull(),
 }));
 export const clientsRelations = relations(clients, ({ many }) => ({
+  Cashbacks: many(cashbacks),
   Sales: many(sales),
   Vouchers: many(vouchers),
 }));

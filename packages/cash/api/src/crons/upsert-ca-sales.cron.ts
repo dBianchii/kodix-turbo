@@ -5,7 +5,11 @@ import dayjs from "@kodix/dayjs";
 import { captureException } from "@kodix/posthog";
 import { uniqBy } from "es-toolkit";
 
-import { MONTHS_TO_EXPIRE_CASHBACK } from "../constants";
+import {
+  DISCOUNTED_CASHBACK_PERCENT,
+  FULL_CASHBACK_PERCENT,
+  MONTHS_TO_EXPIRE_CASHBACK,
+} from "../constants";
 import {
   getProductById,
   listContaAzulPersons,
@@ -23,9 +27,6 @@ function toCents(amount: number) {
 function toReais(amount: number) {
   return amount / 100;
 }
-
-const FULL_CASHBACK_PERCENT = 5; // 5%
-const DISCOUNTED_CASHBACK_PERCENT = 1; // 1%
 
 export const upsertCASalesCron = verifiedQstashCron(async () => {
   const now = dayjs().tz("America/Sao_Paulo");

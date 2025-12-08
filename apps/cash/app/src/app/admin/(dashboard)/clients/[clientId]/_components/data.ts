@@ -21,12 +21,6 @@ export const getClientData = cache(async (clientId: string) => {
   if (!data) redirect("/admin/clients");
 
   const { client, sales: rawSales } = data;
-  const now = new Date();
-
-  const totalAvailableCashback = rawSales
-    .flatMap((sale) => sale.Cashbacks)
-    .filter((cb) => new Date(cb.expiresAt) > now)
-    .reduce((sum, cb) => sum + cb.amount - cb.usedAmount, 0);
 
   const sales = rawSales.map((sale) => {
     const cashbackOriginal = sale.Cashbacks.reduce(
@@ -58,7 +52,7 @@ export const getClientData = cache(async (clientId: string) => {
   return {
     client,
     sales,
-    totalAvailableCashback,
+    totalAvailableCashback: data.totalAvailableCashback,
   };
 });
 export type ClientDataPromise = ReturnType<typeof getClientData>;

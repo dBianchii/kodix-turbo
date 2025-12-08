@@ -6,6 +6,7 @@ import { asc, count, desc, ilike, or, sql } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../procedures";
 import type { ZListClientsInputSchema } from "../../schemas/client";
+import { getTotalAvailableCashback } from "../../../utils/cashback-utils";
 
 interface ListClientsOptions {
   ctx: TAdminProcedureContext;
@@ -41,26 +42,42 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
   };
 
   const result = await db.transaction(async (tx) => {
-    const data = await tx.query.clients.findMany({
-      extras: {
-        cashback: cashbackSum.as("cashback"),
-      },
-      limit: input.perPage,
-      offset,
-      orderBy: getOrderBy(),
-      where: globalSearchFilter,
-    });
-
-    const total = await tx
-      .select({ count: count() })
-      .from(clients)
-      .where(globalSearchFilter)
-      .then((res) => res[0]?.count ?? 0);
+    const [data, total] = await Promise.all([
+      tx.query.clients.findMany({
+        limit: input.perPage,
+        offset,
+        orderBy: getOrderBy(),
+        where: globalSearchFilter,
+        with: {
+          Cashbacks: {
+            columns: {
+              amount: true,
+              expiresAt: true,
+            },
+            with: {
+              VoucherCashbacks: {
+                columns: {
+                  amount: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      tx
+        .select({ count: count() })
+        .from(clients)
+        .where(globalSearchFilter)
+        .then((res) => res[0]?.count ?? 0),
+    ]);
 
     const pageCount = Math.ceil(total / input.perPage);
 
     return {
-      data,
+      data: data.map((client) => ({
+        ...client,
+        cashback: getTotalAvailableCashback([client]),
+      })),
       pageCount,
     };
   });

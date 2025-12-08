@@ -1,12 +1,19 @@
 {
-  "name": "@kdx/testing",
+  "name": "@kodix/testing",
   "private": true,
   "type": "module",
+  "exports": {
+    "./seed-utils": "./src/seed-utils.ts"
+  },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "tsc": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest --watch"
+  },
+  "dependencies": {
+    "drizzle-seed": "catalog:",
+    "drizzle-orm": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",

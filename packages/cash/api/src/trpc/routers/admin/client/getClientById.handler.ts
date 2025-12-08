@@ -5,6 +5,7 @@ import { desc, eq } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../../procedures";
 import type { ZGetClientByIdInputSchema } from "../../../schemas/client";
+import { getTotalAvailableCashback } from "../../../../utils/cashback-utils";
 
 interface GetClientByIdHandlerOptions {
   ctx: TAdminProcedureContext;
@@ -59,17 +60,20 @@ export const getClientByIdHandler = async ({
   const salesDataWithUsedAmount = salesData.map((sale) => ({
     ...sale,
     Cashbacks: sale.Cashbacks.map((cashback) => {
-      const { VoucherCashbacks, ...cashbackWithoutVoucherCashbacks } = cashback;
+      const { VoucherCashbacks, ...rest } = cashback;
       return {
-        ...cashbackWithoutVoucherCashbacks,
+        ...rest,
         usedAmount:
           VoucherCashbacks.reduce((sum, vc) => sum + Number(vc.amount), 0) ?? 0,
       };
     }),
   }));
 
+  const totalAvailableCashback = getTotalAvailableCashback(salesData);
+
   return {
     client,
     sales: salesDataWithUsedAmount,
+    totalAvailableCashback,
   };
 };
