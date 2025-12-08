@@ -16,7 +16,7 @@ export const getTotalAvailableCashback = (
         Math.max(
           0,
           cb.amount -
-            cb.VoucherCashbacks.reduce((sum2, vc) => sum2 + vc.amount, 0),
+            cb.VoucherCashbacks.reduce((_sum, vc) => _sum + vc.amount, 0),
         ),
       0,
     );
