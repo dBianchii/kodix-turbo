@@ -1,6 +1,6 @@
 import type z from "zod";
 import { db } from "@cash/db/client";
-import { clients } from "@cash/db/schema";
+import { cashbacks, clients, voucherCashbacks } from "@cash/db/schema";
 import { getVectorSearchFilter } from "@kodix/drizzle-utils";
 import { asc, count, desc, ilike, or, sql } from "drizzle-orm";
 
@@ -17,7 +17,12 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
   const offset = (input.page - 1) * input.perPage;
 
   const [column, order] = input.sort.split(".").filter(Boolean) as [
-    keyof typeof clients.$inferSelect | "cashback" | undefined,
+    (
+      | keyof typeof clients.$inferSelect
+      | "cashback"
+      | "totalAvailableCashback"
+      | undefined
+    ),
     "asc" | "desc" | undefined,
   ];
 
@@ -29,16 +34,36 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
       )
     : undefined;
 
-  const cashbackSum = sql<number>`COALESCE((SELECT SUM("cashback"."amount") FROM "cashback" WHERE "cashback"."clientId" = "clients"."id"), 0)`;
+  const cashbackSum = sql<number>`COALESCE((SELECT SUM(${cashbacks.amount}) FROM ${cashbacks} WHERE ${cashbacks.clientId} = ${clients.id}), 0)`;
+
+  const totalAvailableCashback = sql<number>`COALESCE(
+    (
+      SELECT SUM(GREATEST(0, ${cashbacks.amount} - COALESCE(voucherCashbackTotals.totalRedeemed, 0)))
+      FROM ${cashbacks}
+      LEFT JOIN (
+        SELECT ${voucherCashbacks.cashbackId} AS cashback_id, SUM(${voucherCashbacks.amount}) AS "totalRedeemed"
+        FROM ${voucherCashbacks}
+        GROUP BY ${voucherCashbacks.cashbackId}
+      ) AS voucherCashbackTotals ON voucherCashbackTotals.cashback_id = ${cashbacks.id}
+      WHERE ${cashbacks.clientId} = ${clients.id} AND ${cashbacks.expiresAt} > NOW()
+    ),
+    0
+  )`;
 
   const getOrderBy = () => {
+    const getOrderFn = (value: Parameters<typeof asc>[0]) =>
+      order === "asc" ? asc(value) : desc(value);
+
+    if (column === "totalAvailableCashback") {
+      return getOrderFn(totalAvailableCashback);
+    }
     if (column === "cashback") {
-      return order === "asc" ? asc(cashbackSum) : desc(cashbackSum);
+      return getOrderFn(cashbackSum);
     }
     if (column && column in clients) {
-      return order === "asc" ? asc(clients[column]) : desc(clients[column]);
+      return getOrderFn(clients[column]);
     }
-    return desc(cashbackSum);
+    return desc(totalAvailableCashback);
   };
 
   const result = await db.transaction(async (tx) => {

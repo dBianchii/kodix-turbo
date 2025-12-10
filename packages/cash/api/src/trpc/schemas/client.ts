@@ -57,7 +57,7 @@ export const ZListClientsInputSchema = z.object({
   globalSearch: z.string().optional(),
   page: z.coerce.number().default(1),
   perPage: z.coerce.number().default(10),
-  sort: z.string().optional().default("cashback.desc"),
+  sort: z.string().optional().default("totalAvailableCashback.desc"),
 });
 export type TListClientsInputSchema = z.infer<typeof ZListClientsInputSchema>;
 

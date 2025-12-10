@@ -5,7 +5,7 @@ export const createClientsSearchParamsParsers = {
   globalSearch: parseAsString.withDefault(""),
   page: parseAsInteger.withDefault(1),
   perPage: parseAsInteger.withDefault(50),
-  sort: parseAsString.withDefault("cashback.desc"),
+  sort: parseAsString.withDefault("totalAvailableCashback.desc"),
 } satisfies ParserMap;
 
 export const useClientsSearchParams = () =>
