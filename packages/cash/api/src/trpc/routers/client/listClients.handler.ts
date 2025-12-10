@@ -76,7 +76,7 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
     return {
       data: data.map((client) => ({
         ...client,
-        cashback: getTotalAvailableCashback([client]),
+        totalAvailableCashback: getTotalAvailableCashback([client]),
       })),
       pageCount,
     };

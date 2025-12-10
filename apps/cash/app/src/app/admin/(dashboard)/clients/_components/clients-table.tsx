@@ -106,7 +106,7 @@ export function ClientsTable() {
           </DataTableColumnHeader>
         ),
       }),
-      columnHelper.accessor("cashback", {
+      columnHelper.accessor("totalAvailableCashback", {
         cell: (info) => (
           <div className="text-left font-medium">
             {formatCurrency("BRL", info.getValue())}
