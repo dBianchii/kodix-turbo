@@ -2,7 +2,7 @@ import type z from "zod";
 import { db } from "@cash/db/client";
 import { cashbacks, clients, voucherCashbacks } from "@cash/db/schema";
 import { getVectorSearchFilter } from "@kodix/drizzle-utils";
-import { asc, count, desc, ilike, or, sql } from "drizzle-orm";
+import { asc, count, desc, eq, gt, ilike, or, sql, sum } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../procedures";
 import type { ZListClientsInputSchema } from "../../schemas/client";
@@ -36,16 +36,38 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
 
   const cashbackSum = sql<number>`COALESCE((SELECT SUM(${cashbacks.amount}) FROM ${cashbacks} WHERE ${cashbacks.clientId} = ${clients.id}), 0)`;
 
+  const voucherCashbackTotals = db
+    .select({
+      cashbackId: voucherCashbacks.cashbackId,
+      totalRedeemed: sum(voucherCashbacks.amount).as("totalRedeemed"),
+    })
+    .from(voucherCashbacks)
+    .groupBy(voucherCashbacks.cashbackId)
+    .as("vct");
+
+  const cabAlias = "cab";
+
+  const cashbackAvailableByClient = db
+    .select({
+      clientId: cashbacks.clientId,
+      totalAvailable: sum(
+        sql<number>`GREATEST(0, ${cashbacks.amount} - COALESCE(${voucherCashbackTotals.totalRedeemed}, 0))`,
+      ).as("totalAvailable"),
+    })
+    .from(cashbacks)
+    .leftJoin(
+      voucherCashbackTotals,
+      eq(voucherCashbackTotals.cashbackId, cashbacks.id),
+    )
+    .where(gt(cashbacks.expiresAt, sql`NOW()`))
+    .groupBy(cashbacks.clientId)
+    .as(cabAlias);
+
   const totalAvailableCashback = sql<number>`COALESCE(
     (
-      SELECT SUM(GREATEST(0, ${cashbacks.amount} - COALESCE(voucherCashbackTotals.totalRedeemed, 0)))
-      FROM ${cashbacks}
-      LEFT JOIN (
-        SELECT ${voucherCashbacks.cashbackId} AS cashback_id, SUM(${voucherCashbacks.amount}) AS "totalRedeemed"
-        FROM ${voucherCashbacks}
-        GROUP BY ${voucherCashbacks.cashbackId}
-      ) AS voucherCashbackTotals ON voucherCashbackTotals.cashback_id = ${cashbacks.id}
-      WHERE ${cashbacks.clientId} = ${clients.id} AND ${cashbacks.expiresAt} > NOW()
+      SELECT ${sql.raw(cabAlias)}."totalAvailable"
+      FROM ${cashbackAvailableByClient}
+      WHERE ${sql.raw(cabAlias)}."clientId" = ${clients.id}
     ),
     0
   )`;
