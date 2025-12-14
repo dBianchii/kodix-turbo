@@ -53,11 +53,30 @@ export const ZGetByCpfInputSchema = z.object({
 });
 export type TGetByCpfInputSchema = z.infer<typeof ZGetByCpfInputSchema>;
 
+export const CLIENTS_SORT_FIELDS = [
+  "name",
+  "registeredFromFormAt",
+  "totalAvailableCashback",
+] as const;
+
+export const ZClientsSortSchema = z.object({
+  desc: z.boolean(),
+  id: z.enum(CLIENTS_SORT_FIELDS),
+});
+export type TClientsSortSchema = z.infer<typeof ZClientsSortSchema>;
+
+export const DEFAULT_CLIENT_TABLE_SORT = [
+  { desc: true, id: "totalAvailableCashback" },
+] satisfies TClientsSortSchema[];
+
 export const ZListClientsInputSchema = z.object({
-  globalSearch: z.string().optional(),
-  page: z.coerce.number().default(1),
-  perPage: z.coerce.number().default(10),
-  sort: z.string().optional().default("totalAvailableCashback.desc"),
+  globalSearch: z.string().optional().default(""),
+  page: z.coerce.number().int().min(1).default(1),
+  perPage: z.coerce.number().int().min(1).max(250).default(50),
+  sort: z
+    .array(ZClientsSortSchema)
+    .default(DEFAULT_CLIENT_TABLE_SORT)
+    .transform((value) => (value.length ? value : DEFAULT_CLIENT_TABLE_SORT)),
 });
 export type TListClientsInputSchema = z.infer<typeof ZListClientsInputSchema>;
 

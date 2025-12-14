@@ -7,6 +7,7 @@ import { asc, count, desc, eq, gt, ilike, or, sql, sum } from "drizzle-orm";
 import type { TAdminProcedureContext } from "../../procedures";
 import type { ZListClientsInputSchema } from "../../schemas/client";
 import { getTotalAvailableCashback } from "../../../utils/cashback-utils";
+import { DEFAULT_CLIENT_TABLE_SORT } from "../../schemas/client";
 
 interface ListClientsOptions {
   ctx: TAdminProcedureContext;
@@ -14,17 +15,11 @@ interface ListClientsOptions {
 }
 
 export const listClientsHandler = async ({ input }: ListClientsOptions) => {
-  const offset = (input.page - 1) * input.perPage;
-
-  const [column, order] = input.sort.split(".").filter(Boolean) as [
-    (
-      | keyof typeof clients.$inferSelect
-      | "cashback"
-      | "totalAvailableCashback"
-      | undefined
-    ),
-    "asc" | "desc" | undefined,
-  ];
+  // biome-ignore lint/style/noNonNullAssertion: Safe to do so
+  const primarySort = input.sort[0] ?? DEFAULT_CLIENT_TABLE_SORT[0]!;
+  // biome-ignore lint/style/noNonNullAssertion: Safe to do so
+  const column = primarySort?.id ?? DEFAULT_CLIENT_TABLE_SORT[0]!.id;
+  const order = primarySort?.desc ? "desc" : "asc";
 
   const globalSearchFilter = input.globalSearch
     ? or(
@@ -33,8 +28,6 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
         ilike(clients.document, `%${input.globalSearch}%`),
       )
     : undefined;
-
-  const cashbackSum = sql<number>`COALESCE((SELECT SUM(${cashbacks.amount}) FROM ${cashbacks} WHERE ${cashbacks.clientId} = ${clients.id}), 0)`;
 
   const voucherCashbackTotals = db
     .select({
@@ -79,9 +72,6 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
     if (column === "totalAvailableCashback") {
       return getOrderFn(totalAvailableCashback);
     }
-    if (column === "cashback") {
-      return getOrderFn(cashbackSum);
-    }
     if (column && column in clients) {
       return getOrderFn(clients[column]);
     }
@@ -92,7 +82,7 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
     const [data, total] = await Promise.all([
       tx.query.clients.findMany({
         limit: input.perPage,
-        offset,
+        offset: (input.page - 1) * input.perPage,
         orderBy: getOrderBy(),
         where: globalSearchFilter,
         with: {
