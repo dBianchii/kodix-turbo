@@ -144,7 +144,7 @@ catalogs:
     '@formatjs/intl-pluralrules': 5.4.4
     '@formatjs/intl-relativetimeformat': 11.4.11
   next:
-    next: 16.0.6
+    next: 16.0.10
   react:
     '@types/react': 19.2.2
     '@types/react-dom': 19.2.2
