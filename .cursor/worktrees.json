@@ -1,0 +1,7 @@
+{
+  "setup-worktree": [
+    "pnpm install",
+    "cp $ROOT_WORKTREE_PATH/apps/kdx/app/.env.local ./apps/kdx/app/.env.local",
+    "cp $ROOT_WORKTREE_PATH/apps/cash/app/.env.local ./apps/cash/app/.env.local"
+  ]
+}
