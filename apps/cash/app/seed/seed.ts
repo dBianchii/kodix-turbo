@@ -30,7 +30,7 @@ const generators = getGeneratorsFunctions();
 function createGenerator<T>(
   generator: {
     init: (params: { count: number; seed: number }) => void;
-    generate: (params?: { i: number }) => T;
+    generate: (params: { i: number }) => T;
   },
   count: number,
 ) {
@@ -141,12 +141,18 @@ export async function seedCash() {
     sales.length,
   );
   const genCashbackPercent = createGenerator(
-    generators.valuesFromArray({
-      values: [
-        { values: [FULL_CASHBACK_PERCENT], weight: 0.8 },
-        { values: [DISCOUNTED_CASHBACK_PERCENT], weight: 0.2 },
-      ],
-    }),
+    generators.weightedRandom([
+      {
+        value: generators.default({ defaultValue: FULL_CASHBACK_PERCENT }),
+        weight: 0.8,
+      },
+      {
+        value: generators.default({
+          defaultValue: DISCOUNTED_CASHBACK_PERCENT,
+        }),
+        weight: 0.2,
+      },
+    ]),
     estimatedCashbacks,
   );
   const genItemRatio = createGenerator(
