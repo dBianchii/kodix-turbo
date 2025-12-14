@@ -4,6 +4,11 @@ import type { RouterOutputs } from "@cash/api";
 import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useTRPC } from "@cash/api/trpc/react/client";
+import {
+  CLIENTS_SORT_FIELDS,
+  DEFAULT_CLIENT_TABLE_SORT,
+  type TClientsSortSchema,
+} from "@cash/api/trpc/schemas/client";
 import { formatCurrency, formatDate } from "@kodix/shared/intl-utils";
 import { Button } from "@kodix/ui/button";
 import { DataTableColumnHeader } from "@kodix/ui/common/data-table/data-table-column-header";
@@ -29,6 +34,7 @@ import {
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  type SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import {
@@ -54,17 +60,15 @@ const columnHelper =
 
 export function ClientsTable() {
   const [params, setParams] = useClientsSearchParams();
-  const { globalSearch = "", page = 1, perPage = 50 } = params;
 
   const router = useRouter();
   const trpc = useTRPC();
 
+  const sorting: SortingState = params.sort;
+
   const { data, isPending, error } = useQuery(
     trpc.admin.client.list.queryOptions({
-      globalSearch,
-      page,
-      perPage,
-      sort: params.sort,
+      ...params,
     }),
   );
 
@@ -97,6 +101,7 @@ export function ClientsTable() {
             .replace(CPF_FORMAT_REGEX, "$1.$2.$3-$4");
           return <span className="font-mono text-sm">{formatted}</span>;
         },
+        enableSorting: false,
         header: ({ column }) => (
           <DataTableColumnHeader column={column}>
             <div className="flex items-center gap-2">
@@ -106,7 +111,7 @@ export function ClientsTable() {
           </DataTableColumnHeader>
         ),
       }),
-      columnHelper.accessor("cashback", {
+      columnHelper.accessor("totalAvailableCashback", {
         cell: (info) => (
           <div className="text-left font-medium">
             {formatCurrency("BRL", info.getValue())}
@@ -146,8 +151,8 @@ export function ClientsTable() {
   );
 
   const pagination = {
-    pageIndex: page - 1,
-    pageSize: perPage,
+    pageIndex: params.page - 1,
+    pageSize: params.perPage,
   };
 
   const table = useReactTable({
@@ -156,6 +161,7 @@ export function ClientsTable() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     manualPagination: true,
+    manualSorting: true,
     onPaginationChange: (updater) => {
       const newPagination =
         typeof updater === "function" ? updater(pagination) : updater;
@@ -164,19 +170,47 @@ export function ClientsTable() {
         perPage: newPagination.pageSize,
       });
     },
+    onSortingChange: (updater) => {
+      const newSorting =
+        typeof updater === "function" ? updater(sorting) : updater;
+
+      type ClientSortId = (typeof CLIENTS_SORT_FIELDS)[number];
+      const isClientSortId = (id: string): id is ClientSortId =>
+        (CLIENTS_SORT_FIELDS as readonly string[]).includes(id);
+
+      const normalizedSort: TClientsSortSchema[] = newSorting
+        .filter((item): item is { id: ClientSortId; desc: boolean } =>
+          isClientSortId(item.id),
+        )
+        .map((item) => ({ desc: item.desc, id: item.id }));
+
+      setParams({
+        page: 1,
+        sort: normalizedSort.length ? normalizedSort : null,
+      });
+    },
     pageCount: data?.pageCount ?? 0,
     state: {
       pagination,
+      sorting,
     },
   });
 
-  const isFiltered = globalSearch;
+  const isDefaultSort =
+    JSON.stringify(params.sort) === JSON.stringify(DEFAULT_CLIENT_TABLE_SORT);
+
+  const isFiltered =
+    params.globalSearch !== "" ||
+    params.page !== 1 ||
+    params.perPage !== 50 ||
+    !isDefaultSort;
 
   const handleResetFilters = () => {
     setParams({
       globalSearch: null,
       page: 1,
       perPage: 50,
+      sort: null,
     });
   };
 
@@ -200,7 +234,7 @@ export function ClientsTable() {
                 });
               }}
               placeholder="Buscar..."
-              value={globalSearch}
+              value={params.globalSearch}
             />
           </InputGroup>
         </div>

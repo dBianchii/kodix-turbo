@@ -8,9 +8,9 @@ import { createLoader } from "nuqs/server";
 import PageWrapper, { LoadingPage } from "~/app/_components/page-wrapper";
 
 import { ClientsTable } from "./_components/clients-table";
-import { createClientsSearchParamsParsers } from "./_components/clients-url-state";
+import { clientsSearchParamsParserMap } from "./_components/clients-url-state";
 
-const loadSearchParams = createLoader(createClientsSearchParamsParsers);
+const loadSearchParams = createLoader(clientsSearchParamsParserMap);
 
 export const metadata: Metadata = {
   title: "Clientes | Cash Admin",
@@ -38,14 +38,7 @@ async function PageContent({
 
   const params = await loadSearchParams(searchParams);
 
-  prefetch(
-    trpc.admin.client.list.queryOptions({
-      globalSearch: params.globalSearch,
-      page: params.page,
-      perPage: params.perPage,
-      sort: params.sort,
-    }),
-  );
+  prefetch(trpc.admin.client.list.queryOptions(params));
 
   return (
     <HydrateClient>

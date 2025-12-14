@@ -8,7 +8,8 @@
     "./trpc/react/server": "./src/trpc/react/server.tsx",
     "./crons/*": "./src/crons/*.ts",
     "./trpc/schemas/*": "./src/trpc/schemas/*.ts",
-    "./constants": "./src/constants.ts"
+    "./constants": "./src/constants.ts",
+    "./utils/*": "./src/utils/*.ts"
   },
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",

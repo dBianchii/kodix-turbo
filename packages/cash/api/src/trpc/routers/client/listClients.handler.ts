@@ -1,11 +1,13 @@
 import type z from "zod";
 import { db } from "@cash/db/client";
-import { clients } from "@cash/db/schema";
+import { cashbacks, clients, voucherCashbacks } from "@cash/db/schema";
 import { getVectorSearchFilter } from "@kodix/drizzle-utils";
-import { asc, count, desc, ilike, or, sql } from "drizzle-orm";
+import { asc, count, desc, eq, gt, ilike, or, sql, sum } from "drizzle-orm";
 
 import type { TAdminProcedureContext } from "../../procedures";
 import type { ZListClientsInputSchema } from "../../schemas/client";
+import { getTotalAvailableCashback } from "../../../utils/cashback-utils";
+import { DEFAULT_CLIENT_TABLE_SORT } from "../../schemas/client";
 
 interface ListClientsOptions {
   ctx: TAdminProcedureContext;
@@ -13,12 +15,11 @@ interface ListClientsOptions {
 }
 
 export const listClientsHandler = async ({ input }: ListClientsOptions) => {
-  const offset = (input.page - 1) * input.perPage;
-
-  const [column, order] = input.sort.split(".").filter(Boolean) as [
-    keyof typeof clients.$inferSelect | "cashback" | undefined,
-    "asc" | "desc" | undefined,
-  ];
+  // biome-ignore lint/style/noNonNullAssertion: Safe to do so
+  const primarySort = input.sort[0] ?? DEFAULT_CLIENT_TABLE_SORT[0]!;
+  // biome-ignore lint/style/noNonNullAssertion: Safe to do so
+  const column = primarySort?.id ?? DEFAULT_CLIENT_TABLE_SORT[0]!.id;
+  const order = primarySort?.desc ? "desc" : "asc";
 
   const globalSearchFilter = input.globalSearch
     ? or(
@@ -28,39 +29,92 @@ export const listClientsHandler = async ({ input }: ListClientsOptions) => {
       )
     : undefined;
 
-  const cashbackSum = sql<number>`COALESCE((SELECT SUM("cashback"."amount") FROM "cashback" WHERE "cashback"."clientId" = "clients"."id"), 0)`;
+  const voucherCashbackTotals = db
+    .select({
+      cashbackId: voucherCashbacks.cashbackId,
+      totalRedeemed: sum(voucherCashbacks.amount).as("totalRedeemed"),
+    })
+    .from(voucherCashbacks)
+    .groupBy(voucherCashbacks.cashbackId)
+    .as("vct");
+
+  const cabAlias = "cab";
+
+  const cashbackAvailableByClient = db
+    .select({
+      clientId: cashbacks.clientId,
+      totalAvailable: sum(
+        sql<number>`GREATEST(0, ${cashbacks.amount} - COALESCE(${voucherCashbackTotals.totalRedeemed}, 0))`,
+      ).as("totalAvailable"),
+    })
+    .from(cashbacks)
+    .leftJoin(
+      voucherCashbackTotals,
+      eq(voucherCashbackTotals.cashbackId, cashbacks.id),
+    )
+    .where(gt(cashbacks.expiresAt, sql`NOW()`))
+    .groupBy(cashbacks.clientId)
+    .as(cabAlias);
+
+  const totalAvailableCashback = sql<number>`COALESCE(
+    (
+      SELECT ${sql.raw(cabAlias)}."totalAvailable"
+      FROM ${cashbackAvailableByClient}
+      WHERE ${sql.raw(cabAlias)}."clientId" = ${clients.id}
+    ),
+    0
+  )`;
 
   const getOrderBy = () => {
-    if (column === "cashback") {
-      return order === "asc" ? asc(cashbackSum) : desc(cashbackSum);
+    const getOrderFn = (value: Parameters<typeof asc>[0]) =>
+      order === "asc" ? asc(value) : desc(value);
+
+    if (column === "totalAvailableCashback") {
+      return getOrderFn(totalAvailableCashback);
     }
     if (column && column in clients) {
-      return order === "asc" ? asc(clients[column]) : desc(clients[column]);
+      return getOrderFn(clients[column]);
     }
-    return desc(cashbackSum);
+    return desc(totalAvailableCashback);
   };
 
   const result = await db.transaction(async (tx) => {
-    const data = await tx.query.clients.findMany({
-      extras: {
-        cashback: cashbackSum.as("cashback"),
-      },
-      limit: input.perPage,
-      offset,
-      orderBy: getOrderBy(),
-      where: globalSearchFilter,
-    });
-
-    const total = await tx
-      .select({ count: count() })
-      .from(clients)
-      .where(globalSearchFilter)
-      .then((res) => res[0]?.count ?? 0);
+    const [data, total] = await Promise.all([
+      tx.query.clients.findMany({
+        limit: input.perPage,
+        offset: (input.page - 1) * input.perPage,
+        orderBy: getOrderBy(),
+        where: globalSearchFilter,
+        with: {
+          Cashbacks: {
+            columns: {
+              amount: true,
+              expiresAt: true,
+            },
+            with: {
+              VoucherCashbacks: {
+                columns: {
+                  amount: true,
+                },
+              },
+            },
+          },
+        },
+      }),
+      tx
+        .select({ count: count() })
+        .from(clients)
+        .where(globalSearchFilter)
+        .then((res) => res[0]?.count ?? 0),
+    ]);
 
     const pageCount = Math.ceil(total / input.perPage);
 
     return {
-      data,
+      data: data.map((client) => ({
+        ...client,
+        totalAvailableCashback: getTotalAvailableCashback([client]),
+      })),
       pageCount,
     };
   });

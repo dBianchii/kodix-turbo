@@ -46,11 +46,15 @@
   },
   "devDependencies": {
     "@cash/db": "workspace:*",
+    "@kodix/auth": "workspace:*",
+    "@kodix/dayjs": "workspace:*",
+    "@kodix/testing": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@tailwindcss/postcss": "catalog:tailwindcss",
     "@types/node": "catalog:",
     "@types/react": "catalog:react",
     "@types/react-dom": "catalog:react",
+    "drizzle-seed": "catalog:",
     "tailwindcss": "catalog:tailwindcss",
     "typescript": "catalog:"
   }

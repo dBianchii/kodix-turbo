@@ -14,7 +14,7 @@
     "push": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' pnpm drizzle-kit push",
     "push:production": "pnpm tsx ./scripts/push-production.ts",
     "studio": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' pnpm drizzle-kit studio",
-    "seed": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' pnpm tsx ./scripts/seed.ts",
+    "seed": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun ../../../apps/cash/app/seed/index.ts",
     "tsc": "tsc --noEmit",
     "wait-for-db": "while ! nc -z localhost 5432; do sleep 1; done"
   },
@@ -23,10 +23,12 @@
     "@kodix/shared": "workspace:*",
     "@neondatabase/serverless": "catalog:",
     "@t3-oss/env-core": "catalog:",
+    "@kodix/testing": "workspace:*",
     "drizzle-orm": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@kodix/auth": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "drizzle-kit": "catalog:",
