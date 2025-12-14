@@ -16,6 +16,13 @@ export const runSeed = async ({
   seedFn: () => Promise<void>;
   name: AppName;
 }) => {
+  // biome-ignore lint/style/noNonNullAssertion: fix me?
+  if (new URL(process.env.DATABASE_URL!).hostname !== "localhost") {
+    throw new Error(
+      "Uncomment this line to reset the database in a live environment. Proceed with caution.",
+    );
+  }
+
   const spinner = ora(`🧨 Resetting ${name} database...`).start();
   try {
     await reset(db, schemaToReset);
