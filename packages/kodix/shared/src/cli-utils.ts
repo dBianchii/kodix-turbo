@@ -92,3 +92,31 @@ export const execCommand = (
       }
     });
   });
+
+const ARG_PARSER_REGEX = /^--([^=]+)=(.*)$/;
+const parseArgs = () => {
+  const args: Record<string, string> = {};
+  for (const arg of process.argv.slice(2)) {
+    const match = arg.match(ARG_PARSER_REGEX);
+    if (match) {
+      // biome-ignore lint/style/noNonNullAssertion: Safe to do so
+      args[match[1]!] = match[2]!;
+    }
+  }
+  return args;
+};
+
+const ENVIRONMENTS = ["production", "preview"] as const;
+export const getEnvironmentFromArguments = () => {
+  const args = parseArgs();
+  const env = args.environment;
+  if (!env) {
+    throw new Error("--environment flag is required (production or preview)");
+  }
+  if (!ENVIRONMENTS.includes(env as (typeof ENVIRONMENTS)[number])) {
+    throw new Error(
+      `Invalid environment: ${env}. Must be one of: ${ENVIRONMENTS.join(", ")}`,
+    );
+  }
+  return env as (typeof ENVIRONMENTS)[number];
+};

@@ -1,46 +1,23 @@
 import fs from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { execCommand, pushDatabaseSchema } from "@kodix/shared/cli-utils";
+import {
+  execCommand,
+  getEnvironmentFromArguments,
+  pushDatabaseSchema,
+} from "@kodix/shared/cli-utils";
 
 const DATABASE_URL_GRABBER_REGEX = /DATABASE_URL=["']?([^"'\n]+)["']?/;
-const ARG_PARSER_REGEX = /^--([^=]+)=(.*)$/;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const APP_ROOT = resolve(__dirname, "../../../../apps/cash/app");
 
-const parseArgs = () => {
-  const args: Record<string, string> = {};
-  for (const arg of process.argv.slice(2)) {
-    const match = arg.match(ARG_PARSER_REGEX);
-    if (match) {
-      // biome-ignore lint/style/noNonNullAssertion: Safe to do so
-      args[match[1]!] = match[2]!;
-    }
-  }
-  return args;
-};
-
-const getEnvironment = () => {
-  const args = parseArgs();
-  const env = args.environment;
-  if (!env) {
-    throw new Error("--environment flag is required (production or preview)");
-  }
-  if (env !== "production" && env !== "preview") {
-    throw new Error(
-      `Invalid environment: ${env}. Must be 'production' or 'preview'`,
-    );
-  }
-  return env as "production" | "preview";
-};
-
 const deleteEnvFile = (envFilePath: string) =>
   execCommand(`rm -f ${envFilePath}`);
 
 async function main() {
-  const environment = getEnvironment();
+  const environment = getEnvironmentFromArguments();
   const envFileName = `.env.${environment}`;
   const ENV_FILE_PATH = resolve(APP_ROOT, envFileName);
 
