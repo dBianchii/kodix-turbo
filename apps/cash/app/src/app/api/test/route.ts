@@ -1,6 +1,11 @@
 import { connection } from "next/server";
+import { captureException } from "@kodix/posthog";
 
 export async function GET() {
   await connection();
-  throw new Error("Test error");
+  try {
+    throw new Error("This is a test error in the test route");
+  } catch (error) {
+    captureException(error);
+  }
 }
