@@ -3,7 +3,7 @@ import readline from "node:readline";
 
 type AppName = "kdx" | "cash";
 
-const confirm = (question: string) => {
+export const confirm = (question: string) => {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -107,16 +107,66 @@ const parseArgs = () => {
 };
 
 const ENVIRONMENTS = ["production", "preview"] as const;
+export type Environment = (typeof ENVIRONMENTS)[number];
+
 export const getEnvironmentFromArguments = () => {
   const args = parseArgs();
   const env = args.environment;
   if (!env) {
     throw new Error("--environment flag is required (production or preview)");
   }
-  if (!ENVIRONMENTS.includes(env as (typeof ENVIRONMENTS)[number])) {
+  if (!ENVIRONMENTS.includes(env as Environment)) {
     throw new Error(
       `Invalid environment: ${env}. Must be one of: ${ENVIRONMENTS.join(", ")}`,
     );
   }
-  return env as (typeof ENVIRONMENTS)[number];
+  return env as Environment;
+};
+
+export const tryGetEnvironmentFromArguments = (): Environment | undefined => {
+  const args = parseArgs();
+  const env = args.environment;
+  if (!env) return;
+  if (!ENVIRONMENTS.includes(env as Environment)) {
+    throw new Error(
+      `Invalid environment: ${env}. Must be one of: ${ENVIRONMENTS.join(", ")}`,
+    );
+  }
+  return env as Environment;
+};
+
+const DATABASE_URL_GRABBER_REGEX = /DATABASE_URL=["']?([^"'\n]+)["']?/;
+
+export const fetchDatabaseUrlFromVercel = async ({
+  appRoot,
+  environment,
+}: {
+  appRoot: string;
+  environment: Environment;
+}) => {
+  const fs = await import("node:fs/promises");
+  const { resolve } = await import("node:path");
+
+  const envFileName = `.env.${environment}`;
+  const envFilePath = resolve(appRoot, envFileName);
+
+  try {
+    await execCommand(
+      `vercel env pull ${envFileName} --environment=${environment} --cwd=${appRoot}`,
+    );
+    const envFile = await fs.readFile(envFilePath, "utf8");
+
+    const databaseUrl = envFile
+      .match(DATABASE_URL_GRABBER_REGEX)?.[1]
+      ?.trim()
+      .replace(/^["']|["']$/g, "");
+
+    if (!databaseUrl) {
+      throw new Error(`DATABASE_URL not found in ${envFileName}`);
+    }
+
+    return databaseUrl;
+  } finally {
+    await execCommand(`rm -f ${envFilePath}`);
+  }
 };

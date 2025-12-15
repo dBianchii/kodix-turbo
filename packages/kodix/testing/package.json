@@ -12,8 +12,10 @@
     "test:watch": "vitest --watch"
   },
   "dependencies": {
+    "@kodix/shared": "workspace:*",
     "drizzle-seed": "catalog:",
-    "drizzle-orm": "catalog:"
+    "drizzle-orm": "catalog:",
+    "ora": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",

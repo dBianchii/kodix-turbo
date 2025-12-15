@@ -15,6 +15,7 @@
     "push:cash:production": "pnpm -F @cash/db push:production",
     "seed:kdx": "turbo @kdx/db-dev#dev @kdx/db#seed",
     "seed:cash": "turbo @cash/db-dev#dev @cash/db#seed",
+    "seed:cash:preview": "pnpm -F @cash/db seed:preview",
     "check": "biome check .",
     "check:write": "biome check --write .",
     "check:unsafe": "biome check --write --unsafe .",
