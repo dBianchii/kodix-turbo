@@ -26,7 +26,6 @@ export const onRequestError: Instrumentation.onRequestError = async (
   errorRequest,
   _errorContext,
 ) => {
-  console.log("HELLO I AM IN THE ONREQUESTERROR FUNCTION");
   if (process.env.NEXT_RUNTIME !== "nodejs") {
     return;
   }
@@ -35,10 +34,6 @@ export const onRequestError: Instrumentation.onRequestError = async (
     //Skip in development
     return;
   }
-
-  console.log(
-    "HELLO I AM IN THE ONREQUESTERROR FUNCTION, AFTER THE DEVELOPMENT CHECK",
-  );
 
   const { getPostHogServer } = await import("@kodix/posthog");
   const posthog = getPostHogServer();
@@ -66,7 +61,4 @@ export const onRequestError: Instrumentation.onRequestError = async (
 
   posthog.captureException(error, distinctId || undefined);
   await posthog.shutdown();
-  console.log(
-    "HELLO I AM IN THE ONREQUESTERROR FUNCTION, AFTER THE POSTHOG SHUTDOWN",
-  );
 };

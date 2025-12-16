@@ -2,7 +2,6 @@ import type { clients, sales } from "@cash/db/schema";
 import { db } from "@cash/db/client";
 import { caRepository, cashbackRepository } from "@cash/db/repositories";
 import dayjs from "@kodix/dayjs";
-import { captureException } from "@kodix/posthog";
 import { uniqBy } from "es-toolkit";
 
 import {
@@ -39,34 +38,23 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   let totalItens = 0;
   const pageSize = 100;
 
-  try {
-    do {
-      const { itens, total_itens } = await listContaAzulSales({
-        data_fim,
-        data_inicio,
-        pagina: currentPage,
-        tamanho_pagina: pageSize,
-      });
-
-      const filteredItens = itens.filter((item) => item.itens === "PRODUCT"); // Exclude services
-
-      if (filteredItens?.length) {
-        allCASales = [...allCASales, ...filteredItens];
-      }
-
-      totalItens = total_itens;
-      currentPage++;
-    } while (allCASales.length < totalItens);
-  } catch (error) {
-    captureException(error, undefined, {
-      context: "listContaAzulSales",
-      currentPage,
+  do {
+    const { itens, total_itens } = await listContaAzulSales({
       data_fim,
       data_inicio,
-      totalItens,
+      pagina: currentPage,
+      tamanho_pagina: pageSize,
     });
-    throw error;
-  }
+
+    const filteredItens = itens.filter((item) => item.itens === "PRODUCT"); // Exclude services
+
+    if (filteredItens?.length) {
+      allCASales = [...allCASales, ...filteredItens];
+    }
+
+    totalItens = total_itens;
+    currentPage++;
+  } while (allCASales.length < totalItens);
 
   if (!allCASales.length) {
     return new Response("No recent sales found. Skipping", {
@@ -77,40 +65,32 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   const allCASaleItems = (
     await Promise.all(
       allCASales.map(async (caSale) => {
-        try {
-          // Fetch all pages of sale items
-          const saleItems: Awaited<
-            ReturnType<typeof listSaleItemsBySaleId>
-          >["itens"] = [];
-          let currentItemPage = 1;
-          let totalSaleItems = 0;
+        // Fetch all pages of sale items
+        const saleItems: Awaited<
+          ReturnType<typeof listSaleItemsBySaleId>
+        >["itens"] = [];
+        let currentItemPage = 1;
+        let totalSaleItems = 0;
 
-          do {
-            const { itens, itens_totais } = await listSaleItemsBySaleId({
-              id_venda: caSale.id,
-              pagina: currentItemPage,
-              tamanho_pagina: 100,
-            });
-
-            if (itens?.length) {
-              saleItems.push(...itens);
-            }
-
-            totalSaleItems = itens_totais;
-            currentItemPage++;
-          } while (saleItems.length < totalSaleItems);
-
-          return saleItems.map((item) => ({
-            ...item,
-            caSaleId: caSale.id,
-          }));
-        } catch (error) {
-          captureException(error, undefined, {
-            caSaleId: caSale.id,
-            context: "listSaleItemsBySaleId",
+        do {
+          const { itens, itens_totais } = await listSaleItemsBySaleId({
+            id_venda: caSale.id,
+            pagina: currentItemPage,
+            tamanho_pagina: 100,
           });
-          return [];
-        }
+
+          if (itens?.length) {
+            saleItems.push(...itens);
+          }
+
+          totalSaleItems = itens_totais;
+          currentItemPage++;
+        } while (saleItems.length < totalSaleItems);
+
+        return saleItems.map((item) => ({
+          ...item,
+          caSaleId: caSale.id,
+        }));
       }),
     )
   ).flat();
@@ -119,32 +99,24 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   const products = (
     await Promise.all(
       uniqueProductIds.map(async (item) => {
-        try {
-          const product = await getProductById(item.id_item);
+        const product = await getProductById(item.id_item);
 
+        if (
+          product.estoque.valor_venda <= 0 ||
+          !Number.isFinite(product.estoque.valor_venda)
+        ) {
           // Validate product price
-          if (
-            product.estoque.valor_venda <= 0 ||
-            !Number.isFinite(product.estoque.valor_venda)
-          ) {
-            // biome-ignore lint/suspicious/noConsole: Logging for observability
-            console.warn(
-              `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`,
-            );
-            return null;
-          }
-
-          return {
-            caProductId: product.id,
-            valor_venda: product.estoque.valor_venda,
-          };
-        } catch (error) {
-          captureException(error, undefined, {
-            context: "getProductById",
-            productId: item.id_item,
-          });
+          // biome-ignore lint/suspicious/noConsole: Logging for observability
+          console.warn(
+            `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`,
+          );
           return null;
         }
+
+        return {
+          caProductId: product.id,
+          valor_venda: product.estoque.valor_venda,
+        };
       }),
     )
   ).filter((p): p is NonNullable<typeof p> => p !== null);
@@ -211,31 +183,21 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   let currentClientPage = 1;
   let totalClients = 0;
 
-  try {
-    do {
-      const { items, totalItems } = await listContaAzulPersons({
-        com_endereco: true,
-        ids: uniqueClientIds,
-        pagina: currentClientPage,
-        tamanho_pagina: pageSize,
-      });
-
-      if (items?.length) {
-        allCAClients = [...allCAClients, ...items];
-      }
-
-      totalClients = totalItems;
-      currentClientPage++;
-    } while (allCAClients.length < totalClients);
-  } catch (error) {
-    captureException(error, undefined, {
-      context: "listContaAzulPersons",
-      currentClientPage,
-      totalClients,
-      uniqueClientIds,
+  do {
+    const { items, totalItems } = await listContaAzulPersons({
+      com_endereco: true,
+      ids: uniqueClientIds,
+      pagina: currentClientPage,
+      tamanho_pagina: pageSize,
     });
-    throw error;
-  }
+
+    if (items?.length) {
+      allCAClients = [...allCAClients, ...items];
+    }
+
+    totalClients = totalItems;
+    currentClientPage++;
+  } while (allCAClients.length < totalClients);
 
   // Filter out anonymous clients (without document)
   const clientsWithDocument = allCAClients.filter(
