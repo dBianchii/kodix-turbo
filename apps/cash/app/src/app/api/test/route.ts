@@ -6,6 +6,6 @@ export async function GET() {
   try {
     throw new Error("This is a test error in the test route");
   } catch (error) {
-    captureException(error);
+    await captureException(error);
   }
 }

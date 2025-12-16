@@ -13,11 +13,12 @@ type CaptureExceptionParams = Parameters<
   ReturnType<typeof getPostHogServer>["captureException"]
 >;
 
-export const captureException = (...args: CaptureExceptionParams) => {
+export const captureException = async (...args: CaptureExceptionParams) => {
   // Don't send any events to PostHog locally
   if (process.env.NODE_ENV === "development") {
     return;
   }
 
   getPostHogServer().captureException(...args);
+  await getPostHogServer().shutdown();
 };
