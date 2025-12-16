@@ -66,4 +66,7 @@ export const onRequestError: Instrumentation.onRequestError = async (
 
   posthog.captureException(error, distinctId || undefined);
   await posthog.flush();
+  console.log(
+    "HELLO I AM IN THE ONREQUESTERROR FUNCTION, AFTER THE POSTHOG FLUSH",
+  );
 };
