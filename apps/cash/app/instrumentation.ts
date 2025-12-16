@@ -1,6 +1,6 @@
 import type { Instrumentation } from "next";
 
-export async function register() {
+export function register() {
   // No-op for initialization
 }
 
@@ -26,6 +26,7 @@ export const onRequestError: Instrumentation.onRequestError = async (
   errorRequest,
   _errorContext,
 ) => {
+  console.log("HELLO I AM IN THE ONREQUESTERROR FUNCTION");
   if (process.env.NEXT_RUNTIME !== "nodejs") {
     return;
   }
@@ -34,6 +35,10 @@ export const onRequestError: Instrumentation.onRequestError = async (
     //Skip in development
     return;
   }
+
+  console.log(
+    "HELLO I AM IN THE ONREQUESTERROR FUNCTION, AFTER THE DEVELOPMENT CHECK",
+  );
 
   const { getPostHogServer } = await import("@kodix/posthog");
   const posthog = getPostHogServer();
