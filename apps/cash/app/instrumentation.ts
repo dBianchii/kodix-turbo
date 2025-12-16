@@ -60,6 +60,5 @@ export const onRequestError: Instrumentation.onRequestError = async (
   }
 
   posthog.captureException(error, distinctId || undefined);
-  console.log("Exception captured, shutting down PostHog");
-  await posthog.shutdown();
+  await posthog.flush();
 };
