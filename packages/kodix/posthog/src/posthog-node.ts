@@ -19,6 +19,8 @@ export const captureException = async (...args: CaptureExceptionParams) => {
     return;
   }
 
-  getPostHogServer().captureException(...args);
-  await getPostHogServer().shutdown();
+  const posthog = getPostHogServer();
+  posthog.captureException(...args);
+  console.log("Exception captured, shutting down PostHog");
+  await posthog.shutdown();
 };
