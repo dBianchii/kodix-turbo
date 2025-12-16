@@ -1,5 +1,3 @@
-import type { Instrumentation } from "next";
-
 export function register() {
   // No-op for initialization
 }
@@ -21,9 +19,12 @@ export function register() {
  */
 const POSTHOG_COOKIE_REGEX = /ph_phc_.*?_posthog=([^;]+)/;
 
-export const onRequestError: Instrumentation.onRequestError = async (
+export const onRequestError = async (
+  // @ts-expect-error
   error,
+  // @ts-expect-error
   errorRequest,
+  // @ts-expect-error
   _errorContext,
 ) => {
   console.log("HELLO I AM IN THE ONREQUESTERROR FUNCTION");
@@ -42,7 +43,8 @@ export const onRequestError: Instrumentation.onRequestError = async (
 
   const { getPostHogServer } = await import("@kodix/posthog");
   const posthog = getPostHogServer();
-  let distinctId: string | null = null;
+
+  let distinctId = null;
   if (errorRequest.headers.cookie) {
     // Normalize multiple cookie arrays to string
     const cookieString = Array.isArray(errorRequest.headers.cookie)
