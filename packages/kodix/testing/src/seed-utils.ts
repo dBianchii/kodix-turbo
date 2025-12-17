@@ -1,4 +1,3 @@
-import type { PgDatabase } from "drizzle-orm/pg-core";
 import {
   confirm,
   fetchDatabaseUrlFromVercel,
@@ -9,7 +8,9 @@ import ora from "ora";
 
 type AppName = "Cash";
 
-export const runSeed = async ({
+type ResetDb = Parameters<typeof reset>[0];
+
+export const runSeed = async <DB extends ResetDb>({
   appRoot,
   createDb,
   schemaToReset,
@@ -17,11 +18,9 @@ export const runSeed = async ({
   name,
 }: {
   appRoot: string;
-  // biome-ignore lint/suspicious/noExplicitAny: Intentional any
-  createDb: () => Promise<PgDatabase<any, any>>;
+  createDb: () => Promise<DB>;
   schemaToReset: Parameters<typeof reset>[1];
-  // biome-ignore lint/suspicious/noExplicitAny: Intentional any
-  seedFn: (db: PgDatabase<any, any>) => Promise<void>;
+  seedFn: (db: DB) => Promise<void>;
   name: AppName;
 }) => {
   const liveEnvironment = tryGetEnvironmentFromArguments();
