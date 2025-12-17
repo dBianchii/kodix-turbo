@@ -365,5 +365,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
     `[CA Sales Sync] Created Cashbacks: ${cashbackCreatedCount}, Updated Cashbacks: ${cashbackUpdatedCount}`,
   );
 
+  await posthog.shutdown();
+
   return new Response(`Upserted ${upsertedSales.length} sales`);
 });
