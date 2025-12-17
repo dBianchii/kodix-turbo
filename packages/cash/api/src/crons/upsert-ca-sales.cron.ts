@@ -2,6 +2,7 @@ import type { clients, sales } from "@cash/db/schema";
 import { db } from "@cash/db/client";
 import { caRepository, cashbackRepository } from "@cash/db/repositories";
 import dayjs from "@kodix/dayjs";
+import { getPostHogServer } from "@kodix/posthog";
 import { uniqBy } from "es-toolkit";
 
 import {
@@ -28,6 +29,7 @@ function toReais(amount: number) {
 }
 
 export const upsertCASalesCron = verifiedQstashCron(async () => {
+  const posthog = getPostHogServer();
   const now = dayjs().tz("America/Sao_Paulo");
 
   const data_inicio = now.subtract(LOOKBACK_DAYS, "day").format("YYYY-MM-DD");
@@ -65,32 +67,40 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   const allCASaleItems = (
     await Promise.all(
       allCASales.map(async (caSale) => {
-        // Fetch all pages of sale items
-        const saleItems: Awaited<
-          ReturnType<typeof listSaleItemsBySaleId>
-        >["itens"] = [];
-        let currentItemPage = 1;
-        let totalSaleItems = 0;
+        try {
+          // Fetch all pages of sale items
+          const saleItems: Awaited<
+            ReturnType<typeof listSaleItemsBySaleId>
+          >["itens"] = [];
+          let currentItemPage = 1;
+          let totalSaleItems = 0;
 
-        do {
-          const { itens, itens_totais } = await listSaleItemsBySaleId({
-            id_venda: caSale.id,
-            pagina: currentItemPage,
-            tamanho_pagina: 100,
+          do {
+            const { itens, itens_totais } = await listSaleItemsBySaleId({
+              id_venda: caSale.id,
+              pagina: currentItemPage,
+              tamanho_pagina: 100,
+            });
+
+            if (itens?.length) {
+              saleItems.push(...itens);
+            }
+
+            totalSaleItems = itens_totais;
+            currentItemPage++;
+          } while (saleItems.length < totalSaleItems);
+
+          return saleItems.map((item) => ({
+            ...item,
+            caSaleId: caSale.id,
+          }));
+        } catch (error) {
+          posthog.captureException(error, undefined, {
+            caSaleId: caSale.id,
+            context: "listSaleItemsBySaleId",
           });
-
-          if (itens?.length) {
-            saleItems.push(...itens);
-          }
-
-          totalSaleItems = itens_totais;
-          currentItemPage++;
-        } while (saleItems.length < totalSaleItems);
-
-        return saleItems.map((item) => ({
-          ...item,
-          caSaleId: caSale.id,
-        }));
+          return [];
+        }
       }),
     )
   ).flat();
@@ -99,24 +109,32 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   const products = (
     await Promise.all(
       uniqueProductIds.map(async (item) => {
-        const product = await getProductById(item.id_item);
+        try {
+          const product = await getProductById(item.id_item);
 
-        if (
-          product.estoque.valor_venda <= 0 ||
-          !Number.isFinite(product.estoque.valor_venda)
-        ) {
-          // Validate product price
-          // biome-ignore lint/suspicious/noConsole: Logging for observability
-          console.warn(
-            `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`,
-          );
+          if (
+            product.estoque.valor_venda <= 0 ||
+            !Number.isFinite(product.estoque.valor_venda)
+          ) {
+            // Validate product price
+            // biome-ignore lint/suspicious/noConsole: Logging for observability
+            console.warn(
+              `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`,
+            );
+            return null;
+          }
+
+          return {
+            caProductId: product.id,
+            valor_venda: product.estoque.valor_venda,
+          };
+        } catch (error) {
+          posthog.captureException(error, undefined, {
+            context: "getProductById",
+            productId: item.id_item,
+          });
           return null;
         }
-
-        return {
-          caProductId: product.id,
-          valor_venda: product.estoque.valor_venda,
-        };
       }),
     )
   ).filter((p): p is NonNullable<typeof p> => p !== null);
