@@ -2,7 +2,7 @@ import type { clients, sales } from "@cash/db/schema";
 import { db } from "@cash/db/client";
 import { caRepository, cashbackRepository } from "@cash/db/repositories";
 import dayjs from "@kodix/dayjs";
-import { captureException } from "@kodix/posthog";
+import { getPostHogServer } from "@kodix/posthog";
 import { uniqBy } from "es-toolkit";
 
 import {
@@ -29,6 +29,7 @@ function toReais(amount: number) {
 }
 
 export const upsertCASalesCron = verifiedQstashCron(async () => {
+  const posthog = getPostHogServer();
   const now = dayjs().tz("America/Sao_Paulo");
 
   const data_inicio = now.subtract(LOOKBACK_DAYS, "day").format("YYYY-MM-DD");
@@ -39,34 +40,23 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   let totalItens = 0;
   const pageSize = 100;
 
-  try {
-    do {
-      const { itens, total_itens } = await listContaAzulSales({
-        data_fim,
-        data_inicio,
-        pagina: currentPage,
-        tamanho_pagina: pageSize,
-      });
-
-      const filteredItens = itens.filter((item) => item.itens === "PRODUCT"); // Exclude services
-
-      if (filteredItens?.length) {
-        allCASales = [...allCASales, ...filteredItens];
-      }
-
-      totalItens = total_itens;
-      currentPage++;
-    } while (allCASales.length < totalItens);
-  } catch (error) {
-    captureException(error, undefined, {
-      context: "listContaAzulSales",
-      currentPage,
+  do {
+    const { itens, total_itens } = await listContaAzulSales({
       data_fim,
       data_inicio,
-      totalItens,
+      pagina: currentPage,
+      tamanho_pagina: pageSize,
     });
-    throw error;
-  }
+
+    const filteredItens = itens.filter((item) => item.itens === "PRODUCT"); // Exclude services
+
+    if (filteredItens?.length) {
+      allCASales = [...allCASales, ...filteredItens];
+    }
+
+    totalItens = total_itens;
+    currentPage++;
+  } while (allCASales.length < totalItens);
 
   if (!allCASales.length) {
     return new Response("No recent sales found. Skipping", {
@@ -105,7 +95,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             caSaleId: caSale.id,
           }));
         } catch (error) {
-          captureException(error, undefined, {
+          posthog.captureException(error, undefined, {
             caSaleId: caSale.id,
             context: "listSaleItemsBySaleId",
           });
@@ -122,11 +112,11 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
         try {
           const product = await getProductById(item.id_item);
 
-          // Validate product price
           if (
             product.estoque.valor_venda <= 0 ||
             !Number.isFinite(product.estoque.valor_venda)
           ) {
+            // Validate product price
             // biome-ignore lint/suspicious/noConsole: Logging for observability
             console.warn(
               `Product ${item.id_item} has invalid price: ${product.estoque.valor_venda}, skipping`,
@@ -139,7 +129,7 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
             valor_venda: product.estoque.valor_venda,
           };
         } catch (error) {
-          captureException(error, undefined, {
+          posthog.captureException(error, undefined, {
             context: "getProductById",
             productId: item.id_item,
           });
@@ -211,31 +201,21 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   let currentClientPage = 1;
   let totalClients = 0;
 
-  try {
-    do {
-      const { items, totalItems } = await listContaAzulPersons({
-        com_endereco: true,
-        ids: uniqueClientIds,
-        pagina: currentClientPage,
-        tamanho_pagina: pageSize,
-      });
-
-      if (items?.length) {
-        allCAClients = [...allCAClients, ...items];
-      }
-
-      totalClients = totalItems;
-      currentClientPage++;
-    } while (allCAClients.length < totalClients);
-  } catch (error) {
-    captureException(error, undefined, {
-      context: "listContaAzulPersons",
-      currentClientPage,
-      totalClients,
-      uniqueClientIds,
+  do {
+    const { items, totalItems } = await listContaAzulPersons({
+      com_endereco: true,
+      ids: uniqueClientIds,
+      pagina: currentClientPage,
+      tamanho_pagina: pageSize,
     });
-    throw error;
-  }
+
+    if (items?.length) {
+      allCAClients = [...allCAClients, ...items];
+    }
+
+    totalClients = totalItems;
+    currentClientPage++;
+  } while (allCAClients.length < totalClients);
 
   // Filter out anonymous clients (without document)
   const clientsWithDocument = allCAClients.filter(
@@ -384,6 +364,8 @@ export const upsertCASalesCron = verifiedQstashCron(async () => {
   console.log(
     `[CA Sales Sync] Created Cashbacks: ${cashbackCreatedCount}, Updated Cashbacks: ${cashbackUpdatedCount}`,
   );
+
+  await posthog.shutdown();
 
   return new Response(`Upserted ${upsertedSales.length} sales`);
 });

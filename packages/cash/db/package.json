@@ -12,9 +12,11 @@
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "push": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' pnpm drizzle-kit push",
-    "push:production": "pnpm tsx ./scripts/push-production.ts",
+    "push:preview": "pnpm tsx ./scripts/push-live.ts --environment=preview",
+    "push:production": "pnpm tsx ./scripts/push-live.ts --environment=production",
     "studio": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' pnpm drizzle-kit studio",
     "seed": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun ../../../apps/cash/app/seed/index.ts",
+    "seed:preview": "bun ../../../apps/cash/app/seed/index.ts --environment=preview",
     "tsc": "tsc --noEmit",
     "wait-for-db": "while ! nc -z localhost 5432; do sleep 1; done"
   },

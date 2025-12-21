@@ -1,26 +1,60 @@
-import type { PgDatabase } from "drizzle-orm/pg-core";
+import {
+  confirm,
+  fetchDatabaseUrlFromVercel,
+  tryGetEnvironmentFromArguments,
+} from "@kodix/shared/cli-utils";
 import { reset } from "drizzle-seed";
 import ora from "ora";
 
 type AppName = "Cash";
 
-export const runSeed = async ({
-  db,
+type ResetDb = Parameters<typeof reset>[0];
+
+export const runSeed = async <DB extends ResetDb>({
+  appRoot,
+  createDb,
   schemaToReset,
   seedFn,
   name,
 }: {
-  // biome-ignore lint/suspicious/noExplicitAny: Intentional any
-  db: PgDatabase<any, any>;
+  appRoot: string;
+  createDb: () => Promise<DB>;
   schemaToReset: Parameters<typeof reset>[1];
-  seedFn: () => Promise<void>;
+  seedFn: (db: DB) => Promise<void>;
   name: AppName;
 }) => {
-  // biome-ignore lint/style/noNonNullAssertion: fix me?
-  if (new URL(process.env.DATABASE_URL!).hostname !== "localhost") {
+  const liveEnvironment = tryGetEnvironmentFromArguments();
+
+  if (liveEnvironment) {
+    const databaseUrl = await fetchDatabaseUrlFromVercel({
+      appRoot,
+      environment: liveEnvironment,
+    });
+    process.env.DATABASE_URL = databaseUrl;
+  }
+
+  const db = await createDb();
+
+  // biome-ignore lint/style/noNonNullAssertion: DATABASE_URL is set
+  const databaseUrl = new URL(process.env.DATABASE_URL!);
+  const isLiveEnvironment = databaseUrl.hostname !== "localhost";
+
+  if (isLiveEnvironment && !liveEnvironment) {
     throw new Error(
-      "Uncomment this line to reset the database in a live environment. Proceed with caution.",
+      "Running seed on a live environment requires --environment flag",
     );
+  }
+
+  if (isLiveEnvironment) {
+    // biome-ignore lint/suspicious/noConsole: user confirmation
+    console.warn(
+      `⚠️  WARNING: You are about to RESET and SEED a live ${liveEnvironment} database!\n   Database: ${databaseUrl}\n   This will DELETE ALL DATA and cannot be undone.\n`,
+    );
+
+    const confirmed = await confirm("Do you want to proceed?");
+    if (!confirmed) {
+      throw new Error("Database seed aborted by user");
+    }
   }
 
   const spinner = ora(`🧨 Resetting ${name} database...`).start();
@@ -35,7 +69,7 @@ export const runSeed = async ({
 
   const seedSpinner = ora(`🌱 Seeding ${name} database...`).start();
   try {
-    await seedFn();
+    await seedFn(db);
   } catch (error) {
     seedSpinner.fail(`Failed to seed ${name}: ${(error as Error)?.message}`);
     throw error;

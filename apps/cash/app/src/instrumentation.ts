@@ -1,6 +1,6 @@
 import type { Instrumentation } from "next";
 
-export async function register() {
+export function register() {
   // No-op for initialization
 }
 
@@ -60,4 +60,5 @@ export const onRequestError: Instrumentation.onRequestError = async (
   }
 
   posthog.captureException(error, distinctId || undefined);
+  await posthog.shutdown();
 };

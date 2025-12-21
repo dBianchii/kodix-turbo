@@ -8,7 +8,6 @@ import { db } from "@kdx/db/client";
 import { userRepository } from "@kdx/db/repositories";
 
 import type { TPublicProcedureContext } from "../../procedures";
-import { posthog } from "../../../sdks/posthog";
 
 interface SignupWithPasswordOptions {
   ctx: TPublicProcedureContext;
@@ -44,13 +43,6 @@ export const signupWithPasswordHandler = async ({
   });
 
   const sessionId = createDbSessionAndCookie({ userId });
-
-  posthog.capture({
-    distinctId: userId,
-    event: "signup",
-    properties: { email: input.email },
-  });
-  await posthog.shutdown();
 
   return sessionId;
 };

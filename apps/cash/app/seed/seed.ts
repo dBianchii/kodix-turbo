@@ -1,9 +1,9 @@
+import type { Drizzle } from "@cash/db/client";
 import {
   DISCOUNTED_CASHBACK_PERCENT,
   FULL_CASHBACK_PERCENT,
   MONTHS_TO_EXPIRE_CASHBACK,
 } from "@cash/api/constants";
-import { db } from "@cash/db/client";
 import * as schema from "@cash/db/schema";
 import { generatePasswordHash } from "@kodix/auth/core";
 import dayjs from "@kodix/dayjs";
@@ -39,7 +39,7 @@ function createGenerator<T>(
   return () => generator.generate({ i: i++ }) as T;
 }
 
-export async function seedCash() {
+export async function seedCash(db: Drizzle) {
   const passwordHash = await generatePasswordHash(DEV_USER.password);
 
   const clientsCount = 300;
