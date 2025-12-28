@@ -23,20 +23,20 @@
   "dependencies": {
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "@neondatabase/serverless": "catalog:",
-    "@t3-oss/env-core": "catalog:",
+    "@neondatabase/serverless": "1.0.1",
+    "@t3-oss/env-core": "0.9.2",
     "@kodix/testing": "workspace:*",
-    "drizzle-orm": "catalog:",
-    "zod": "catalog:"
+    "drizzle-orm": "0.44.5",
+    "zod": "4.1.9"
   },
   "devDependencies": {
     "@kodix/auth": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
-    "@types/node": "catalog:",
-    "drizzle-kit": "catalog:",
-    "drizzle-seed": "catalog:",
-    "ora": "catalog:",
-    "tsx": "catalog:",
-    "typescript": "catalog:"
+    "@types/node": "22.15.0",
+    "drizzle-kit": "0.31.5",
+    "drizzle-seed": "0.3.1",
+    "ora": "8.2.0",
+    "tsx": "4.7.3",
+    "typescript": "5.9.2"
   }
 }

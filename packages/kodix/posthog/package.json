@@ -11,10 +11,10 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "posthog-node": "catalog:"
+    "posthog-node": "5.17.2"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "typescript": "catalog:"
+    "typescript": "5.9.2"
   }
 }

@@ -16,19 +16,19 @@
     "@kdx/react-email": "workspace:*",
     "@kodix/auth": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "@node-rs/argon2": "catalog:",
-    "@oslojs/crypto": "catalog:",
-    "@oslojs/encoding": "catalog:",
-    "arctic": "catalog:",
-    "discord-api-types": "catalog:",
-    "next": "catalog:next",
-    "react": "catalog:react",
-    "react-dom": "catalog:react",
-    "zod": "catalog:"
+    "@node-rs/argon2": "1.8.3",
+    "@oslojs/crypto": "1.0.1",
+    "@oslojs/encoding": "1.1.0",
+    "arctic": "1.9.2",
+    "discord-api-types": "0.37.120",
+    "next": "16.0.10",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "zod": "4.1.9"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "catalog:react",
-    "typescript": "catalog:"
+    "@types/react": "19.2.2",
+    "typescript": "5.9.2"
   }
 }
