@@ -18,15 +18,15 @@
   "dependencies": {
     "@kdx/locales": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "@react-email/components": "catalog:",
-    "react": "catalog:react",
-    "react-email": "catalog:"
+    "@react-email/components": "0.0.33",
+    "react": "19.2.0",
+    "react-email": "3.0.7"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@react-email/preview-server": "catalog:",
-    "@types/node": "catalog:",
-    "@types/react": "catalog:react",
-    "typescript": "catalog:"
+    "@react-email/preview-server": "5.0.5",
+    "@types/node": "22.15.0",
+    "@types/react": "19.2.2",
+    "typescript": "5.9.2"
   }
 }

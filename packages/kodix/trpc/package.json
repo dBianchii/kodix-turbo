@@ -14,19 +14,19 @@
   },
   "dependencies": {
     "@kodix/shared": "workspace:*",
-    "@tanstack/react-query": "catalog:tanstack-query",
-    "@tanstack/react-query-devtools": "catalog:tanstack-query",
-    "@trpc/client": "catalog:trpc",
-    "@trpc/server": "catalog:trpc",
-    "@trpc/tanstack-react-query": "catalog:trpc",
-    "react": "catalog:react",
-    "server-only": "catalog:",
-    "superjson": "catalog:",
-    "zod": "catalog:"
+    "@tanstack/react-query": "5.90.2",
+    "@tanstack/react-query-devtools": "5.90.2",
+    "@trpc/client": "11.6.0",
+    "@trpc/server": "11.5.1",
+    "@trpc/tanstack-react-query": "11.6.0",
+    "react": "19.2.0",
+    "server-only": "0.0.1",
+    "superjson": "2.2.1",
+    "zod": "4.1.9"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "catalog:react",
-    "next": "catalog:next"
+    "@types/react": "19.2.2",
+    "next": "16.0.10"
   }
 }

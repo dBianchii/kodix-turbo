@@ -13,20 +13,20 @@
   },
   "dependencies": {
     "@cash/db": "workspace:*",
-    "drizzle-orm": "catalog:",
+    "drizzle-orm": "0.44.5",
     "@kodix/auth": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "@node-rs/argon2": "catalog:",
-    "next": "catalog:next",
-    "react": "catalog:react",
-    "react-dom": "catalog:react",
-    "zod": "catalog:"
+    "@node-rs/argon2": "1.8.3",
+    "next": "16.0.10",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "zod": "4.1.9"
   },
   "devDependencies": {
-    "@clack/prompts": "catalog:",
+    "@clack/prompts": "0.7.0",
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "catalog:react",
-    "chalk": "catalog:",
-    "typescript": "catalog:"
+    "@types/react": "19.2.2",
+    "chalk": "5.6.2",
+    "typescript": "5.9.2"
   }
 }
