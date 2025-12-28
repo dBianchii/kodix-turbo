@@ -25,11 +25,15 @@
     }
   },
   "linter": {
+    "domains": {
+      "turborepo": "recommended"
+    },
     "rules": {
       "performance": {
         "noNamespaceImport": "off" //TODO: enable
       },
       "nursery": {
+        "noUndeclaredEnvVars": "on",
         "useSortedClasses": {
           "level": "on",
           "options": {

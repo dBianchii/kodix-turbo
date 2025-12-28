@@ -628,6 +628,7 @@ function TimePicker({
     () =>
       Array.from({ length: use12HourFormat ? 12 : 24 }, (__, i) => {
         let disabled = false;
+        // biome-ignore lint/style/noNestedTernary: Not my code lol
         const hourValue = use12HourFormat ? (i === 0 ? 12 : i) : i;
         const hDate = setHours(value, use12HourFormat ? i + ampm * 12 : i);
         const hStart = startOfHour(hDate);

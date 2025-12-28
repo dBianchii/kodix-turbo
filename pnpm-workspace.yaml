@@ -5,7 +5,7 @@ packages:
 
 catalog:
   '@bacons/text-decoder': 0.0.0
-  '@biomejs/biome': 2.3.0
+  '@biomejs/biome': 2.3.10
   '@casl/ability': 6.7.3
   '@clack/prompts': 0.7.0
   '@formkit/auto-animate': 0.8.4
@@ -165,5 +165,5 @@ catalogs:
     '@trpc/server': 11.5.1
     '@trpc/tanstack-react-query': 11.6.0
   turbo:
-    '@turbo/gen': 2.5.6
-    turbo: 2.5.6
+    '@turbo/gen': 2.7.1
+    turbo: 2.7.1

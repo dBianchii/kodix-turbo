@@ -140,6 +140,7 @@ export function NotificationsDateRangePicker({
           >
             <LuCalendar className="mr-2 size-4" />
             {date?.from ? (
+              // biome-ignore lint/style/noNestedTernary: Not my code lol
               date.to ? (
                 <>
                   {formatT.dateTime(date.from, {
