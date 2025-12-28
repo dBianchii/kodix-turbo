@@ -14,17 +14,16 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v4
+    - uses: oven-sh/setup-bun@v2
     
     - if: ${{ inputs.skip-node != 'true' }}
       uses: actions/setup-node@v4
       with:
         node-version-file: ".nvmrc"
-        cache: "pnpm"
 
     - shell: bash
       if: ${{ inputs.skip-turbo != 'true' }}
-      run: pnpm add -g turbo
+      run: bun add --global turbo
 
     - shell: bash
-      run: pnpm install
+      run: bun install
