@@ -57,13 +57,13 @@
   "name": "@kdx/app",
   "private": true,
   "scripts": {
-    "build": "pnpm next build",
+    "build": "bun next build",
     "clean": "git clean -xdf .cache .next next-env.d.ts .turbo node_modules",
-    "dev": "pnpm next dev --port 3000",
+    "dev": "bun next dev --port 3000",
     "pull-vercel": "vercel env pull --yes",
-    "start": "pnpm next start --port 3000",
+    "start": "bun next start --port 3000",
     "tsc": "tsc --noEmit",
-    "typegen": "pnpm next typegen"
+    "typegen": "bun next typegen"
   },
   "type": "module"
 }

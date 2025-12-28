@@ -33,7 +33,7 @@ export const pushDatabaseSchema = async (app: AppName, url: string) => {
     }
   }
 
-  await execCommandInteractive(`pnpm -F @${app}/db exec drizzle-kit push`, {
+  await execCommandInteractive(`bun --filter @${app}/db exec drizzle-kit push`, {
     env: {
       ...process.env,
       DATABASE_URL: url,

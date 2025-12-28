@@ -1,0 +1,3 @@
+[install]
+# Automatically link workspace packages
+auto-install-peers = true
