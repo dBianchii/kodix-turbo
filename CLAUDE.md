@@ -9,8 +9,8 @@
 - `tooling/` contains shared tooling and configurations.
 
 ### Environment & Toolchain
-- Node (version in `.nvmrc`) and `pnpm` are required.
-- Turborepo (`turbo.json`) orchestrates tasks. Prefer using `pnpm turbo` over using pnpm to execute scripts (i.e. `pnpm turbo tsc` instead of `pnpm tsc`).
+- Node (version in `.nvmrc`) and `bun` are required.
+- Turborepo (`turbo.json`) orchestrates tasks. Prefer using `bun turbo` over using bun to execute scripts (i.e. `bun turbo tsc` instead of `bun tsc`).
 - TypeScript runs in strict mode with project references—leverage existing `tsconfig` presets under `tooling/typescript`.
 - React 19 + `shadcn/ui` for the frontend
 - Drizzle ORM powers database packages for each app.
