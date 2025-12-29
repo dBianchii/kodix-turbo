@@ -15,7 +15,7 @@
     "push:preview": "bun tsx ./scripts/push-live.ts --environment=preview",
     "push:production": "bun tsx ./scripts/push-live.ts --environment=production",
     "studio": "bun wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun drizzle-kit studio",
-    "seed": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun ../../../apps/cash/app/seed/index.ts",
+    "seed": "bun wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun ../../../apps/cash/app/seed/index.ts",
     "seed:preview": "bun ../../../apps/cash/app/seed/index.ts --environment=preview",
     "tsc": "tsc --noEmit",
     "wait-for-db": "while ! nc -z localhost 5432; do sleep 1; done"
