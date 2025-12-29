@@ -7,7 +7,7 @@ Kodix's main monorepo. It uses [Turborepo](https://turborepo.org) and contains:
 ```text
 .github
   └─ workflows
-        └─ CI with pnpm cache setup
+        └─ CI with bun cache setup
 .vscode
   └─ Recommended extensions and settings for VSCode users
 apps
@@ -67,10 +67,10 @@ To get it running, follow the steps below:
 
 ### Pre-requisites
 
-Make sure you have pnpm installed globally. If not, you can install it by running:
+Make sure you have bun installed globally. If not, you can install it by running:
 
 ```bash
-npm i -g pnpm
+npm i -g bun
 ```
 
 Make sure you are using the specified node version in .nvmrc. You can use nvm (recommended) to manage your node versions. To use the correct node version, run:
@@ -83,19 +83,19 @@ nvm use
 
 ```bash
 # Install dependencies
-pnpm i
+bun install
 
 # Configure environment variables (only Vercel users)
-pnpm vercel-link
+bun vercel-link
 
 # Start the main kdx app
-pnpm dev:kdx
+bun dev:kdx
 
 # Push the Drizzle schema to the database
-pnpm db:push
+bun db:push
 
 # Seed the running database
-pnpm db:seed
+bun db:seed
 
 ```
 
@@ -106,34 +106,34 @@ pnpm db:seed
 turbo clean
 
 # Run Biome checks on all packages
-pnpm check
+bun check
 
 # Run Biome checks and write all packages
-pnpm check:write
+bun check:write
 
 # Run Biome checks and write all packages (unsafe)
-pnpm check:unsafe
+bun check:unsafe
 
 #tsc all packages
-pnpm tsc
+bun tsc
 
 # Start the main kdx app
-pnpm dev:kdx
+bun dev:kdx
 
 # Start Drizzle Studio independently
-pnpm db:studio
+bun db:studio
 
 # Pushing the Drizzle schema to the database
-pnpm db:push
+bun db:push
 
 # Generate a new tRPC endpoint using the trpc-cli tool
-pnpm start:trpc-cli
+bun start:trpc-cli
 
 # Start the trpc-cli tool in development mode
-pnpm dev:trpc-cli
+bun dev:trpc-cli
 
 # Create a new package (global or kdx-scoped)
-pnpm turbo gen init
+bun turbo gen init
 ```
 
 ## References

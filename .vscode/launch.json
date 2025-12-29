@@ -5,7 +5,7 @@
       "name": "kdx",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm dev:kdx",
+      "command": "bun dev:kdx",
       "cwd": "${workspaceFolder}",
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
@@ -17,7 +17,7 @@
       "name": "cash",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm dev:cash",
+      "command": "bun dev:cash",
       "cwd": "${workspaceFolder}",
       "sourceMaps": true,
       "skipFiles": ["<node_internals>/**"],
@@ -29,7 +29,7 @@
       "name": "react-email",
       "type": "node-terminal",
       "request": "launch",
-      "command": "pnpm dev",
+      "command": "bun dev",
       "cwd": "${workspaceFolder}/packages/react-email/",
       "skipFiles": ["<node_internals>/**"]
     }

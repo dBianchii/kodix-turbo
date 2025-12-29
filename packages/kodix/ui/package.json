@@ -17,7 +17,7 @@
     "./common/data-table/export": "./src/common/data-table/export.ts"
   },
   "scripts": {
-    "ui:add": "pnpm dlx shadcn@latest add",
+    "ui:add": "bunx shadcn@latest add",
     "clean": "git clean -xdf .cache .turbo dist node_modules",
     "tsc": "tsc --noEmit"
   },
