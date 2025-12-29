@@ -15,7 +15,7 @@
     "push:preview": "bun tsx ./scripts/push-live.ts --environment=preview",
     "push:production": "bun tsx ./scripts/push-live.ts --environment=production",
     "studio": "bun wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun drizzle-kit studio",
-    "seed": "bun wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun ../../../apps/cash/app/seed/index.ts",
+    "seed": "pnpm wait-for-db && DATABASE_URL='postgresql://postgres:local@localhost:5432/postgres' bun ../../../apps/cash/app/seed/index.ts",
     "seed:preview": "bun ../../../apps/cash/app/seed/index.ts --environment=preview",
     "tsc": "tsc --noEmit",
     "wait-for-db": "while ! nc -z localhost 5432; do sleep 1; done"
@@ -23,20 +23,20 @@
   "dependencies": {
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "@neondatabase/serverless": "1.0.1",
-    "@t3-oss/env-core": "0.9.2",
+    "@neondatabase/serverless": "catalog:",
+    "@t3-oss/env-core": "catalog:",
     "@kodix/testing": "workspace:*",
-    "drizzle-orm": "0.44.5",
-    "zod": "4.1.9"
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@kodix/auth": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
-    "@types/node": "22.15.0",
-    "drizzle-kit": "0.31.5",
-    "drizzle-seed": "0.3.1",
-    "ora": "8.2.0",
-    "tsx": "4.7.3",
-    "typescript": "5.9.2"
+    "@types/node": "catalog:",
+    "drizzle-kit": "catalog:",
+    "drizzle-seed": "catalog:",
+    "ora": "catalog:",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   }
 }

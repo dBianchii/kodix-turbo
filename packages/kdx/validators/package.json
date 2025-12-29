@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "drizzle-zod": "0.8.3",
-    "zod": "4.1.9"
+    "drizzle-zod": "catalog:",
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@kdx/db": "workspace:*",
@@ -9,8 +9,8 @@
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
-    "rrule": "2.8.1",
-    "typescript": "5.9.2"
+    "rrule": "catalog:",
+    "typescript": "catalog:"
   },
   "exports": {
     ".": "./src/index.ts",

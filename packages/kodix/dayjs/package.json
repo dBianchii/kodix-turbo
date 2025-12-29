@@ -10,10 +10,10 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "dayjs": "1.11.18"
+    "dayjs": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "typescript": "5.9.2"
+    "typescript": "catalog:"
   }
 }

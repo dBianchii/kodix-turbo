@@ -14,10 +14,10 @@
     "@kdx/db": "workspace:*",
     "@kdx/locales": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
-    "typescript": "5.9.2"
+    "typescript": "catalog:"
   },
   "dependencies": {
-    "@casl/ability": "6.7.3",
+    "@casl/ability": "catalog:",
     "@kodix/shared": "workspace:*"
   }
 }

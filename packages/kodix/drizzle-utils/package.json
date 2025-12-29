@@ -11,10 +11,10 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "drizzle-orm": "0.44.5"
+    "drizzle-orm": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "typescript": "5.9.2"
+    "typescript": "catalog:"
   }
 }
