@@ -15,14 +15,14 @@
   },
   "dependencies": {
     "@kodix/shared": "workspace:*",
-    "next-intl": "4.3.9",
-    "react": "19.2.0",
-    "use-intl": "4.3.9"
+    "next-intl": "catalog:",
+    "react": "catalog:react",
+    "use-intl": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "19.2.2",
-    "tsx": "4.7.3",
-    "typescript": "5.9.2"
+    "@types/react": "catalog:react",
+    "tsx": "catalog:",
+    "typescript": "catalog:"
   }
 }

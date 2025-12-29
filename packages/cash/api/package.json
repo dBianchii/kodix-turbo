@@ -16,21 +16,21 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "server-only": "0.0.1",
+    "server-only": "catalog:",
     "@kodix/drizzle-utils": "workspace:*",
     "@cash/auth": "workspace:*",
     "@cash/db": "workspace:*",
     "@kodix/dayjs": "workspace:*",
     "@kodix/posthog": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "zod": "4.1.9",
+    "zod": "catalog:",
     "@kodix/trpc": "workspace:*"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@types/node": "22.15.0",
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
-    "typescript": "5.9.2"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react",
+    "@types/react-dom": "catalog:react",
+    "typescript": "catalog:"
   }
 }

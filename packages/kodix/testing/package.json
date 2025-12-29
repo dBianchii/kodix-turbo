@@ -13,13 +13,13 @@
   },
   "dependencies": {
     "@kodix/shared": "workspace:*",
-    "drizzle-seed": "0.3.1",
-    "drizzle-orm": "0.44.5",
-    "ora": "8.2.0"
+    "drizzle-seed": "catalog:",
+    "drizzle-orm": "catalog:",
+    "ora": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "typescript": "5.9.2",
-    "vitest": "3.2.4"
+    "typescript": "catalog:",
+    "vitest": "catalog:"
   }
 }

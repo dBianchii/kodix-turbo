@@ -11,10 +11,10 @@
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "typescript": "5.9.2"
+    "typescript": "catalog:"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.13.8",
-    "zod": "4.1.9"
+    "zod": "catalog:"
   }
 }

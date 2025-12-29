@@ -10,14 +10,14 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
-    "libphonenumber-js": "1.12.24",
+    "libphonenumber-js": "catalog:",
     "@kodix/dayjs": "workspace:*",
-    "zod": "4.1.9"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@types/node": "22.15.0",
-    "@types/react": "19.2.2",
-    "typescript": "5.9.2"
+    "@types/node": "catalog:",
+    "@types/react": "catalog:react",
+    "typescript": "catalog:"
   }
 }

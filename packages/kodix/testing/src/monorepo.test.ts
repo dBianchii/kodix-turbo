@@ -8,9 +8,11 @@ interface PackageJson {
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   engines?: Record<string, string>;
-  workspaces?: string[];
-  catalog?: Record<string, unknown>;
-  catalogs?: Record<string, Record<string, unknown>>;
+  workspaces?: string[] | {
+    packages?: string[];
+    catalog?: Record<string, unknown>;
+    catalogs?: Record<string, Record<string, unknown>>;
+  };
 }
 
 const repositoryRoot = path.join(__dirname, "../../../../");
@@ -25,7 +27,9 @@ const getFilesToCheck = () => {
   const filesToCheck: { packageJson: string; tsconfig: string }[] = [];
 
   const rootPkg = getRootPackageJson();
-  const workspaces = rootPkg.workspaces ?? [];
+  const workspaces = Array.isArray(rootPkg.workspaces) 
+    ? rootPkg.workspaces 
+    : (rootPkg.workspaces?.packages ?? []);
 
   for (const workspacePath of workspaces) {
     const folders = globSync(workspacePath, {
@@ -96,7 +100,10 @@ it("There are no unused dependencies", () => {
 
   // Parse the root package.json for catalogs
   const rootPkg = getRootPackageJson();
-  const { catalog: defaultCatalog = {}, catalogs = {} } = rootPkg;
+  const workspacesConfig = typeof rootPkg.workspaces === 'object' && !Array.isArray(rootPkg.workspaces) 
+    ? rootPkg.workspaces 
+    : { catalog: {}, catalogs: {} };
+  const { catalog: defaultCatalog = {}, catalogs = {} } = workspacesConfig;
 
   // Collect all packages defined in catalogs
   const allCatalogPackages = new Set<string>();
