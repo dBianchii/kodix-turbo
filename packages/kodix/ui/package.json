@@ -22,6 +22,7 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "catalog:",
     "@hookform/resolvers": "catalog:",
     "@kdx/locales": "workspace:*",
     "@tanstack/react-table": "catalog:",
@@ -33,11 +34,14 @@
     "framer-motion": "catalog:",
     "lucide-react": "catalog:",
     "motion": "catalog:",
+    "next": "catalog:",
+    "next-intl": "catalog:",
     "next-themes": "catalog:",
     "radix-ui": "catalog:",
     "react": "catalog:",
     "react-day-picker": "catalog:",
     "react-hook-form": "catalog:",
+    "react-icons": "catalog:",
     "react-number-format": "catalog:",
     "react-phone-number-input": "catalog:",
     "sonner": "catalog:",
@@ -50,6 +54,7 @@
   "devDependencies": {
     "@kodix/shared": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "cobe": "catalog:",

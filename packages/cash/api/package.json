@@ -16,6 +16,9 @@
     "tsc": "tsc --noEmit"
   },
   "dependencies": {
+    "@trpc/server": "catalog:",
+    "@trpc/tanstack-react-query": "catalog:",
+    "@upstash/qstash": "catalog:",
     "server-only": "catalog:",
     "@kodix/drizzle-utils": "workspace:*",
     "@cash/auth": "workspace:*",
@@ -23,6 +26,9 @@
     "@kodix/dayjs": "workspace:*",
     "@kodix/posthog": "workspace:*",
     "@kodix/shared": "workspace:*",
+    "drizzle-orm": "catalog:",
+    "es-toolkit": "catalog:",
+    "next": "catalog:",
     "zod": "catalog:",
     "@kodix/trpc": "workspace:*"
   },

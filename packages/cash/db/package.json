@@ -27,6 +27,7 @@
     "@t3-oss/env-core": "catalog:",
     "@kodix/testing": "workspace:*",
     "drizzle-orm": "catalog:",
+    "drizzle-zod": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {

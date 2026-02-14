@@ -4,6 +4,7 @@
     "@kodix/shared": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "drizzle-orm": "catalog:",
+    "drizzle-zod": "catalog:",
     "mysql2": "catalog:",
     "nanoid": "catalog:",
     "zod": "catalog:"

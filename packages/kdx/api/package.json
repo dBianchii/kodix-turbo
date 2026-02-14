@@ -14,6 +14,7 @@
     "@node-rs/argon2": "catalog:",
     "@react-email/render": "catalog:",
     "@trpc/server": "catalog:",
+    "@trpc/tanstack-react-query": "catalog:",
     "@upstash/qstash": "catalog:",
     "@upstash/redis": "catalog:",
     "deep-diff": "catalog:",

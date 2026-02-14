@@ -143,10 +143,7 @@ export async function getAppActivityLogs({
         value: diff.rhs,
       });
 
-      //@ts-expect-error It might not be set
-      const translatedPath = t(`api.appActivityLogs.${fullPath}`);
-      const isTranslated = !translatedPath.includes("api.appActivityLogs");
-      const pathMessage = `[${isTranslated ? translatedPath : fullPath}]`;
+      const pathMessage = `[${fullPath}]`;
 
       if (!lhs) {
         messageParts.push(
