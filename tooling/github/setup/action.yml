@@ -14,10 +14,15 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: oven-sh/setup-bun@v2.1.2
-    
-    - if: ${{ inputs.skip-node != 'true' }}
-      uses: actions/setup-node@v4
+    - name: Setup Node
+      if: ${{ inputs.skip-node != 'true' }}
+      uses: actions/setup-node@v6.2.0
+      with:
+        node-version-file: .nvmrc
+
+    - name: Setup Bun
+      if: ${{ inputs.skip-turbo != 'true' }}
+      uses: oven-sh/setup-bun@v2.1.2
 
     - name: Install Dependencies
       shell: bash
