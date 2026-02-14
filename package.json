@@ -168,17 +168,17 @@
     "dev:email": "turbo dev -F @kdx/react-email...",
     "push:kdx": "turbo @kdx/db-dev#dev @kdx/db#push",
     "push:cash": "turbo @cash/db-dev#dev @cash/db#push",
-    "push:cash:preview": "bun --filter @cash/db push:preview",
-    "push:cash:production": "bun --filter @cash/db push:production",
+    "push:cash:preview": "bun -F @cash/db push:preview",
+    "push:cash:production": "bun -F @cash/db push:production",
     "seed:kdx": "turbo @kdx/db-dev#dev @kdx/db#seed",
     "seed:cash": "turbo @cash/db-dev#dev @cash/db#seed",
-    "seed:cash:preview": "bun --filter @cash/db seed:preview",
+    "seed:cash:preview": "bun -F @cash/db seed:preview",
     "check": "biome check .",
     "check:write": "biome check --write .",
     "check:unsafe": "biome check --write --unsafe .",
-    "start:trpc-cli": "bun --filter trpc-cli start",
-    "dev:trpc-cli": "bun --filter trpc-cli dev",
-    "vercel-link": "vercel switch kodix && vercel link --repo --yes && bun --filter='*' pull-vercel"
+    "start:trpc-cli": "bun -F trpc-cli start",
+    "dev:trpc-cli": "bun -F trpc-cli dev",
+    "vercel-link": "vercel link --repo --yes --scope=kodix && bun turbo pull-vercel"
   },
   "devDependencies": {
     "@biomejs/biome": "catalog:",

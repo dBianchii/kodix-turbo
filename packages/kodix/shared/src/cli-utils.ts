@@ -33,15 +33,12 @@ export const pushDatabaseSchema = async (app: AppName, url: string) => {
     }
   }
 
-  await execCommandInteractive(
-    `bun --filter @${app}/db exec drizzle-kit push`,
-    {
-      env: {
-        ...process.env,
-        DATABASE_URL: url,
-      },
+  await execCommandInteractive(`bun -F @${app}/db exec drizzle-kit push`, {
+    env: {
+      ...process.env,
+      DATABASE_URL: url,
     },
-  );
+  });
 };
 
 /** Runs a command with inherited stdio - use for interactive commands that need TTY */
