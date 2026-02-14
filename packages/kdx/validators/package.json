@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "drizzle-zod": "catalog:",
+    "next-intl": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
@@ -9,6 +10,7 @@
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
     "rrule": "catalog:",
     "typescript": "catalog:"
   },

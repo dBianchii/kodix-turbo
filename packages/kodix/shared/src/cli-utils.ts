@@ -1,13 +1,25 @@
 import { exec as nodeExec, spawn } from "node:child_process";
+import { createReadStream, createWriteStream } from "node:fs";
 import readline from "node:readline";
 
 type AppName = "kdx" | "cash";
 
 export const confirm = (question: string) => {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
+  let input: NodeJS.ReadableStream = process.stdin;
+  let output: NodeJS.WritableStream = process.stdout;
+
+  if (!(process.stdin.isTTY && process.stdout.isTTY)) {
+    try {
+      input = createReadStream("/dev/tty");
+      output = createWriteStream("/dev/tty");
+    } catch {
+      throw new Error(
+        "Cannot prompt for confirmation without a TTY.\nRun from an interactive terminal.",
+      );
+    }
+  }
+
+  const rl = readline.createInterface({ input, output });
 
   return new Promise((resolve) => {
     rl.question(`${question} (Y/N): `, (answer) => {
@@ -33,7 +45,7 @@ export const pushDatabaseSchema = async (app: AppName, url: string) => {
     }
   }
 
-  await execCommandInteractive(`pnpm -F @${app}/db exec drizzle-kit push`, {
+  await execCommandInteractive(`bun -F @${app}/db exec drizzle-kit push`, {
     env: {
       ...process.env,
       DATABASE_URL: url,

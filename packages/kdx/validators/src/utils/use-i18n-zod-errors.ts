@@ -16,11 +16,16 @@ const localeToZod: Record<
 export const useI18nZodErrors = () => {
   const locale = useLocale();
   const zodLocale = localeToZod[locale as Locale];
-
+  if (!zodLocale) {
+    throw new Error(`Locale ${locale} not supported`);
+  }
   z.config(zodLocale());
 };
 
 export const createI18nZodErrors = ({ locale }: { locale: string }) => {
   const zodLocale = localeToZod[locale as Locale];
+  if (!zodLocale) {
+    throw new Error(`Locale ${locale} not supported`);
+  }
   z.config(zodLocale());
 };

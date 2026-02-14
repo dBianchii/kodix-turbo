@@ -12,12 +12,13 @@
   "dependencies": {
     "libphonenumber-js": "catalog:",
     "@kodix/dayjs": "workspace:*",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "nanoid": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "catalog:react",
+    "@types/react": "catalog:",
     "typescript": "catalog:"
   }
 }

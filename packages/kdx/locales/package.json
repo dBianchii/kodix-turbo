@@ -16,12 +16,12 @@
   "dependencies": {
     "@kodix/shared": "workspace:*",
     "next-intl": "catalog:",
-    "react": "catalog:react",
+    "react": "catalog:",
     "use-intl": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "catalog:react",
+    "@types/react": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }

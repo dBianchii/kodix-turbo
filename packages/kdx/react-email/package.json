@@ -19,14 +19,14 @@
     "@kdx/locales": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@react-email/components": "catalog:",
-    "react": "catalog:react",
+    "react": "catalog:",
     "react-email": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
     "@react-email/preview-server": "catalog:",
     "@types/node": "catalog:",
-    "@types/react": "catalog:react",
+    "@types/react": "catalog:",
     "typescript": "catalog:"
   }
 }

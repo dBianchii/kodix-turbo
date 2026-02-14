@@ -17,15 +17,15 @@
     "@kodix/auth": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@node-rs/argon2": "catalog:",
-    "next": "catalog:next",
-    "react": "catalog:react",
-    "react-dom": "catalog:react",
+    "next": "catalog:",
+    "react": "catalog:",
+    "react-dom": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@clack/prompts": "catalog:",
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "catalog:react",
+    "@types/react": "catalog:",
     "chalk": "catalog:",
     "typescript": "catalog:"
   }

@@ -27,7 +27,6 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
         with:
-          skip-turbo: true
           skip-node: true
 
       - name: Setup Biome
@@ -45,7 +44,7 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: tsc
-        run: turbo tsc
+        run: bun turbo tsc
 
   test:
     runs-on: ubuntu-latest
@@ -56,4 +55,4 @@ jobs:
         uses: ./tooling/github/setup
 
       - name: Test
-        run: turbo test
+        run: bun turbo test

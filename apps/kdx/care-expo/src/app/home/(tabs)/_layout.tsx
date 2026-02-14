@@ -1,4 +1,4 @@
-import type { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs/src/types";
+import type { BottomTabBarButtonProps } from "@react-navigation/bottom-tabs";
 import { Pressable } from "react-native";
 import { Bell, Home } from "@tamagui/lucide-icons";
 import * as Haptics from "expo-haptics";
