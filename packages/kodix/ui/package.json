@@ -35,7 +35,7 @@
     "motion": "catalog:",
     "next-themes": "catalog:",
     "radix-ui": "catalog:",
-    "react": "catalog:react",
+    "react": "catalog:",
     "react-day-picker": "catalog:",
     "react-hook-form": "catalog:",
     "react-number-format": "catalog:",
@@ -50,8 +50,8 @@
   "devDependencies": {
     "@kodix/shared": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "catalog:react",
-    "@types/react-dom": "catalog:react",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "cobe": "catalog:",
     "react-spring": "catalog:",
     "typescript": "catalog:"

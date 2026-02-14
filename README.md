@@ -83,7 +83,7 @@ nvm use
 
 ```bash
 # Install dependencies
-bun install
+bun i
 
 # Configure environment variables (only Vercel users)
 bun vercel-link

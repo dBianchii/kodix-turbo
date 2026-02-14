@@ -20,13 +20,13 @@
     "arctic": "catalog:",
     "discord-api-types": "catalog:",
     "es-toolkit": "catalog:",
-    "next": "catalog:next",
-    "react": "catalog:react",
+    "next": "catalog:",
+    "react": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
-    "@types/react": "catalog:react",
+    "@types/react": "catalog:",
     "typescript": "catalog:"
   }
 }

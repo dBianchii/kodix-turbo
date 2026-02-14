@@ -29,8 +29,8 @@
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
     "@types/node": "catalog:",
-    "@types/react": "catalog:react",
-    "@types/react-dom": "catalog:react",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
     "typescript": "catalog:"
   }
 }
