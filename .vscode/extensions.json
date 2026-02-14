@@ -6,6 +6,7 @@
     "bradlc.vscode-tailwindcss",
     "aaron-bond.better-comments",
     "lokalise.i18n-ally",
+    "antfu.pnpm-catalog-lens",
     "vercel.turbo-vsc"
   ]
 }
