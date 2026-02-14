@@ -8,27 +8,27 @@ interface PackageJson {
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   engines?: Record<string, string>;
-  workspaces?: string[] | {
-    packages?: string[];
-    catalog?: Record<string, unknown>;
-    catalogs?: Record<string, Record<string, unknown>>;
-  };
+  workspaces?:
+    | string[]
+    | {
+        packages?: string[];
+        catalog?: Record<string, unknown>;
+        catalogs?: Record<string, Record<string, unknown>>;
+      };
 }
 
 const repositoryRoot = path.join(__dirname, "../../../../");
 
 const getRootPackageJson = (): PackageJson =>
-  JSON.parse(
-    readFileSync(path.join(repositoryRoot, "package.json"), "utf-8"),
-  );
+  JSON.parse(readFileSync(path.join(repositoryRoot, "package.json"), "utf-8"));
 
 const getFilesToCheck = () => {
   const packageNameMap: Record<string, string> = {};
   const filesToCheck: { packageJson: string; tsconfig: string }[] = [];
 
   const rootPkg = getRootPackageJson();
-  const workspaces = Array.isArray(rootPkg.workspaces) 
-    ? rootPkg.workspaces 
+  const workspaces = Array.isArray(rootPkg.workspaces)
+    ? rootPkg.workspaces
     : (rootPkg.workspaces?.packages ?? []);
 
   for (const workspacePath of workspaces) {
@@ -100,9 +100,10 @@ it("There are no unused dependencies", () => {
 
   // Parse the root package.json for catalogs
   const rootPkg = getRootPackageJson();
-  const workspacesConfig = typeof rootPkg.workspaces === 'object' && !Array.isArray(rootPkg.workspaces) 
-    ? rootPkg.workspaces 
-    : { catalog: {}, catalogs: {} };
+  const workspacesConfig =
+    typeof rootPkg.workspaces === "object" && !Array.isArray(rootPkg.workspaces)
+      ? rootPkg.workspaces
+      : { catalog: {}, catalogs: {} };
   const { catalog: defaultCatalog = {}, catalogs = {} } = workspacesConfig;
 
   // Collect all packages defined in catalogs

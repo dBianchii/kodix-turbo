@@ -2,6 +2,6 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    exclude: ["**/.react-email/**/*"],
+    exclude: ["**/node_modules/**", "**/.react-email/**/*"],
   },
 });

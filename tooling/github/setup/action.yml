@@ -14,16 +14,11 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: oven-sh/setup-bun@v2
+    - uses: oven-sh/setup-bun@v2.1.2
     
     - if: ${{ inputs.skip-node != 'true' }}
       uses: actions/setup-node@v4
-      with:
-        node-version-file: ".nvmrc"
 
-    - shell: bash
-      if: ${{ inputs.skip-turbo != 'true' }}
-      run: bun add --global turbo
-
-    - shell: bash
-      run: bun install
+    - name: Install Dependencies
+      shell: bash
+      run: bun ci
