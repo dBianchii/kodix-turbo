@@ -1,7 +1,7 @@
-import type { SheetProps } from "tamagui";
+import type { SheetProps } from "@tamagui/sheet";
 import { useEffect } from "react";
 import { BackHandler } from "react-native";
-import { Sheet } from "tamagui";
+import { Sheet } from "@tamagui/sheet";
 
 import { defaultPadding } from "./safe-area-view";
 

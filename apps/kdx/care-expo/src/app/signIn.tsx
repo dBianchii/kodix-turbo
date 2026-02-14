@@ -1,17 +1,12 @@
 import { Keyboard, TouchableOpacity } from "react-native";
 import { getErrorMessage } from "@kodix/shared/utils";
+import { Button } from "@tamagui/button";
+import { Text, useTheme, View } from "@tamagui/core";
+import { Input } from "@tamagui/input";
 import { ChevronLeft } from "@tamagui/lucide-icons";
+import { YStack } from "@tamagui/stacks";
+import { H1 } from "@tamagui/text";
 import { router, Stack } from "expo-router";
-import {
-  Button,
-  H1,
-  Input,
-  Spinner,
-  Text,
-  useTheme,
-  View,
-  YStack,
-} from "tamagui";
 
 import { ZSignInByPasswordInputSchema } from "@kdx/validators/trpc/user";
 
@@ -25,6 +20,7 @@ import {
   FormMessage,
   useForm,
 } from "~/components/form";
+import { Spinner } from "~/components/spinner";
 import { useSignIn } from "~/utils/auth";
 
 //https://www.youtube.com/watch?v=ykQaIZtankk&ab_channel=OmatsolaDev

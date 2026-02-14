@@ -1,5 +1,6 @@
-import type { ListItemProps } from "tamagui";
-import { ListItem, YGroup } from "tamagui";
+import type { ListItemProps } from "@tamagui/list-item";
+import { YGroup } from "@tamagui/group";
+import { ListItem } from "@tamagui/list-item";
 
 export function MenuListItem({ children, ...props }: ListItemProps) {
   return (

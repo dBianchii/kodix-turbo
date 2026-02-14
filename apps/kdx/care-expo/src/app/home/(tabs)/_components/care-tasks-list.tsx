@@ -3,6 +3,10 @@ import { useEffect, useMemo, useState } from "react";
 import { Alert, FlatList, Keyboard, TouchableOpacity } from "react-native";
 import dayjs from "@kodix/dayjs";
 import { getErrorMessage } from "@kodix/shared/utils";
+import { Button } from "@tamagui/button";
+import { Checkbox } from "@tamagui/checkbox";
+import { Text, useTheme, View } from "@tamagui/core";
+import { Input, TextArea } from "@tamagui/input";
 import {
   AlertCircle,
   ArrowRightLeft,
@@ -13,26 +17,13 @@ import {
   Text as TextIcon,
   Trash2,
 } from "@tamagui/lucide-icons";
+import { XStack, YStack } from "@tamagui/stacks";
+import { H4, Paragraph, SizableText } from "@tamagui/text";
 import { useToastController } from "@tamagui/toast";
 import { Audio } from "expo-av";
 import * as Haptics from "expo-haptics";
 import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  Button,
-  Checkbox,
-  H4,
-  Input,
-  Paragraph,
-  SizableText,
-  Spinner,
-  Text,
-  TextArea,
-  useTheme,
-  View,
-  XStack,
-  YStack,
-} from "tamagui";
 import { useFormatter, useTranslations } from "use-intl";
 
 import {
@@ -53,6 +44,7 @@ import {
 } from "~/components/form";
 import { defaultPadding } from "~/components/safe-area-view";
 import { SheetModal } from "~/components/sheet-modal";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 
 type CareTaskOrCalendarTask =

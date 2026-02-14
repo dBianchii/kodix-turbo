@@ -1,6 +1,7 @@
+import { useTheme } from "@tamagui/core";
+import { XStack } from "@tamagui/stacks";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useTheme, XStack } from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { defaultPadding } from "~/components/safe-area-view";

@@ -4,6 +4,8 @@ import "@bacons/text-decoder/install";
 
 import type { FontSource } from "expo-font";
 import { useEffect } from "react";
+import { TamaguiProvider } from "@tamagui/core";
+import { PortalProvider } from "@tamagui/portal";
 import {
   Toast,
   ToastProvider,
@@ -13,13 +15,13 @@ import {
 import { useFonts } from "expo-font";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { PortalProvider, Spinner, TamaguiProvider } from "tamagui";
 import tamaguiConfig from "tamagui.config";
 import { IntlProvider } from "use-intl";
 
 import { en, pt_BR } from "@kdx/locales/messages/care-expo";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
+import { Spinner } from "~/components/spinner";
 
 import "~/polyfills/intl";
 

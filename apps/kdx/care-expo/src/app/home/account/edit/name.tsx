@@ -1,7 +1,9 @@
 import { Pressable } from "react-native";
+import { useTheme, View } from "@tamagui/core";
+import { Input } from "@tamagui/input";
 import { ChevronLeft } from "@tamagui/lucide-icons";
+import { SizableText } from "@tamagui/text";
 import { Stack, useRouter } from "expo-router";
-import { Input, SizableText, Spinner, useTheme, View } from "tamagui";
 import { useTranslations } from "use-intl";
 
 import { ZChangeNameInputSchema } from "@kdx/validators/trpc/user";
@@ -16,6 +18,7 @@ import {
   useForm,
 } from "~/components/form";
 import { defaultPadding } from "~/components/safe-area-view";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 

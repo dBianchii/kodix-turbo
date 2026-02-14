@@ -1,17 +1,13 @@
 import { TouchableOpacity } from "react-native";
+import { View } from "@tamagui/core";
+import { YGroup } from "@tamagui/group";
+import { ListItem } from "@tamagui/list-item";
 import { ArrowRight, LogOut, X } from "@tamagui/lucide-icons";
+import { Separator } from "@tamagui/separator";
+import { XStack, YStack } from "@tamagui/stacks";
+import { H4, SizableText } from "@tamagui/text";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  H4,
-  ListItem,
-  Separator,
-  SizableText,
-  View,
-  XStack,
-  YGroup,
-  YStack,
-} from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { MenuListItem } from "~/components/menu-list-item";

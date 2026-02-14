@@ -1,5 +1,5 @@
+import { styled } from "@tamagui/core";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { styled } from "tamagui";
 
 export const defaultPadding = "$4";
 
