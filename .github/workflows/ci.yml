@@ -27,7 +27,6 @@ jobs:
       - name: Setup
         uses: ./tooling/github/setup
         with:
-          skip-bun: true
           skip-node: true
 
       - name: Setup Biome
