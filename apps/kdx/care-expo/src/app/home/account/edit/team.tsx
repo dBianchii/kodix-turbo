@@ -1,21 +1,16 @@
 import { FlatList, Pressable } from "react-native";
+import { useTheme, View } from "@tamagui/core";
+import { YGroup } from "@tamagui/group";
 import { ArrowRight, ChevronLeft, RefreshCw } from "@tamagui/lucide-icons";
+import { XStack, YStack } from "@tamagui/stacks";
+import { H4, SizableText } from "@tamagui/text";
 import { router, Stack } from "expo-router";
-import {
-  H4,
-  SizableText,
-  Spinner,
-  useTheme,
-  View,
-  XStack,
-  YGroup,
-  YStack,
-} from "tamagui";
 
 import { AvatarWrapper } from "~/components/avatar-wrapper";
 import { ElasticSpinnerView } from "~/components/loading-spinner";
 import { MenuListItem } from "~/components/menu-list-item";
 import { defaultPadding } from "~/components/safe-area-view";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 

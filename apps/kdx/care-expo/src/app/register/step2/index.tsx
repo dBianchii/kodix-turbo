@@ -1,7 +1,11 @@
 import { Keyboard } from "react-native";
+import { Button } from "@tamagui/button";
+import { View } from "@tamagui/core";
+import { Input } from "@tamagui/input";
 import { ArrowLeft } from "@tamagui/lucide-icons";
+import { YStack } from "@tamagui/stacks";
+import { H3, Paragraph } from "@tamagui/text";
 import { router, useLocalSearchParams } from "expo-router";
-import { Button, H3, Input, Paragraph, Spinner, View, YStack } from "tamagui";
 
 import { ZSignupWithPasswordInputSchema } from "@kdx/validators/trpc/user";
 
@@ -16,6 +20,7 @@ import {
   useForm,
 } from "~/components/form";
 import { RootSafeAreaView } from "~/components/safe-area-view";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 import { setToken } from "~/utils/session-store";
 

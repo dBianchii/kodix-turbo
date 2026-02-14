@@ -1,18 +1,12 @@
 import { useEffect } from "react";
 import { Keyboard, TouchableOpacity } from "react-native";
+import { Button } from "@tamagui/button";
+import { Text, useTheme, View } from "@tamagui/core";
+import { Input } from "@tamagui/input";
 import { ChevronLeft, ChevronRight } from "@tamagui/lucide-icons";
+import { YStack } from "@tamagui/stacks";
+import { H3, Paragraph } from "@tamagui/text";
 import { Link, Stack, useRouter } from "expo-router";
-import {
-  Button,
-  H3,
-  Input,
-  Paragraph,
-  Spinner,
-  Text,
-  useTheme,
-  View,
-  YStack,
-} from "tamagui";
 
 import { ZCheckEmailForRegisterInputSchema } from "@kdx/validators/trpc/app/kodixCare";
 
@@ -27,6 +21,7 @@ import {
   FormMessage,
   useForm,
 } from "~/components/form";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 
 export default function Register() {

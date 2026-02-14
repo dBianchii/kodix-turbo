@@ -1,24 +1,28 @@
 "use client";
 
 import type { ComponentProps, ElementRef, ReactNode } from "react";
+import type { TextProps, ViewProps } from "@tamagui/core";
+import type { LabelProps } from "@tamagui/label";
+import type { ParagraphProps } from "@tamagui/text";
 import type {
   ControllerProps,
   FieldPath,
   FieldValues,
   UseFormProps,
 } from "react-hook-form";
-import type { LabelProps, ParagraphProps, TextProps, ViewProps } from "tamagui";
 import type { ZodType } from "zod";
 import { createContext, forwardRef, useContext, useId } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Slot } from "@radix-ui/react-slot";
+import { Text, View } from "@tamagui/core";
+import { Label } from "@tamagui/label";
+import { Paragraph } from "@tamagui/text";
 import {
   useForm as __useForm,
   Controller,
   FormProvider,
   useFormContext,
 } from "react-hook-form";
-import { Label, Paragraph, Text, View } from "tamagui";
 
 function useForm<TOut extends FieldValues, TIn extends FieldValues>(
   props: Omit<UseFormProps<TIn, unknown, TOut>, "resolver"> & {

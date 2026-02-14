@@ -1,6 +1,8 @@
-import type { ViewProps } from "tamagui";
+import type { ViewProps } from "@tamagui/core";
+import { Button } from "@tamagui/button";
+import { View } from "@tamagui/core";
+import { H1 } from "@tamagui/text";
 import { Link, useRouter } from "expo-router";
-import { Button, H1, View } from "tamagui";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 

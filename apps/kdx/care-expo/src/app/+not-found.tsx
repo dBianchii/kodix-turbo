@@ -1,5 +1,7 @@
+import { Button } from "@tamagui/button";
+import { Text } from "@tamagui/core";
+import { YStack } from "@tamagui/stacks";
 import { Link, Stack } from "expo-router";
-import { Button, Text, YStack } from "tamagui";
 
 import { RootSafeAreaView } from "~/components/safe-area-view";
 import { useAuth } from "~/utils/auth";

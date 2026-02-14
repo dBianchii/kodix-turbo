@@ -1,21 +1,17 @@
 import { useState } from "react";
 import { kodixCareAppId } from "@kodix/shared/db";
 import { getErrorMessage } from "@kodix/shared/utils";
+import { useTheme, View } from "@tamagui/core";
+import { YGroup } from "@tamagui/group";
+import { ListItem } from "@tamagui/list-item";
 import { AlertCircle } from "@tamagui/lucide-icons";
+import { Switch } from "@tamagui/switch";
+import { H2, SizableText } from "@tamagui/text";
 import { useToastController } from "@tamagui/toast";
 import { Stack } from "expo-router";
-import {
-  H2,
-  ListItem,
-  SizableText,
-  Spinner,
-  Switch,
-  useTheme,
-  View,
-  YGroup,
-} from "tamagui";
 
 import { defaultPadding } from "~/components/safe-area-view";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 
 export default function Config() {

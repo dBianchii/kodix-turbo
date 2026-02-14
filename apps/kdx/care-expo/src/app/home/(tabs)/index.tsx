@@ -1,8 +1,10 @@
 import { kodixCareAppId } from "@kodix/shared/db";
+import { Text, View } from "@tamagui/core";
+import { H3 } from "@tamagui/text";
 import { useRouter } from "expo-router";
-import { H3, Spinner, Text, View } from "tamagui";
 
 import { defaultPadding, RootSafeAreaView } from "~/components/safe-area-view";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 

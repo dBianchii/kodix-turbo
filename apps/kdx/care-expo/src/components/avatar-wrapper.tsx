@@ -1,5 +1,6 @@
-import type { AvatarProps } from "tamagui";
-import { Avatar, Text } from "tamagui";
+import type { AvatarProps } from "@tamagui/avatar";
+import { Avatar } from "@tamagui/avatar";
+import { Text } from "@tamagui/core";
 
 export function AvatarWrapper({
   src,

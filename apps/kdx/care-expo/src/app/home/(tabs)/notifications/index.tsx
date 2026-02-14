@@ -1,10 +1,15 @@
 import { FlatList, RefreshControl } from "react-native";
+import { useTheme, View } from "@tamagui/core";
+import { YGroup } from "@tamagui/group";
+import { ListItem } from "@tamagui/list-item";
 import { Cog } from "@tamagui/lucide-icons";
+import { XStack } from "@tamagui/stacks";
+import { H3 } from "@tamagui/text";
 import { Link, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { H3, ListItem, Spinner, useTheme, View, XStack, YGroup } from "tamagui";
 
 import { defaultPadding, RootSafeAreaView } from "~/components/safe-area-view";
+import { Spinner } from "~/components/spinner";
 import { api } from "~/utils/api";
 import { useAuth } from "~/utils/auth";
 
