@@ -27,16 +27,13 @@
     "@t3-oss/env-core": "catalog:",
     "@kodix/testing": "workspace:*",
     "drizzle-orm": "catalog:",
-    "drizzle-zod": "catalog:",
-    "zod": "catalog:"
+    "drizzle-zod": "catalog:"
   },
   "devDependencies": {
     "@kodix/auth": "workspace:*",
     "@kodix/tsconfig": "workspace:*",
     "@types/node": "catalog:",
     "drizzle-kit": "catalog:",
-    "drizzle-seed": "catalog:",
-    "ora": "catalog:",
     "tsx": "catalog:",
     "typescript": "catalog:"
   }

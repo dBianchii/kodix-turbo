@@ -1,6 +1,5 @@
 {
   "dependencies": {
-    "drizzle-zod": "catalog:",
     "next-intl": "catalog:",
     "zod": "catalog:"
   },

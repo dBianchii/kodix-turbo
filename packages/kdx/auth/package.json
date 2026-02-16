@@ -16,15 +16,9 @@
     "@kdx/react-email": "workspace:*",
     "@kodix/auth": "workspace:*",
     "@kodix/shared": "workspace:*",
-    "@node-rs/argon2": "catalog:",
-    "@oslojs/crypto": "catalog:",
-    "@oslojs/encoding": "catalog:",
-    "arctic": "catalog:",
-    "discord-api-types": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:",
-    "zod": "catalog:"
+    "react-dom": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",

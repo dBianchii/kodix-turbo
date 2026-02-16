@@ -11,7 +11,6 @@
     "@kodix/dayjs": "workspace:*",
     "@kodix/shared": "workspace:*",
     "@kodix/trpc": "workspace:*",
-    "@node-rs/argon2": "catalog:",
     "@react-email/render": "catalog:",
     "@trpc/server": "catalog:",
     "@trpc/tanstack-react-query": "catalog:",
@@ -23,10 +22,8 @@
     "next": "catalog:",
     "next-intl": "catalog:",
     "object.groupby": "catalog:",
-    "posthog-node": "catalog:",
     "resend": "catalog:",
     "rrule": "catalog:",
-    "superjson": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
