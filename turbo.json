@@ -66,6 +66,9 @@
     "clean": {
       "cache": false
     },
+    "pull-vercel": {
+      "cache": false
+    },
     "push": {
       "cache": false,
       "interactive": true
