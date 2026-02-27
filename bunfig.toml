@@ -1,0 +1,2 @@
+[install]
+linker = "hoisted" #TODO: See if we can remove this when bun fixes the infinite install hang issue: https://github.com/oven-sh/bun/issues/22846#issuecomment-3948193870
