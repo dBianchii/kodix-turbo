@@ -41,6 +41,8 @@
   },
   "exports": {
     ".": "./src/index.ts",
+    "./internal/*": "./src/internal/*.ts",
+    "./utils/*": "./src/utils/*.ts",
     "./crons/*": "./src/crons/*.ts",
     "./trpc/react/client": "./src/trpc/react/client.tsx",
     "./trpc/react/server": "./src/trpc/react/server.tsx"

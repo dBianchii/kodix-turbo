@@ -1,7 +1,6 @@
 "use server";
 
-import { getLocaleBasedOnCookie } from "node_modules/@kdx/api/src/utils/locales";
-
+import { getLocaleBasedOnCookie } from "@kdx/api/utils/locales";
 import { auth, deleteSessionTokenCookie, invalidateSession } from "@kdx/auth";
 
 import { redirect } from "~/i18n/routing";

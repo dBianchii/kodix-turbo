@@ -1,4 +1,3 @@
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-care-task-central";
 import { useMemo, useState } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { kodixCareAppId } from "@kodix/shared/db";
@@ -42,6 +41,7 @@ import {
   LuTriangleAlert,
 } from "react-icons/lu";
 
+import type { CareTask } from "@kdx/api/internal/calendar-and-care-task-central";
 import type { User } from "@kdx/auth";
 import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZEditCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
