@@ -18,7 +18,19 @@ apps
   |       ├─ React Native using React 19
   |       ├─ Navigation using Expo Router
   |       └─ Typesafe API calls using tRPC
+  └─ cash/
+      └─ app/
+          └─ Next.js app (@cash/app) with its own tRPC endpoint served from @cash/api
 packages
+  ├─ cash/ (cash-scoped packages)
+  |   ├─ api/
+  |   |   └─ tRPC v11 router definition for cash
+  |   ├─ auth/
+  |   |   └─ Authentication for cash
+  |   ├─ db/
+  |   |   └─ Typesafe db calls using Drizzle
+  |   └─ db-dev/
+  |       └─ Dev utilities for cash database
   ├─ kdx/ (kdx-scoped packages)
   |   ├─ api/
   |   |   └─ tRPC v11 router definition
@@ -26,6 +38,8 @@ packages
   |   |   └─ Authentication using database sessions and oslo (lucia-auth)
   |   ├─ db/
   |   |   └─ Typesafe db calls using Drizzle and MySQL
+  |   ├─ db-dev/
+  |   |   └─ Dev utilities for kdx database
   |   ├─ env/
   |   |   └─ Environment variable validation
   |   ├─ locales/
@@ -38,13 +52,21 @@ packages
   |   |   └─ CLI tool to automatically create new tRPC endpoints with boilerplate
   |   └─ validators/
   |       └─ Shared zod validation schemas for tRPC
-  └─ kodix/ (Global packages)
+  └─ kodix/ (Global shared packages)
+      ├─ auth/
+      |   └─ Shared authentication utilities
       ├─ dayjs/
       |   └─ Extended dayjs configuration with centralized plugins
+      ├─ drizzle-utils/
+      |   └─ Shared Drizzle ORM utilities
+      ├─ posthog/
+      |   └─ PostHog analytics integration
       ├─ shared/
       |   └─ Reusable code snippets and general lightweight utilities
       ├─ testing/
       |   └─ Testing utilities and configurations
+      ├─ trpc/
+      |   └─ Shared tRPC configuration
       └─ ui/
           └─ Global UI components using shadcn-ui
 tooling
@@ -81,6 +103,8 @@ nvm use
 
 ### 1. Setup dependencies
 
+Available apps: `kdx`, `cash`. Replace `<app>` below with one of them.
+
 ```bash
 # Install dependencies
 bun i
@@ -88,15 +112,14 @@ bun i
 # Configure environment variables (only Vercel users)
 bun vercel-link
 
-# Start the main kdx app
-bun dev:kdx
+# Start an app
+bun dev:<app>
 
 # Push the Drizzle schema to the database
-bun push:kdx
+bun push:<app>
 
 # Seed the running database
-bun seed:kdx
-
+bun seed:<app>
 ```
 
 ### 2. Most helpful commands
@@ -117,11 +140,11 @@ bun check:unsafe
 #tsc all packages
 bun tsc
 
-# Start the main kdx app
-bun dev:kdx
+# Start an app
+bun dev:<app>
 
-# Pushing the Drizzle schema to the database
-bun push:kdx
+# Push the Drizzle schema to the database
+bun push:<app>
 
 # Generate a new tRPC endpoint using the trpc-cli tool
 bun start:trpc-cli
