@@ -21,8 +21,7 @@
     "discord-api-types": "catalog:",
     "es-toolkit": "catalog:",
     "next": "catalog:",
-    "react": "catalog:",
-    "zod": "catalog:"
+    "react": "catalog:"
   },
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
