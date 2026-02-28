@@ -1,4 +1,3 @@
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-care-task-central";
 import { useEffect, useMemo, useState } from "react";
 import { Alert, FlatList, Keyboard, TouchableOpacity } from "react-native";
 import dayjs from "@kodix/dayjs";
@@ -26,6 +25,7 @@ import Swipeable from "react-native-gesture-handler/Swipeable";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFormatter, useTranslations } from "use-intl";
 
+import type { CareTask } from "@kdx/api/internal/calendar-and-care-task-central";
 import {
   ZCreateCareTaskInputSchema,
   ZEditCareTaskInputSchema,
@@ -461,13 +461,14 @@ function CareTaskOrCalendarTaskItem(props: {
       enabled={isCareTaskItem(props.task)}
       renderRightActions={() => {
         if (!isCareTaskItem(props.task)) return null;
+        const taskId = props.task.id;
         return (
           <TouchableOpacity
             disabled={deleteCareTaskMutation.isPending}
             onPress={() => {
-              if (isCareTaskItem(props.task)) {
+              if (taskId) {
                 deleteCareTaskMutation.mutate({
-                  id: props.task.id,
+                  id: taskId,
                 });
               }
             }}

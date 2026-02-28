@@ -4,6 +4,7 @@
     "@kodix/shared": "workspace:*",
     "@t3-oss/env-core": "catalog:",
     "drizzle-orm": "catalog:",
+    "drizzle-zod": "catalog:",
     "mysql2": "catalog:",
     "nanoid": "catalog:",
     "zod": "catalog:"
@@ -30,9 +31,9 @@
   "private": true,
   "scripts": {
     "clean": "git clean -xdf .cache .turbo dist node_modules",
-    "push": "pnpm wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' pnpm drizzle-kit push",
-    "seed": "pnpm wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' pnpm tsx ./scripts/seed.ts",
-    "studio": "pnpm wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' pnpm drizzle-kit studio",
+    "push": "bun wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' bun drizzle-kit push",
+    "seed": "bun wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' bun tsx ./scripts/seed.ts",
+    "studio": "bun wait-for-db && MYSQL_URL='mysql://root:password@localhost:3306/kodix' bun drizzle-kit studio",
     "tsc": "tsc --noEmit",
     "wait-for-db": "while ! nc -z localhost 3306; do sleep 1; done"
   },

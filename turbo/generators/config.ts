@@ -68,10 +68,8 @@ export default function generator(plop: PlopTypes.NodePlopAPI): void {
          * Install deps and format everything
          */
         if ("name" in answers && typeof answers.name === "string") {
-          execSync("pnpm i", { stdio: "inherit" });
-          execSync(
-            `pnpm biome check --write packages/kodix/${answers.name}/**`,
-          );
+          execSync("bun i", { stdio: "inherit" });
+          execSync(`bun biome check --write packages/kodix/${answers.name}/**`);
           return "Package scaffolded";
         }
         return "Package not scaffolded";

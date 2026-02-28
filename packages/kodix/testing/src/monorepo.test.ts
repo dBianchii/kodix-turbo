@@ -1,7 +1,6 @@
 import { existsSync, globSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, it, test } from "vitest";
-import yaml from "yaml";
 
 interface PackageJson {
   name: string;
@@ -9,26 +8,30 @@ interface PackageJson {
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
   engines?: Record<string, string>;
+  workspaces?:
+    | string[]
+    | {
+        packages?: string[];
+        catalog?: Record<string, unknown>;
+        catalogs?: Record<string, Record<string, unknown>>;
+      };
 }
 
 const repositoryRoot = path.join(__dirname, "../../../../");
 
-const getPNPMWorkspaceFile = (
-  packageRoot: string,
-): {
-  catalog: Record<string, unknown>;
-  catalogs: Record<string, Record<string, unknown>>;
-  packages: string[];
-} =>
-  yaml.parse(
-    readFileSync(path.join(packageRoot, "pnpm-workspace.yaml"), "utf-8"),
-  );
+const getRootPackageJson = (): PackageJson =>
+  JSON.parse(readFileSync(path.join(repositoryRoot, "package.json"), "utf-8"));
 
 const getFilesToCheck = () => {
   const packageNameMap: Record<string, string> = {};
   const filesToCheck: { packageJson: string; tsconfig: string }[] = [];
 
-  for (const workspacePath of getPNPMWorkspaceFile(repositoryRoot).packages) {
+  const rootPkg = getRootPackageJson();
+  const workspaces = Array.isArray(rootPkg.workspaces)
+    ? rootPkg.workspaces
+    : (rootPkg.workspaces?.packages ?? []);
+
+  for (const workspacePath of workspaces) {
     const folders = globSync(workspacePath, {
       cwd: repositoryRoot,
     }).filter((folder) => !folder.includes("node_modules"));
@@ -95,9 +98,13 @@ it("There are no unused dependencies", () => {
     }
   }
 
-  // Parse the PNPM workspace file
-  const { catalog: defaultCatalog, catalogs } =
-    getPNPMWorkspaceFile(repositoryRoot);
+  // Parse the root package.json for catalogs
+  const rootPkg = getRootPackageJson();
+  const workspacesConfig =
+    typeof rootPkg.workspaces === "object" && !Array.isArray(rootPkg.workspaces)
+      ? rootPkg.workspaces
+      : { catalog: {}, catalogs: {} };
+  const { catalog: defaultCatalog = {}, catalogs = {} } = workspacesConfig;
 
   // Collect all packages defined in catalogs
   const allCatalogPackages = new Set<string>();

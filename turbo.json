@@ -29,6 +29,9 @@
         "CA_CLIENT_SECRET"
       ]
     },
+    "pull-vercel": {
+      "cache": false
+    },
     "start": {
       "cache": false,
       "persistent": false

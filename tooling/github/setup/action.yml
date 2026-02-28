@@ -2,8 +2,8 @@ name: "Setup and install"
 description: "Common setup steps for Actions"
 
 inputs:
-  skip-turbo:
-    description: "Skip installing turbo globally"
+  skip-bun:
+    description: "Skip installing bun and dependencies"
     required: false
     default: "false"
   skip-node:
@@ -14,17 +14,17 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: pnpm/action-setup@v4
-    
-    - if: ${{ inputs.skip-node != 'true' }}
-      uses: actions/setup-node@v4
+    - name: Setup Node
+      if: ${{ inputs.skip-node != 'true' }}
+      uses: actions/setup-node@v6.2.0
       with:
-        node-version-file: ".nvmrc"
-        cache: "pnpm"
+        node-version-file: .nvmrc
 
-    - shell: bash
-      if: ${{ inputs.skip-turbo != 'true' }}
-      run: pnpm add -g turbo
+    - name: Setup Bun
+      if: ${{ inputs.skip-bun != 'true' }}
+      uses: oven-sh/setup-bun@v2.1.2
 
-    - shell: bash
-      run: pnpm install
+    - name: Install Dependencies
+      if: ${{ inputs.skip-bun != 'true' }}
+      shell: bash
+      run: bun install --frozen-lockfile

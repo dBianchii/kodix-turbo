@@ -4,8 +4,7 @@
       "ios": {
         "resourceClass": "m-medium"
       },
-      "node": "20.16.0",
-      "pnpm": "9.7.1"
+      "node": "20.16.0"
     },
     "development": {
       "developmentClient": true,

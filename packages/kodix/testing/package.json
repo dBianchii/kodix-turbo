@@ -20,7 +20,6 @@
   "devDependencies": {
     "@kodix/tsconfig": "workspace:*",
     "typescript": "catalog:",
-    "vitest": "catalog:",
-    "yaml": "catalog:"
+    "vitest": "catalog:"
   }
 }

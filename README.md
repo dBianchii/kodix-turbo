@@ -7,7 +7,7 @@ Kodix's main monorepo. It uses [Turborepo](https://turborepo.org) and contains:
 ```text
 .github
   └─ workflows
-        └─ CI with pnpm cache setup
+        └─ CI with bun cache setup
 .vscode
   └─ Recommended extensions and settings for VSCode users
 apps
@@ -18,7 +18,19 @@ apps
   |       ├─ React Native using React 19
   |       ├─ Navigation using Expo Router
   |       └─ Typesafe API calls using tRPC
+  └─ cash/
+      └─ app/
+          └─ Next.js app (@cash/app) with its own tRPC endpoint served from @cash/api
 packages
+  ├─ cash/ (cash-scoped packages)
+  |   ├─ api/
+  |   |   └─ tRPC v11 router definition for cash
+  |   ├─ auth/
+  |   |   └─ Authentication for cash
+  |   ├─ db/
+  |   |   └─ Typesafe db calls using Drizzle
+  |   └─ db-dev/
+  |       └─ Dev utilities for cash database
   ├─ kdx/ (kdx-scoped packages)
   |   ├─ api/
   |   |   └─ tRPC v11 router definition
@@ -26,6 +38,8 @@ packages
   |   |   └─ Authentication using database sessions and oslo (lucia-auth)
   |   ├─ db/
   |   |   └─ Typesafe db calls using Drizzle and MySQL
+  |   ├─ db-dev/
+  |   |   └─ Dev utilities for kdx database
   |   ├─ env/
   |   |   └─ Environment variable validation
   |   ├─ locales/
@@ -38,13 +52,21 @@ packages
   |   |   └─ CLI tool to automatically create new tRPC endpoints with boilerplate
   |   └─ validators/
   |       └─ Shared zod validation schemas for tRPC
-  └─ kodix/ (Global packages)
+  └─ kodix/ (Global shared packages)
+      ├─ auth/
+      |   └─ Shared authentication utilities
       ├─ dayjs/
       |   └─ Extended dayjs configuration with centralized plugins
+      ├─ drizzle-utils/
+      |   └─ Shared Drizzle ORM utilities
+      ├─ posthog/
+      |   └─ PostHog analytics integration
       ├─ shared/
       |   └─ Reusable code snippets and general lightweight utilities
       ├─ testing/
       |   └─ Testing utilities and configurations
+      ├─ trpc/
+      |   └─ Shared tRPC configuration
       └─ ui/
           └─ Global UI components using shadcn-ui
 tooling
@@ -67,10 +89,10 @@ To get it running, follow the steps below:
 
 ### Pre-requisites
 
-Make sure you have pnpm installed globally. If not, you can install it by running:
+Make sure you have bun installed globally. If not, you can install it by running:
 
 ```bash
-npm i -g pnpm
+npm i -g bun
 ```
 
 Make sure you are using the specified node version in .nvmrc. You can use nvm (recommended) to manage your node versions. To use the correct node version, run:
@@ -81,22 +103,23 @@ nvm use
 
 ### 1. Setup dependencies
 
+Available apps: `kdx`, `cash`. Replace `<app>` below with one of them.
+
 ```bash
 # Install dependencies
-pnpm i
+bun i
 
 # Configure environment variables (only Vercel users)
-pnpm vercel-link
+bun vercel-link
 
-# Start the main kdx app
-pnpm dev:kdx
+# Start an app
+bun dev:<app>
 
 # Push the Drizzle schema to the database
-pnpm db:push
+bun push:<app>
 
 # Seed the running database
-pnpm db:seed
-
+bun seed:<app>
 ```
 
 ### 2. Most helpful commands
@@ -106,34 +129,31 @@ pnpm db:seed
 turbo clean
 
 # Run Biome checks on all packages
-pnpm check
+bun check
 
 # Run Biome checks and write all packages
-pnpm check:write
+bun check:write
 
 # Run Biome checks and write all packages (unsafe)
-pnpm check:unsafe
+bun check:unsafe
 
 #tsc all packages
-pnpm tsc
+bun tsc
 
-# Start the main kdx app
-pnpm dev:kdx
+# Start an app
+bun dev:<app>
 
-# Start Drizzle Studio independently
-pnpm db:studio
-
-# Pushing the Drizzle schema to the database
-pnpm db:push
+# Push the Drizzle schema to the database
+bun push:<app>
 
 # Generate a new tRPC endpoint using the trpc-cli tool
-pnpm start:trpc-cli
+bun start:trpc-cli
 
 # Start the trpc-cli tool in development mode
-pnpm dev:trpc-cli
+bun dev:trpc-cli
 
 # Create a new package (global or kdx-scoped)
-pnpm turbo gen init
+bun turbo gen init
 ```
 
 ## References

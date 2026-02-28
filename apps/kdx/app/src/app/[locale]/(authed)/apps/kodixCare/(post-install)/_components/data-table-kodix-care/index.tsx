@@ -1,7 +1,6 @@
 "use client";
 
 import type { SortingState, VisibilityState } from "@tanstack/react-table";
-import type { CareTask } from "node_modules/@kdx/api/src/internal/calendar-and-care-task-central";
 import { useEffect, useMemo, useState } from "react";
 import dayjs from "@kodix/dayjs";
 import {
@@ -95,6 +94,7 @@ import { RxDotsHorizontal } from "react-icons/rx";
 import { create } from "zustand";
 
 import type { RouterOutputs } from "@kdx/api";
+import type { CareTask } from "@kdx/api/internal/calendar-and-care-task-central";
 import type { User } from "@kdx/auth";
 import { useTRPC } from "@kdx/api/trpc/react/client";
 import { ZCreateCareTaskInputSchema } from "@kdx/validators/trpc/app/kodixCare/careTask";
