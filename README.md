@@ -92,10 +92,10 @@ bun vercel-link
 bun dev:kdx
 
 # Push the Drizzle schema to the database
-bun db:push
+bun push:kdx
 
 # Seed the running database
-bun db:seed
+bun seed:kdx
 
 ```
 
@@ -120,11 +120,8 @@ bun tsc
 # Start the main kdx app
 bun dev:kdx
 
-# Start Drizzle Studio independently
-bun db:studio
-
 # Pushing the Drizzle schema to the database
-bun db:push
+bun push:kdx
 
 # Generate a new tRPC endpoint using the trpc-cli tool
 bun start:trpc-cli
